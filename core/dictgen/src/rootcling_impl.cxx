@@ -534,7 +534,7 @@ void SetRootSys()
 
 bool ParsePragmaLine(const std::string &line,
                      const char *expectedTokens[],
-                     size_t *end = 0)
+                     size_t *end = nullptr)
 {
    if (end) *end = 0;
    if (line[0] != '#') return false;
@@ -869,7 +869,7 @@ int STLContainerStreamer(const clang::FieldDecl &m,
    stlName = ROOT::TMetaUtils::ShortTypeName(m.getName().str().c_str());
 
    string fulName1, fulName2;
-   const char *tcl1 = 0, *tcl2 = 0;
+   const char *tcl1 = nullptr, *tcl2 = nullptr;
    const clang::TemplateArgument &arg0(tmplt_specialization->getTemplateArgs().get(0));
    clang::QualType ti = arg0.getAsType();
 
@@ -1889,7 +1889,7 @@ void GenerateLinkdef(llvm::cl::list<std::string> &InputFiles,
 
 bool Which(cling::Interpreter &interp, const char *fname, string &pname)
 {
-   FILE *fp = 0;
+   FILE *fp = nullptr;
 
 #ifdef WIN32
    static const char *fopenopts = "rb";
@@ -2873,11 +2873,11 @@ public:
 
       m_names.push_back(nameStr);
       m_tempNames.push_back(tmpNameStr);
-      ROOT::TMetaUtils::Info(0, "File %s added to the tmp catalog.\n", name);
+      ROOT::TMetaUtils::Info(nullptr, "File %s added to the tmp catalog.\n", name);
 
       // This is to allow update of existing files
       if (0 == std::rename(name , tmpName)) {
-         ROOT::TMetaUtils::Info(0, "File %s existing. Preserved as %s.\n", name, tmpName);
+         ROOT::TMetaUtils::Info(nullptr, "File %s existing. Preserved as %s.\n", name, tmpName);
       }
 
       // To change the name to its tmp version
@@ -2897,10 +2897,10 @@ public:
          // Check if the file exists
          std::ifstream ifile(tmpName);
          if (!ifile)
-            ROOT::TMetaUtils::Error(0, "Cannot find %s!\n", tmpName);
+            ROOT::TMetaUtils::Error(nullptr, "Cannot find %s!\n", tmpName);
 
          if (0 != std::remove(tmpName)) {
-            ROOT::TMetaUtils::Error(0, "Removing %s!\n", tmpName);
+            ROOT::TMetaUtils::Error(nullptr, "Removing %s!\n", tmpName);
             retval++;
          }
       }
@@ -2918,7 +2918,7 @@ public:
          // Check if the file exists
          std::ifstream ifile(tmpName);
          if (!ifile)
-            ROOT::TMetaUtils::Error(0, "Cannot find %s!\n", tmpName);
+            ROOT::TMetaUtils::Error(nullptr, "Cannot find %s!\n", tmpName);
 #ifdef WIN32
          // Sometimes files cannot be renamed on Windows if they don't have
          // been released by the system. So just copy them and try to delete
@@ -2932,7 +2932,7 @@ public:
          }
 #else
          if (0 != std::rename(tmpName , name)) {
-            ROOT::TMetaUtils::Error(0, "Renaming %s into %s!\n", tmpName, name);
+            ROOT::TMetaUtils::Error(nullptr, "Renaming %s into %s!\n", tmpName, name);
             retval++;
          }
 #endif
@@ -4035,7 +4035,7 @@ int RootClingMain(int argc,
    }
 
    if (gOptForce && dictname.empty()) {
-      ROOT::TMetaUtils::Error(0, "Inconsistent set of arguments detected: overwrite of dictionary file forced but no filename specified.\n");
+      ROOT::TMetaUtils::Error(nullptr, "Inconsistent set of arguments detected: overwrite of dictionary file forced but no filename specified.\n");
       llvm::cl::PrintHelpMessage();
       return 1;
    }
@@ -4292,26 +4292,26 @@ int RootClingMain(int argc,
    diags.setClient(recordingClient, true);
 
    if (ROOT::TMetaUtils::GetErrorIgnoreLevel() == ROOT::TMetaUtils::kInfo) {
-      ROOT::TMetaUtils::Info(0, "\n");
-      ROOT::TMetaUtils::Info(0, "==== INTERPRETER CONFIGURATION ====\n");
-      ROOT::TMetaUtils::Info(0, "== Include paths\n");
+      ROOT::TMetaUtils::Info(nullptr, "\n");
+      ROOT::TMetaUtils::Info(nullptr, "==== INTERPRETER CONFIGURATION ====\n");
+      ROOT::TMetaUtils::Info(nullptr, "== Include paths\n");
       interp.DumpIncludePath();
       printf("\n\n");
       fflush(stdout);
 
-      ROOT::TMetaUtils::Info(0, "== Included files\n");
+      ROOT::TMetaUtils::Info(nullptr, "== Included files\n");
       interp.printIncludedFiles(llvm::outs());
       llvm::outs() << "\n\n";
       llvm::outs().flush();
 
-      ROOT::TMetaUtils::Info(0, "== Language Options\n");
+      ROOT::TMetaUtils::Info(nullptr, "== Language Options\n");
       const clang::LangOptions& LangOpts
          = interp.getCI()->getASTContext().getLangOpts();
 #define LANGOPT(Name, Bits, Default, Description) \
       ROOT::TMetaUtils::Info(0, "%s = %d // %s\n", #Name, (int)LangOpts.Name, Description);
 #define ENUM_LANGOPT(Name, Type, Bits, Default, Description)
 #include "clang/Basic/LangOptions.def"
-      ROOT::TMetaUtils::Info(0, "==== END interpreter configuration ====\n\n");
+      ROOT::TMetaUtils::Info(nullptr, "==== END interpreter configuration ====\n\n");
    }
 
    interp.getOptions().ErrorOut = true;
@@ -4333,7 +4333,7 @@ int RootClingMain(int argc,
    }
 
    if (interp.declare("namespace std {} using namespace std;") != cling::Interpreter::kSuccess) {
-      ROOT::TMetaUtils::Error(0, "Error loading the default header files.\n");
+      ROOT::TMetaUtils::Error(nullptr, "Error loading the default header files.\n");
       return 1;
    }
    if (!isGenreflex) { // rootcling
@@ -4343,7 +4343,7 @@ int RootClingMain(int argc,
                             "#include \"TObject.h\"") != cling::Interpreter::kSuccess
          ) {
          // There was an error.
-         ROOT::TMetaUtils::Error(0, "Error loading the default header files.\n");
+         ROOT::TMetaUtils::Error(nullptr, "Error loading the default header files.\n");
          return 1;
       }
    }
@@ -4472,7 +4472,7 @@ int RootClingMain(int argc,
 
    if (!interpreterDeclarations.empty() &&
        interp.declare(interpreterDeclarations) != cling::Interpreter::kSuccess) {
-      ROOT::TMetaUtils::Error(0, "%s: Linkdef compilation failure\n", executableFileName);
+      ROOT::TMetaUtils::Error(nullptr, "%s: Linkdef compilation failure\n", executableFileName);
       return 1;
    }
 
@@ -4611,11 +4611,11 @@ int RootClingMain(int argc,
          ROOT::TMetaUtils::Error(0, "Parsing #pragma failed %s\n", linkdefFilename.c_str());
          rootclingRetCode += 1;
       } else {
-         ROOT::TMetaUtils::Info(0, "#pragma successfully parsed.\n");
+         ROOT::TMetaUtils::Info(nullptr, "#pragma successfully parsed.\n");
       }
 
       if (!ldefr.LoadIncludes(extraIncludes)) {
-         ROOT::TMetaUtils::Error(0, "Error loading the #pragma extra_include.\n");
+         ROOT::TMetaUtils::Error(nullptr, "Error loading the #pragma extra_include.\n");
          return 1;
       }
 
@@ -4625,14 +4625,14 @@ int RootClingMain(int argc,
 
       std::ifstream file(linkdefFilename.c_str());
       if (file.is_open()) {
-         ROOT::TMetaUtils::Info(0, "Selection XML file\n");
+         ROOT::TMetaUtils::Info(nullptr, "Selection XML file\n");
 
          XMLReader xmlr(interp);
          if (!xmlr.Parse(linkdefFilename.c_str(), selectionRules)) {
             ROOT::TMetaUtils::Error(0, "Parsing XML file %s\n", linkdefFilename.c_str());
             return 1; // Return here to propagate the failure up to the build system
          } else {
-            ROOT::TMetaUtils::Info(0, "XML file successfully parsed\n");
+            ROOT::TMetaUtils::Info(nullptr, "XML file successfully parsed\n");
          }
          file.close();
       } else {
@@ -4659,11 +4659,11 @@ int RootClingMain(int argc,
          ROOT::TMetaUtils::Error(0, "Parsing Linkdef file %s\n", linkdefFilename.c_str());
          rootclingRetCode += 1;
       } else {
-         ROOT::TMetaUtils::Info(0, "Linkdef file successfully parsed.\n");
+         ROOT::TMetaUtils::Info(nullptr, "Linkdef file successfully parsed.\n");
       }
 
       if (! ldefr.LoadIncludes(extraIncludes)) {
-         ROOT::TMetaUtils::Error(0, "Error loading the #pragma extra_include.\n");
+         ROOT::TMetaUtils::Error(nullptr, "Error loading the #pragma extra_include.\n");
          return 1;
       }
 
@@ -4746,7 +4746,7 @@ int RootClingMain(int argc,
          !gOptGeneratePCH &&
          !dictSelRulesPresent &&
          !selectionRules.AreAllSelectionRulesUsed()) {
-      ROOT::TMetaUtils::Warning(0, "Not all selection rules are used!\n");
+      ROOT::TMetaUtils::Warning(nullptr, "Not all selection rules are used!\n");
    }
 
    if (!gOptGeneratePCH){

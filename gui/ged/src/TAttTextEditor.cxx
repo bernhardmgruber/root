@@ -56,7 +56,7 @@ TAttTextEditor::TAttTextEditor(const TGWindow *p, Int_t width,
 {
    fPriority = 3;
 
-   fAttText = 0;
+   fAttText = nullptr;
 
    MakeTitle("Text");
 

@@ -602,7 +602,7 @@ int TClingCallFunc::get_wrapper_code(std::string &wrapper_name, std::string &wra
    //  instantiate and codegen this function.
    //
    bool needInstantiation = false;
-   const FunctionDecl *Definition = 0;
+   const FunctionDecl *Definition = nullptr;
    if (!FD->isDefined(Definition)) {
       FunctionDecl::TemplatedKind TK = FD->getTemplatedKind();
       switch (TK) {
@@ -1085,7 +1085,7 @@ tcling_callfunc_Wrapper_t TClingCallFunc::make_wrapper()
    string wrapper_name;
    string wrapper;
 
-   if (get_wrapper_code(wrapper_name, wrapper) == 0) return 0;
+   if (get_wrapper_code(wrapper_name, wrapper) == 0) return nullptr;
 
    //fprintf(stderr, "%s\n", wrapper.c_str());
    //
@@ -2026,7 +2026,7 @@ TClingCallFunc::InitRetAndExec(const clang::FunctionDecl *FD, cling::Value &ret)
 void TClingCallFunc::exec_with_valref_return(void *address, cling::Value *ret)
 {
    if (!ret) {
-      exec(address, 0);
+      exec(address, nullptr);
       return;
    }
    std::function<void(void*, cling::Value&)> execFunc;
@@ -2075,7 +2075,7 @@ void TClingCallFunc::Exec(void *address, TInterpreterValue *interpVal/*=0*/)
       return;
    }
    if (!interpVal) {
-      exec(address, 0);
+      exec(address, nullptr);
       return;
    }
    cling::Value *val = reinterpret_cast<cling::Value *>(interpVal->GetValAddr());
@@ -2174,7 +2174,7 @@ void *TClingCallFunc::ExecDefaultConstructor(const TClingClassInfo *info,
             "Called with no wrapper, not implemented!");
       return nullptr;
    }
-   void *obj = 0;
+   void *obj = nullptr;
    (*wrapper)(&obj, address, nary);
    return obj;
 }
@@ -2187,7 +2187,7 @@ void TClingCallFunc::ExecDestructor(const TClingClassInfo *info, void *address /
       return;
    }
 
-   tcling_callfunc_dtor_Wrapper_t wrapper = 0;
+   tcling_callfunc_dtor_Wrapper_t wrapper = nullptr;
    {
       R__LOCKGUARD_CLING(gInterpreterMutex);
       const Decl *D = info->GetDecl();
@@ -2215,7 +2215,7 @@ TClingCallFunc::FactoryMethod() const
 void TClingCallFunc::Init()
 {
    fMethod.reset();
-   fWrapper = 0;
+   fWrapper = nullptr;
    fDecl = nullptr;
    fMinRequiredArguments = -1;
    ResetArg();
@@ -2236,7 +2236,7 @@ void TClingCallFunc::Init(std::unique_ptr<TClingMethodInfo> minfo)
 void *TClingCallFunc::InterfaceMethod()
 {
    if (!IsValid()) {
-      return 0;
+      return nullptr;
    }
    if (!fWrapper) {
       const FunctionDecl *decl = GetDecl();

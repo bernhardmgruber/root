@@ -29,24 +29,24 @@ PyObject *PyROOT::AsRVec(PyObject * /*self*/, PyObject * obj)
 {
    if (!obj) {
       PyErr_SetString(PyExc_RuntimeError, "Object not convertible: Invalid Python object.");
-      return NULL;
+      return nullptr;
    }
 
    // Get array interface of object
    auto pyinterface = GetArrayInterface(obj);
-   if (pyinterface == NULL)
-      return NULL;
+   if (pyinterface == nullptr)
+      return nullptr;
 
    // Get the data-pointer
    const auto data = GetDataPointerFromArrayInterface(pyinterface);
    if (data == 0)
-      return NULL;
+      return nullptr;
 
    // Get the size of the contiguous memory
    auto pyshape = PyDict_GetItemString(pyinterface, "shape");
    if (!pyshape) {
       PyErr_SetString(PyExc_RuntimeError, "Object not convertible: __array_interface__['shape'] does not exist.");
-      return NULL;
+      return nullptr;
    }
    long size = 0;
    for (int i = 0; i < PyTuple_Size(pyshape); i++) {
@@ -57,14 +57,14 @@ PyObject *PyROOT::AsRVec(PyObject * /*self*/, PyObject * obj)
    // Get the typestring and properties thereof
    const auto typestr = GetTypestrFromArrayInterface(pyinterface);
    if (typestr.compare("") == 0)
-      return NULL;
+      return nullptr;
    if (!CheckEndianessFromTypestr(typestr))
-      return NULL;
+      return nullptr;
 
    const auto dtype = typestr.substr(1, typestr.size());
    std::string cppdtype = GetCppTypeFromNumpyType(dtype);
    if (cppdtype.compare("") == 0)
-      return NULL;
+      return nullptr;
 
    // Construct an RVec of the correct data-type
    const std::string klassname = "ROOT::VecOps::RVec<" + cppdtype + ">";
@@ -84,7 +84,7 @@ PyObject *PyROOT::AsRVec(PyObject * /*self*/, PyObject * obj)
    // Bind pyobject holding adopted memory to the RVec
    if (PyObject_SetAttrString(pyobj, "__adopted__", obj)) {
       PyErr_SetString(PyExc_RuntimeError, "Object not convertible: Failed to set Python object as attribute __adopted__.");
-      return NULL;
+      return nullptr;
    }
 
    // Clean-up and return

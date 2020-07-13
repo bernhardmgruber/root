@@ -95,7 +95,7 @@ static struct BoolNameTable_t {
    { "NO",    0 },
    { "OK",    1 },
    { "NOT",   0 },
-   { 0, 0 }
+   { nullptr, 0 }
 };
 
 
@@ -404,7 +404,7 @@ TEnv::TEnv(const char *name)
    fIgnoreDup = kFALSE;
 
    if (!name || !name[0] || !gSystem)
-      fTable = 0;
+      fTable = nullptr;
    else {
       fTable  = new THashList(1000);
       fRcName = name;
@@ -446,42 +446,42 @@ const char *TEnv::Getvalue(const char *name) const
       haveProgName = kTRUE;
 
    TString aname;
-   TEnvRec *er = 0;
+   TEnvRec *er = nullptr;
    if (haveProgName && gSystem && gProgName) {
       aname = gSystem->GetName(); aname += "."; aname += gProgName;
       aname += "."; aname += name;
       er = Lookup(aname);
    }
-   if (er == 0 && gSystem && gROOT) {
+   if (er == nullptr && gSystem && gROOT) {
       aname = gSystem->GetName(); aname += "."; aname += gROOT->GetName();
       aname += "."; aname += name;
       er = Lookup(aname);
    }
-   if (er == 0 && gSystem) {
+   if (er == nullptr && gSystem) {
       aname = gSystem->GetName(); aname += ".*."; aname += name;
       er = Lookup(aname);
    }
-   if (er == 0 && haveProgName && gProgName) {
+   if (er == nullptr && haveProgName && gProgName) {
       aname = gProgName; aname += "."; aname += name;
       er = Lookup(aname);
    }
-   if (er == 0 && gROOT) {
+   if (er == nullptr && gROOT) {
       aname = gROOT->GetName(); aname += "."; aname += name;
       er = Lookup(aname);
    }
-   if (er == 0) {
+   if (er == nullptr) {
       aname = "*.*."; aname += name;
       er = Lookup(aname);
    }
-   if (er == 0) {
+   if (er == nullptr) {
       aname = "*."; aname += name;
       er = Lookup(aname);
    }
-   if (er == 0) {
+   if (er == nullptr) {
       er = Lookup(name);
    }
-   if (er == 0)
-      return 0;
+   if (er == nullptr)
+      return nullptr;
    return er->fValue;
 }
 
@@ -547,7 +547,7 @@ const char *TEnv::GetValue(const char *name, const char *dflt) const
 
 TEnvRec *TEnv::Lookup(const char *name) const
 {
-   if (!fTable) return 0;
+   if (!fTable) return nullptr;
    return (TEnvRec*) fTable->FindObject(name);
 }
 
@@ -695,11 +695,11 @@ void TEnv::SaveLevel(EEnvLevel level)
 
    if ((ofp = fopen(Form("%s.new", rootrcdir.Data()), "w"))) {
       ifp = fopen(rootrcdir.Data(), "r");
-      if (ifp == 0) {     // try to create file
+      if (ifp == nullptr) {     // try to create file
          ifp = fopen(rootrcdir.Data(), "w");
          if (ifp) {
             fclose(ifp);
-            ifp = 0;
+            ifp = nullptr;
          }
       }
       if (ifp || (ifp = fopen(rootrcdir.Data(), "r"))) {

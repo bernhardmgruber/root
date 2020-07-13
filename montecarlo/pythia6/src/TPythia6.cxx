@@ -190,7 +190,7 @@ TPythia6::TPythia6Cleaner::TPythia6Cleaner() {
 TPythia6::TPythia6Cleaner::~TPythia6Cleaner() {
    if (TPythia6::fgInstance) {
       delete TPythia6::fgInstance;
-      TPythia6::fgInstance = 0;
+      TPythia6::fgInstance = nullptr;
    }
 }
 
@@ -274,7 +274,7 @@ TPythia6::~TPythia6()
    if (fParticles) {
       fParticles->Delete();
       delete fParticles;
-      fParticles = 0;
+      fParticles = nullptr;
    }
 }
 
@@ -362,7 +362,7 @@ TObjArray *TPythia6::ImportParticles(Option_t *)
 
 Int_t TPythia6::ImportParticles(TClonesArray *particles, Option_t *option)
 {
-   if (particles == 0) return 0;
+   if (particles == nullptr) return 0;
    TClonesArray &clonesParticles = *particles;
    clonesParticles.Clear();
    Int_t numpart = fPyjets->N;

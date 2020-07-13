@@ -35,7 +35,7 @@ namespace Math {
 
 
 RootFinder::RootFinder(RootFinder::EType type) :
-   fSolver(0)
+   fSolver(nullptr)
 {
    // constructor passing type (default is kBRENT)
    SetMethod(type);
@@ -111,7 +111,7 @@ bool RootFinder::SetMethod(RootFinder::EType type)
       break;
    default:
       MATH_ERROR_MSG("RootFinder::SetMethod","RootFinderMethod type is not available in MathCore");
-      fSolver = 0;
+      fSolver = nullptr;
       return false;
       break;
    };

@@ -123,9 +123,9 @@ unsigned int GSLMinimizer::NCalls() const {
 bool GSLMinimizer::Minimize() {
    // set initial parameters of the minimizer
 
-   if (fGSLMultiMin == 0) return false;
+   if (fGSLMultiMin == nullptr) return false;
    const ROOT::Math::IMultiGradFunction * function = GradObjFunction();
-   if (function == 0) {
+   if (function == nullptr) {
       MATH_ERROR_MSG("GSLMinimizer::Minimize","Function has not been set");
       return false;
    }
@@ -156,7 +156,7 @@ bool GSLMinimizer::Minimize() {
    // in case all parameters are free - just evaluate the function
    if (NFree() == 0) {
       MATH_INFO_MSG("GSLMinimizer::Minimize","There are no free parameter - just compute the function value");
-      double fval = (*function)((double*)0);   // no need to pass parameters
+      double fval = (*function)((double*)nullptr);   // no need to pass parameters
       SetFinalValues(&startValues[0]);
       SetMinValue(fval);
       fStatus = 0;
@@ -212,7 +212,7 @@ bool GSLMinimizer::Minimize() {
             std::cout << "            Parameter Values : ";
             const double * xtmp = fGSLMultiMin->X();
             std::cout << std::endl;
-            if (trFunc != 0 ) {
+            if (trFunc != nullptr ) {
                xtmp  = trFunc->Transformation(xtmp);
             }
             for (unsigned int i = 0; i < NDim(); ++i) {
@@ -234,7 +234,7 @@ bool GSLMinimizer::Minimize() {
 
    // save state with values and function value
    double * x = fGSLMultiMin->X();
-   if (x == 0) return false;
+   if (x == nullptr) return false;
    SetFinalValues(x);
 
    double minVal =  fGSLMultiMin->Minimum();

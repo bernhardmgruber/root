@@ -126,7 +126,7 @@ static void ErrMsgHandler(int level, Bool_t abort, const char *location, const c
       // the GIL.
       if (!gGlobalMutex) {
          // Either printout or raise exception, depending on user settings
-         PyErr_WarnExplicit(NULL, (char *)msg, (char *)location, 0, (char *)"ROOT", NULL);
+         PyErr_WarnExplicit(nullptr, (char *)msg, (char *)location, 0, (char *)"ROOT", nullptr);
       } else {
          ::DefaultErrorHandler(level, abort, location, msg);
       }

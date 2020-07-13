@@ -47,7 +47,7 @@ namespace Math {
 
   // default constructor (need to call set type later)
    GSLQuasiRandomEngine::GSLQuasiRandomEngine() :
-      fQRng(0 )
+      fQRng(nullptr )
   { }
 
    // constructor from external rng
@@ -90,7 +90,7 @@ namespace Math {
       if (!fQRng) return;
       fQRng->Free();
       delete fQRng;
-      fQRng = 0;
+      fQRng = nullptr;
    }
 
 

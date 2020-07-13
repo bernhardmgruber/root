@@ -774,8 +774,8 @@ static std::string printFunctionValue(const Value &V, const void *ptr,
     if (FD) {
       o << '\n';
       clang::SourceRange SRange = FD->getSourceRange();
-      const char *cBegin = 0;
-      const char *cEnd = 0;
+      const char *cBegin = nullptr;
+      const char *cEnd = nullptr;
       bool Invalid;
       if (SRange.isValid()) {
         clang::SourceManager &SM = C.getSourceManager();
@@ -793,9 +793,9 @@ static std::string printFunctionValue(const Value &V, const void *ptr,
           LocEnd = SM.getExpansionRange(LocEnd).second;
           cEnd = SM.getCharacterData(LocEnd, &Invalid);
           if (Invalid)
-            cBegin = 0;
+            cBegin = nullptr;
         } else {
-          cBegin = 0;
+          cBegin = nullptr;
         }
       }
       if (cBegin && cEnd && cEnd > cBegin && cEnd - cBegin < 16 * 1024) {

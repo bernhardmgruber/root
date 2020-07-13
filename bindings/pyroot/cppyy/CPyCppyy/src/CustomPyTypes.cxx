@@ -18,21 +18,21 @@ namespace CPyCppyy {
 PyTypeObject RefFloat_Type = {     // python float is a C/C++ double
     PyVarObject_HEAD_INIT(&PyType_Type, 0)
     (char*)"cppyy.Double",         // tp_name
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
     Py_TPFLAGS_DEFAULT | Py_TPFLAGS_CHECKTYPES |
         Py_TPFLAGS_BASETYPE,       // tp_flags
     (char*)"CPyCppyy float object for pass by reference",   // tp_doc
-    0, 0, 0, 0, 0, 0, 0, 0, 0,
+    nullptr, nullptr, nullptr, 0, nullptr, nullptr, nullptr, nullptr, nullptr,
     &PyFloat_Type,                 // tp_base
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+    nullptr, nullptr, nullptr, 0, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr
 #if PY_VERSION_HEX >= 0x02030000
-    , 0                            // tp_del
+    , nullptr                            // tp_del
 #endif
 #if PY_VERSION_HEX >= 0x02060000
     , 0                            // tp_version_tag
 #endif
 #if PY_VERSION_HEX >= 0x03040000
-    , 0                            // tp_finalize
+    , nullptr                            // tp_finalize
 #endif
 };
 
@@ -40,7 +40,7 @@ PyTypeObject RefFloat_Type = {     // python float is a C/C++ double
 PyTypeObject RefInt_Type = {       // python int is a C/C++ long
     PyVarObject_HEAD_INIT(&PyType_Type, 0)
     (char*)"cppyy.Long",           // tp_name
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
     Py_TPFLAGS_DEFAULT | Py_TPFLAGS_CHECKTYPES |
         Py_TPFLAGS_BASETYPE
 #if PY_VERSION_HEX >= 0x03040000
@@ -48,17 +48,17 @@ PyTypeObject RefInt_Type = {       // python int is a C/C++ long
 #endif
         ,                          // tp_flags
     (char*)"CPyCppyy long object for pass by reference",    // tp_doc
-    0, 0, 0, 0, 0, 0, 0, 0, 0,
+    nullptr, nullptr, nullptr, 0, nullptr, nullptr, nullptr, nullptr, nullptr,
     &PyInt_Type,                   // tp_base
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+    nullptr, nullptr, nullptr, 0, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr
 #if PY_VERSION_HEX >= 0x02030000
-    , 0                            // tp_del
+    , nullptr                            // tp_del
 #endif
 #if PY_VERSION_HEX >= 0x02060000
     , 0                            // tp_version_tag
 #endif
 #if PY_VERSION_HEX >= 0x03040000
-    , 0                            // tp_finalize
+    , nullptr                            // tp_finalize
 #endif
 };
 
@@ -75,20 +75,20 @@ PyTypeObject TypedefPointerToClass_Type = {
     PyVarObject_HEAD_INIT(&PyType_Type, 0)
     (char*)"cppyy.TypedefPointerToClass",// tp_name
     sizeof(typedefpointertoclassobject), // tp_basicsize
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
     (ternaryfunc)tpc_call,        // tp_call
-    0, 0, 0, 0,
+    nullptr, nullptr, nullptr, nullptr,
     Py_TPFLAGS_DEFAULT |
         Py_TPFLAGS_HAVE_GC,       // tp_flags
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+    nullptr, nullptr, nullptr, nullptr, 0, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, 0, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr
 #if PY_VERSION_HEX >= 0x02030000
-    , 0                           // tp_del
+    , nullptr                           // tp_del
 #endif
 #if PY_VERSION_HEX >= 0x02060000
     , 0                           // tp_version_tag
 #endif
 #if PY_VERSION_HEX >= 0x03040000
-    , 0                           // tp_finalize
+    , nullptr                           // tp_finalize
 #endif
 };
 
@@ -235,25 +235,25 @@ PyTypeObject CustomInstanceMethod_Type = {
     (char*)"cppyy.InstanceMethod", // tp_name
     0, 0,
     (destructor)im_dealloc,        // tp_dealloc
-    0, 0, 0, 0, 0, 0, 0, 0, 0,
+    nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
     im_call,                       // tp_call
-    0, 0, 0, 0,
+    nullptr, nullptr, nullptr, nullptr,
     Py_TPFLAGS_DEFAULT | Py_TPFLAGS_CHECKTYPES |
         Py_TPFLAGS_BASETYPE,       // tp_flags
     (char*)"CPyCppyy custom instance method (internal)",    // tp_doc
-    0, 0, 0, 0, 0, 0, 0, 0, 0,
+    nullptr, nullptr, nullptr, 0, nullptr, nullptr, nullptr, nullptr, nullptr,
     &PyMethod_Type,                // tp_base
-    0,
+    nullptr,
     im_descr_get,                  // tp_descr_get
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+    nullptr, 0, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr
 #if PY_VERSION_HEX >= 0x02030000
-    , 0                            // tp_del
+    , nullptr                            // tp_del
 #endif
 #if PY_VERSION_HEX >= 0x02060000
     , 0                            // tp_version_tag
 #endif
 #if PY_VERSION_HEX >= 0x03040000
-    , 0                            // tp_finalize
+    , nullptr                            // tp_finalize
 #endif
 };
 
@@ -287,23 +287,23 @@ PyTypeObject IndexIter_Type = {
     sizeof(indexiterobject),      // tp_basicsize
     0,
     (destructor)indexiter_dealloc,     // tp_dealloc
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
     Py_TPFLAGS_DEFAULT |
         Py_TPFLAGS_HAVE_GC,       // tp_flags
-    0,
+    nullptr,
     (traverseproc)indexiter_traverse,  // tp_traverse
-    0, 0, 0,
+    nullptr, nullptr, 0,
     PyObject_SelfIter,            // tp_iter
     (iternextfunc)indexiter_iternext,  // tp_iternext
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+    nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, 0, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr
 #if PY_VERSION_HEX >= 0x02030000
-    , 0                           // tp_del
+    , nullptr                           // tp_del
 #endif
 #if PY_VERSION_HEX >= 0x02060000
     , 0                           // tp_version_tag
 #endif
 #if PY_VERSION_HEX >= 0x03040000
-    , 0                           // tp_finalize
+    , nullptr                           // tp_finalize
 #endif
 };
 
@@ -346,23 +346,23 @@ PyTypeObject VectorIter_Type = {
     sizeof(vectoriterobject),     // tp_basicsize
     0,
     (destructor)vectoriter_dealloc,         // tp_dealloc
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
     Py_TPFLAGS_DEFAULT |
         Py_TPFLAGS_HAVE_GC,       // tp_flags
-    0,
+    nullptr,
     (traverseproc)indexiter_traverse,  // tp_traverse
-    0, 0, 0,
+    nullptr, nullptr, 0,
     PyObject_SelfIter,            // tp_iter
     (iternextfunc)vectoriter_iternext,      // tp_iternext
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+    nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, 0, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr
 #if PY_VERSION_HEX >= 0x02030000
-    , 0                           // tp_del
+    , nullptr                           // tp_del
 #endif
 #if PY_VERSION_HEX >= 0x02060000
     , 0                           // tp_version_tag
 #endif
 #if PY_VERSION_HEX >= 0x03040000
-    , 0                           // tp_finalize
+    , nullptr                           // tp_finalize
 #endif
 };
 

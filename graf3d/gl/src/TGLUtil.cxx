@@ -1455,7 +1455,7 @@ protected:
 public:
    GLUtesselator *fTess;
 
-   TGLTesselatorWrap(tessfuncptr_t vertex_func) : fTess(0)
+   TGLTesselatorWrap(tessfuncptr_t vertex_func) : fTess(nullptr)
    {
       fTess = gluNewTess();
       if (!fTess)
@@ -4148,7 +4148,7 @@ void GetColor(Float_t v, Float_t vmin, Float_t vmax, Int_t type, Float_t *rgba)
 ///Ctor.
 
 TGLLevelPalette::TGLLevelPalette()
-                  : fContours(0),
+                  : fContours(nullptr),
                     fPaletteSize(0),
                     fTexture(0),
                     fMaxPaletteSize(0)

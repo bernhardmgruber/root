@@ -21,7 +21,7 @@ TMySQLRow::TMySQLRow(void *res, ULong_t rowHandle)
 {
    fResult      = (MYSQL_RES *) res;
    fFields      = (MYSQL_ROW) rowHandle;
-   fFieldLength = 0;
+   fFieldLength = nullptr;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -43,7 +43,7 @@ void TMySQLRow::Close(Option_t *)
 
    fFields      = nullptr;
    fResult      = nullptr;
-   fFieldLength = 0;
+   fFieldLength = nullptr;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

@@ -80,11 +80,11 @@ PyObject *GetArrayInterface(PyObject *obj)
    auto pyinterface = PyObject_GetAttrString(obj, "__array_interface__");
    if (!pyinterface) {
       PyErr_SetString(PyExc_RuntimeError, "Object not convertible: __array_interface__ does not exist.");
-      return NULL;
+      return nullptr;
    }
    if (!PyDict_Check(pyinterface)) {
       PyErr_SetString(PyExc_RuntimeError, "Object not convertible: __array_interface__ is not a dictionary.");
-      return NULL;
+      return nullptr;
    }
    return pyinterface;
 }

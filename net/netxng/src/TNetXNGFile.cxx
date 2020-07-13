@@ -129,7 +129,7 @@ TNetXNGFile::TNetXNGFile(const char *url,
                          Int_t       compress,
                          Int_t       netopt,
                          Bool_t      parallelopen) :
-	TNetXNGFile(url,0,mode,title,compress,netopt,parallelopen){}
+	TNetXNGFile(url,nullptr,mode,title,compress,netopt,parallelopen){}
 
 TNetXNGFile::TNetXNGFile(const char *url,
 		         const char *lurl,
@@ -290,7 +290,7 @@ Long64_t TNetXNGFile::GetSize() const
    if( fMode == XrdCl::OpenFlags::Read )
       forceStat = false;
 
-   StatInfo *info = 0;
+   StatInfo *info = nullptr;
    if( !fFile->Stat( forceStat, info ).IsOK() )
     return -1;
    Long64_t size = info->GetSize();
@@ -542,7 +542,7 @@ Bool_t TNetXNGFile::ReadBuffers(char *buffer, Long64_t *position, Int_t *length,
    {
       handler = new TAsyncReadvHandler(statuses, it - chunkLists.begin(),
                                        semaphore);
-      status = fFile->VectorRead(*it, 0, handler);
+      status = fFile->VectorRead(*it, nullptr, handler);
 
       if (!status.IsOK()) {
          Error("ReadBuffers", "%s", status.ToStr().c_str());
@@ -803,7 +803,7 @@ Bool_t TNetXNGFile::GetVectorReadLimits()
 void TNetXNGFile::SetEnv()
 {
    XrdCl::Env *env  = XrdCl::DefaultEnv::GetEnv();
-   const char *cenv = 0;
+   const char *cenv = nullptr;
    TString     val;
 
    val = gEnv->GetValue("NetXNG.ConnectionWindow",     "");

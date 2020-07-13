@@ -130,7 +130,7 @@ Bool_t TFileMerger::AddFile(const char *url, Bool_t cpProgress)
       Printf("%s Source file %d: %s", fMsgPrefix.Data(), fFileList.GetEntries() + fExcessFiles.GetEntries() + 1, url);
    }
 
-   TFile *newfile = 0;
+   TFile *newfile = nullptr;
    TString localcopy;
 
    if (fFileList.GetEntries() >= (fMaxOpenedFiles-1)) {
@@ -162,7 +162,7 @@ Bool_t TFileMerger::AddFile(const char *url, Bool_t cpProgress)
    // Zombie files should also be skipped
    if (newfile && newfile->IsZombie()) {
       delete newfile;
-      newfile = 0;
+      newfile = nullptr;
    }
 
    if (!newfile) {
@@ -215,7 +215,7 @@ Bool_t TFileMerger::AddAdoptFile(TFile *source, Bool_t cpProgress)
 
 Bool_t TFileMerger::AddFile(TFile *source, Bool_t own, Bool_t cpProgress)
 {
-   if (source == 0 || source->IsZombie()) {
+   if (source == nullptr || source->IsZombie()) {
       return kFALSE;
    }
 
@@ -223,7 +223,7 @@ Bool_t TFileMerger::AddFile(TFile *source, Bool_t own, Bool_t cpProgress)
       Printf("%s Source file %d: %s",fMsgPrefix.Data(),fFileList.GetEntries()+1,source->GetName());
    }
 
-   TFile *newfile = 0;
+   TFile *newfile = nullptr;
    TString localcopy;
 
    // We want gDirectory untouched by anything going on here
@@ -239,7 +239,7 @@ Bool_t TFileMerger::AddFile(TFile *source, Bool_t own, Bool_t cpProgress)
       // Zombie files should also be skipped
       if (newfile && newfile->IsZombie()) {
          delete newfile;
-         newfile = 0;
+         newfile = nullptr;
       }
    } else {
       newfile = source;
@@ -326,7 +326,7 @@ Bool_t TFileMerger::OutputFile(std::unique_ptr<TFile> outputfile)
    fExplicitCompLevel = kTRUE;
 
    TFile *oldfile = fOutputFile;
-   fOutputFile = 0; // This avoids the complaint from RecursiveRemove about the file being deleted which is here
+   fOutputFile = nullptr; // This avoids the complaint from RecursiveRemove about the file being deleted which is here
                     // spurrious. (see RecursiveRemove).
    SafeDelete(oldfile);
 
@@ -413,7 +413,7 @@ Bool_t TFileMerger::MergeRecursive(TDirectory *target, TList *sourcelist, Int_t 
    TFile      *current_file;
    TDirectory *current_sourcedir;
    if (type & kIncremental) {
-      current_file      = 0;
+      current_file      = nullptr;
       current_sourcedir = target;
    } else {
       current_file      = (TFile*)sourcelist->First();
@@ -422,7 +422,7 @@ Bool_t TFileMerger::MergeRecursive(TDirectory *target, TList *sourcelist, Int_t 
    while (current_file || current_sourcedir) {
       // When current_sourcedir != 0 and current_file == 0 we are going over the target
       // for an incremental merge.
-      if (current_sourcedir && (current_file == 0 || current_sourcedir != target)) {
+      if (current_sourcedir && (current_file == nullptr || current_sourcedir != target)) {
 
          // loop over all keys in this directory
          TIter nextkey( current_sourcedir->GetListOfKeys() );
@@ -557,7 +557,7 @@ Bool_t TFileMerger::MergeRecursive(TDirectory *target, TList *sourcelist, Int_t 
 
                // Loop over all source files and merge same-name object
                TFile *nextsource = current_file ? (TFile*)sourcelist->After( current_file ) : (TFile*)sourcelist->First();
-               if (nextsource == 0) {
+               if (nextsource == nullptr) {
                   // There is only one file in the list
                   ROOT::MergeFunc_t func = cl->GetMerge();
                   func(obj, &inputs, &info);
@@ -621,7 +621,7 @@ Bool_t TFileMerger::MergeRecursive(TDirectory *target, TList *sourcelist, Int_t 
 
                // Loop over all source files and merge same-name object
                TFile *nextsource = current_file ? (TFile*)sourcelist->After( current_file ) : (TFile*)sourcelist->First();
-               if (nextsource == 0) {
+               if (nextsource == nullptr) {
                   // There is only one file in the list
                   Int_t error = 0;
                   obj->Execute("Merge", listHargs.Data(), &error);
@@ -687,7 +687,7 @@ Bool_t TFileMerger::MergeRecursive(TDirectory *target, TList *sourcelist, Int_t 
 
                // Loop over all source files and merge same-name object
                TFile *nextsource = current_file ? (TFile*)sourcelist->After( current_file ) : (TFile*)sourcelist->First();
-               if (nextsource == 0) {
+               if (nextsource == nullptr) {
                   // There is only one file in the list
                   Int_t error = 0;
                   obj->Execute("Merge", listHargs.Data(), &error);
@@ -811,7 +811,7 @@ Bool_t TFileMerger::MergeRecursive(TDirectory *target, TList *sourcelist, Int_t 
       if (current_file) {
          current_sourcedir = current_file->GetDirectory(path);
       } else {
-         current_sourcedir = 0;
+         current_sourcedir = nullptr;
       }
    }
    // save modifications to the target directory.
@@ -947,12 +947,12 @@ Bool_t TFileMerger::OpenExcessFiles()
    }
    Int_t nfiles = 0;
    TIter next(&fExcessFiles);
-   TObjString *url = 0;
+   TObjString *url = nullptr;
    TString localcopy;
    // We want gDirectory untouched by anything going on here
    TDirectory::TContext ctxt;
    while( nfiles < (fMaxOpenedFiles-1) && ( url = (TObjString*)next() ) ) {
-      TFile *newfile = 0;
+      TFile *newfile = nullptr;
       if (fLocal) {
          TUUID uuid;
          localcopy.Form("file:%s/ROOTMERGE-%s.root", gSystem->TempDirectory(), uuid.AsString());

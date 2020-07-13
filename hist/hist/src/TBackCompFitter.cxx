@@ -75,9 +75,9 @@ ClassImp(TBackCompFitter);
 /// initialize setting name and the global pointer
 
 TBackCompFitter::TBackCompFitter( ) :
-   fMinimizer(0),
-   fObjFunc(0),
-   fModelFunc(0)
+   fMinimizer(nullptr),
+   fObjFunc(nullptr),
+   fModelFunc(nullptr)
 {
    SetName("BCFitter");
 }
@@ -89,9 +89,9 @@ TBackCompFitter::TBackCompFitter( ) :
 TBackCompFitter::TBackCompFitter(const std::shared_ptr<ROOT::Fit::Fitter> & fitter, const std::shared_ptr<ROOT::Fit::FitData> & data) :
    fFitData(data),
    fFitter(fitter),
-   fMinimizer(0),
-   fObjFunc(0),
-   fModelFunc(0)
+   fMinimizer(nullptr),
+   fObjFunc(nullptr),
+   fModelFunc(nullptr)
 {
    SetName("LastFitter");
 }
@@ -280,7 +280,7 @@ Int_t TBackCompFitter::ExecuteCommand(const char *command, Double_t *args, Int_t
    else if (scommand.Contains("CALL FCN"))   {
       //     call fcn function (global pointer to free function)
 
-      if (nargs < 1 || fFCN == 0 ) return -1;
+      if (nargs < 1 || fFCN == nullptr ) return -1;
       int npar = fObjFunc->NDim();
       // use values in fit result if existing  otherwise in ParameterSettings
       std::vector<double> params(npar);
@@ -288,7 +288,7 @@ Int_t TBackCompFitter::ExecuteCommand(const char *command, Double_t *args, Int_t
          params[i] = GetParameter(i);
 
       double fval = 0;
-      (*fFCN)(npar, 0, fval, &params[0],int(args[0]) ) ;
+      (*fFCN)(npar, nullptr, fval, &params[0],int(args[0]) ) ;
       return 0;
    }
    else {
@@ -473,7 +473,7 @@ Double_t* TBackCompFitter::GetCovarianceMatrix() const {
 
    if (!fFitter->Result().IsValid() ) {
       Warning("GetCovarianceMatrix","Invalid fit result");
-      return 0;
+      return nullptr;
    }
 
    unsigned int l = 0;
@@ -500,7 +500,7 @@ Double_t TBackCompFitter::GetCovarianceMatrixElement(Int_t i, Int_t j) const {
    unsigned int npar = GetNumberFreeParameters();
    if ( np2 == 0 || np2 != npar *npar ) {
       double * c = GetCovarianceMatrix();
-      if (c == 0) return 0;
+      if (c == nullptr) return 0;
    }
    return fCovar[i*npar + j];
 }
@@ -589,7 +589,7 @@ Int_t TBackCompFitter::GetParameter(Int_t ipar,char *name,Double_t &value,Double
 
 const char *TBackCompFitter::GetParName(Int_t ipar) const {
    if (!ValidParameterIndex(ipar) )    {
-      return 0;
+      return nullptr;
    }
    return fFitter->Config().ParSettings(ipar).Name().c_str();
 }
@@ -689,7 +689,7 @@ void TBackCompFitter::ReCreateMinimizer() {
    assert(fFitData.get());
 
    // case of standard fits (not made fia Fitter::FitFCN)
-   if (fFitter->Result().FittedFunction() != 0) {
+   if (fFitter->Result().FittedFunction() != nullptr) {
 
       if (fModelFunc) delete fModelFunc;
       fModelFunc =  dynamic_cast<ROOT::Math::IParamMultiFunction *>((fFitter->Result().FittedFunction())->Clone());
@@ -712,7 +712,7 @@ void TBackCompFitter::ReCreateMinimizer() {
 
    // recreate the minimizer
    fMinimizer = fFitter->Config().CreateMinimizer();
-   if (fMinimizer == 0) {
+   if (fMinimizer == nullptr) {
       Error("SetMinimizerFunction","cannot create minimizer %s",fFitter->Config().MinimizerType().c_str() );
    }
    else {
@@ -785,7 +785,7 @@ ROOT::Math::Minimizer * TBackCompFitter::GetMinimizer( ) const {
 /// Return a new copy of the TFitResult object which needs to be deleted later by the user
 
 TFitResult * TBackCompFitter::GetTFitResult( ) const {
-   if (!fFitter.get() ) return 0;
+   if (!fFitter.get() ) return nullptr;
    return new TFitResult( fFitter->Result() );
 }
 

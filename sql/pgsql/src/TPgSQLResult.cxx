@@ -43,7 +43,7 @@ void TPgSQLResult::Close(Option_t *)
       return;
 
    PQclear(fResult);
-   fResult     = 0;
+   fResult     = nullptr;
    fRowCount   = 0;
    fCurrentRow = 0;
 }
@@ -83,7 +83,7 @@ const char *TPgSQLResult::GetFieldName(Int_t field)
 {
    if (!fResult) {
       Error("GetFieldName", "result set closed");
-      return 0;
+      return nullptr;
    }
    return PQfname(fResult, field);
 }
@@ -98,11 +98,11 @@ TSQLRow *TPgSQLResult::Next()
 
    if (!fResult) {
       Error("Next", "result set closed");
-      return 0;
+      return nullptr;
    }
    row = fCurrentRow++;
    if (row >= fRowCount)
-      return 0;
+      return nullptr;
    else
       return new TPgSQLRow((void *) fResult, (ULong_t) row);
 }

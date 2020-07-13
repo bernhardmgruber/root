@@ -165,12 +165,12 @@ fFitDone(kFALSE),
 fLowLimitX(0), fHighLimitX(0),
 fLowLimitY(0), fHighLimitY(0),
 fLowLimitZ(0), fHighLimitZ(0),
-fData(0), fIntegralData(0),
-fPlot(0)
+fData(nullptr), fIntegralData(0),
+fPlot(nullptr)
 {
-   fFractionFitter = 0;
-   fIntegralMCs   = 0;
-   fFractions     = 0;
+   fFractionFitter = nullptr;
+   fIntegralMCs   = nullptr;
+   fFractions     = nullptr;
 
    fNpfits        = 0;
    fNDF           = 0;
@@ -191,7 +191,7 @@ fPlot(0)
 ///            - option = ""   : default: print initial fraction values and result
 
 TFractionFitter::TFractionFitter(TH1* data, TObjArray  *MCs, Option_t *option) :
-fFitDone(kFALSE), fChisquare(0), fPlot(0)  {
+fFitDone(kFALSE), fChisquare(0), fPlot(nullptr)  {
    fData = data;
    // Default: include all of the histogram (but without under- and overflows)
    fLowLimitX = 1;
@@ -552,7 +552,7 @@ TFitResultPtr TFractionFitter::Fit() {
 
    // remove any existing output histogram
    if (fPlot) {
-      delete fPlot; fPlot = 0;
+      delete fPlot; fPlot = nullptr;
    }
 
    // Make sure the correct likelihood computation is used
@@ -619,7 +619,7 @@ void TFractionFitter::GetResult(Int_t parm, Double_t& value, Double_t& error) co
 TH1* TFractionFitter::GetPlot() {
    if (! fFitDone) {
       Error("GetPlot","Fit not yet performed");
-      return 0;
+      return nullptr;
    }
    if (! fPlot) {
       Double_t f = 0;
@@ -959,7 +959,7 @@ TH1* TFractionFitter::GetMCPrediction(Int_t parm) const
    CheckParNo(parm);
    if ( !fFitDone ) {
       Error("GetMCPrediction","Fit not yet performed");
-      return 0;
+      return nullptr;
    }
    return (TH1*) fAji.At(parm);
 }

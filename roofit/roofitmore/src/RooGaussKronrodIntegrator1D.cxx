@@ -115,7 +115,7 @@ void RooGaussKronrodIntegrator1D::registerIntegrator(RooNumIntFactory& fact)
 /// coverity[UNINIT_CTOR]
 /// Default constructor
 
-RooGaussKronrodIntegrator1D::RooGaussKronrodIntegrator1D() : _x(0)
+RooGaussKronrodIntegrator1D::RooGaussKronrodIntegrator1D() : _x(nullptr)
 {
 }
 
@@ -196,7 +196,7 @@ RooGaussKronrodIntegrator1D::~RooGaussKronrodIntegrator1D()
 Bool_t RooGaussKronrodIntegrator1D::setLimits(Double_t* xmin, Double_t* xmax) 
 {
   if(_useIntegrandLimits) {
-    oocoutE((TObject*)0,Eval) << "RooGaussKronrodIntegrator1D::setLimits: cannot override integrand's limits" << endl;
+    oocoutE((TObject*)nullptr,Eval) << "RooGaussKronrodIntegrator1D::setLimits: cannot override integrand's limits" << endl;
     return kFALSE;
   }
   _xmin= *xmin;

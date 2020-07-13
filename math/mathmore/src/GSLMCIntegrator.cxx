@@ -78,8 +78,8 @@ GSLMCIntegrator::GSLMCIntegrator(MCIntegration::Type type, double absTol, double
    fRelTol((relTol >= 0) ? relTol : IntegratorMultiDimOptions::DefaultRelTolerance() ),
    fResult(0),fError(0),fStatus(-1),
    fExtGen(false),
-   fWorkspace(0),
-   fFunction(0)
+   fWorkspace(nullptr),
+   fFunction(nullptr)
 {
    // constructor of GSL MCIntegrator using enumeration as type
    SetType(type);
@@ -90,11 +90,11 @@ GSLMCIntegrator::GSLMCIntegrator(MCIntegration::Type type, double absTol, double
    // use the default options for the needed extra parameters
    if (fType == MCIntegration::kVEGAS) {
       IOptions * opts = IntegratorMultiDimOptions::FindDefault("VEGAS");
-      if (opts != 0) SetParameters( VegasParameters(*opts) );
+      if (opts != nullptr) SetParameters( VegasParameters(*opts) );
    }
    else  if (fType == MCIntegration::kMISER) {
       IOptions * opts = IntegratorMultiDimOptions::FindDefault("MISER");
-      if (opts != 0)  SetParameters( MiserParameters(*opts) );
+      if (opts != nullptr)  SetParameters( MiserParameters(*opts) );
    }
 
 }
@@ -107,8 +107,8 @@ GSLMCIntegrator::GSLMCIntegrator(const char * type, double absTol, double relTol
    fRelTol(relTol),
    fResult(0),fError(0),fStatus(-1),
    fExtGen(false),
-   fWorkspace(0),
-   fFunction(0)
+   fWorkspace(nullptr),
+   fFunction(nullptr)
 {
    // constructor of GSL MCIntegrator. Vegas MC is set as default integration type if type == 0
    SetTypeName(type);
@@ -119,11 +119,11 @@ GSLMCIntegrator::GSLMCIntegrator(const char * type, double absTol, double relTol
    // use the default options for the needed extra parameters
    if (fType == MCIntegration::kVEGAS) {
       IOptions * opts = IntegratorMultiDimOptions::FindDefault("VEGAS");
-      if (opts != 0) SetParameters( VegasParameters(*opts) );
+      if (opts != nullptr) SetParameters( VegasParameters(*opts) );
    }
    else  if (fType == MCIntegration::kMISER) {
       IOptions * opts = IntegratorMultiDimOptions::FindDefault("MISER");
-      if (opts != 0)  SetParameters( MiserParameters(*opts) );
+      if (opts != nullptr)  SetParameters( MiserParameters(*opts) );
    }
 
 }
@@ -134,9 +134,9 @@ GSLMCIntegrator::~GSLMCIntegrator()
 {
    // delete workspace
    if (fWorkspace) delete fWorkspace;
-   if (fRng != 0 && !fExtGen) delete fRng;
-   if (fFunction != 0) delete fFunction;
-   fRng = 0;
+   if (fRng != nullptr && !fExtGen) delete fRng;
+   if (fFunction != nullptr) delete fFunction;
+   fRng = nullptr;
 
 }
 
@@ -157,7 +157,7 @@ GSLMCIntegrator & GSLMCIntegrator::operator=(const GSLMCIntegrator &) { return *
 void GSLMCIntegrator::SetFunction(const IMultiGenFunction &f)
 {
    // method to set the a generic integration function
-   if(fFunction == 0) fFunction = new  GSLMonteFunctionWrapper();
+   if(fFunction == nullptr) fFunction = new  GSLMonteFunctionWrapper();
    fFunction->SetFunction(f);
    fDim = f.NDim();
 }
@@ -165,7 +165,7 @@ void GSLMCIntegrator::SetFunction(const IMultiGenFunction &f)
 void GSLMCIntegrator::SetFunction( GSLMonteFuncPointer f,  unsigned int dim, void * p  )
 {
    // method to set the a generic integration function
-   if(fFunction == 0) fFunction = new  GSLMonteFunctionWrapper();
+   if(fFunction == nullptr) fFunction = new  GSLMonteFunctionWrapper();
    fFunction->SetFuncPointer( f );
    fFunction->SetParams ( p );
    fDim = dim;
@@ -275,10 +275,10 @@ void GSLMCIntegrator::SetType (MCIntegration::Type type)
 {
    // create workspace according to the type
    fType=type;
-   if (fWorkspace != 0) {
+   if (fWorkspace != nullptr) {
       if (type == fWorkspace->Type() ) return;
       delete fWorkspace;  // delete because is a different type
-      fWorkspace = 0;
+      fWorkspace = nullptr;
    }
    //create Workspace according to type
    if (type == MCIntegration::kPLAIN) {
@@ -300,8 +300,8 @@ void GSLMCIntegrator::SetType (MCIntegration::Type type)
 void GSLMCIntegrator::SetTypeName(const char * type)
 {
    // set the integration type using a string
-   std::string typeName = (type!=0) ? type : "VEGAS";
-   if (type == 0) MATH_INFO_MSG("GSLMCIntegration::SetTypeName","use default Vegas integrator method");
+   std::string typeName = (type!=nullptr) ? type : "VEGAS";
+   if (type == nullptr) MATH_INFO_MSG("GSLMCIntegration::SetTypeName","use default Vegas integrator method");
    std::transform(typeName.begin(), typeName.end(), typeName.begin(), (int(*)(int)) toupper );
 
    MCIntegration::Type integType =  MCIntegration::kVEGAS;  // default
@@ -397,7 +397,7 @@ void GSLMCIntegrator::DoInitialize ( )
 {
    //    initialize by setting  integration type
 
-   if (fWorkspace == 0) return;
+   if (fWorkspace == nullptr) return;
    if (fDim == fWorkspace->NDim() && fType == fWorkspace->Type() )
       return; // can use previously existing ws
 
@@ -477,7 +477,7 @@ ROOT::Math::IntegratorMultiDimOptions  GSLMCIntegrator::Options() const {
 }
 
 ROOT::Math::IOptions *  GSLMCIntegrator::ExtraOptions() const {
-   if (!fWorkspace) return 0;
+   if (!fWorkspace) return nullptr;
    return fWorkspace->Options();
 }
 

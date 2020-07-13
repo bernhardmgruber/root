@@ -102,7 +102,7 @@ namespace Math {
       if (!fRng) return;
       fRng->Free();
       delete fRng;
-      fRng = 0;
+      fRng = nullptr;
    }
 
 

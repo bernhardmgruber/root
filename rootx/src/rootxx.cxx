@@ -45,7 +45,7 @@ namespace ROOTX {
 //Globals! A bunch of functions
 //messing around with these globals :)
 //But it's ok for our humble lil program :)
-Display     *gDisplay       = 0;
+Display     *gDisplay       = nullptr;
 Window       gLogoWindow    = 0;
 Pixmap       gLogoPixmap    = 0;
 
@@ -53,8 +53,8 @@ Pixmap       gLogoPixmap    = 0;
 Pixmap       gShapeMask     = 0;
 //
 Pixmap       gCreditsPixmap = 0;
-GC           gGC            = 0;
-XFontStruct *gFont          = 0;
+GC           gGC            = nullptr;
+XFontStruct *gFont          = nullptr;
 bool         gDone          = false;
 
 //Can be accessed from a signal handler:
@@ -85,10 +85,10 @@ struct timeval gPopupTime;
 const char *gConception[] = {
    "Rene Brun",
    "Fons Rademakers",
-   0
+   nullptr
 };
 
-char **gContributors = 0;
+char **gContributors = nullptr;
 
 
 //
@@ -143,7 +143,7 @@ void PopupLogo(bool about)
    if (!CreateSplashscreenWindow()) {
       printf("PopupLogo, CreateSplashscreenWindow failed\n");
       XCloseDisplay(gDisplay);
-      gDisplay = 0;
+      gDisplay = nullptr;
       return;
    }
 
@@ -154,7 +154,7 @@ void PopupLogo(bool about)
       XDestroyWindow(gDisplay, gLogoWindow);
       XCloseDisplay(gDisplay);
       gLogoWindow = 0;
-      gDisplay = 0;
+      gDisplay = nullptr;
       return;
    }
 
@@ -174,7 +174,7 @@ void PopupLogo(bool about)
       } else {
          //GC creation failed, no need in a custom font anymore.
          XFreeFont(gDisplay, gFont);
-         gFont = 0;
+         gFont = nullptr;
       }
    }
 
@@ -192,12 +192,12 @@ void PopupLogo(bool about)
          //Error while creating a pixmap, we
          //do not need our context and font anymore.
          XFreeFont(gDisplay, gFont);
-         gFont = 0;
+         gFont = nullptr;
          //
          FreeCustomColors();
          //
          XFreeGC(gDisplay, gGC);
-         gGC = 0;
+         gGC = nullptr;
          //We still can show an empty splashscreen with
          //our nice logo! ;) - so this error is not fatal.
       }
@@ -206,7 +206,7 @@ void PopupLogo(bool about)
    XSelectInput(gDisplay, gLogoWindow, ButtonPressMask | ExposureMask);
    XMapRaised(gDisplay, gLogoWindow);
 
-   gettimeofday(&gPopupTime, 0);
+   gettimeofday(&gPopupTime, nullptr);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -433,7 +433,7 @@ bool LoadROOTSplashscreenPixmap(const char *imageFileName, bool needMask)
    //Bertrand! Many thanks for this simple but ... smart and not so obvious (??) idea
    //with a mask :) Without you I'll have two separate xpms :)
    const int ret = XpmReadFileToPixmap(gDisplay, gLogoWindow, (char *)path.c_str(), &logo,
-                                       gHasShapeExt ? &mask : 0, &xpmAttr);
+                                       gHasShapeExt ? &mask : nullptr, &xpmAttr);
    XpmFreeAttributes(&xpmAttr);
 
    if ((ret == XpmSuccess || ret == XpmColorError) && logo) {
@@ -487,7 +487,7 @@ bool CreateGC()
    //Call it only once.
    assert(gGC == 0 && "CreateGC, gGC exists already");
 
-   if (!(gGC = XCreateGC(gDisplay, gLogoWindow, 0, 0))) {
+   if (!(gGC = XCreateGC(gDisplay, gLogoWindow, 0, nullptr))) {
       printf("rootx - XCreateGC failed\n");
       return false;
    }
@@ -623,7 +623,7 @@ bool StayUp(int milliSec)
    tv.tv_sec  = milliSec / 1000;
    tv.tv_usec = (milliSec % 1000) * 1000;
 
-   gettimeofday(&ctv, 0);
+   gettimeofday(&ctv, nullptr);
    if ((dtv.tv_usec = ctv.tv_usec - ptv.tv_usec) < 0) {
       dtv.tv_usec += 1000000;
       ptv.tv_sec++;
@@ -651,7 +651,7 @@ void Sleep(int milliSec)
    tv.tv_sec  = milliSec / 1000;
    tv.tv_usec = (milliSec % 1000) * 1000;
 
-   select(0, 0, 0, 0, &tv);
+   select(0, nullptr, nullptr, nullptr, &tv);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -773,9 +773,9 @@ int DrawCredits(bool draw, bool extended)
       y = DrawCreditItem("Contributors: ", (const char **)gContributors, y, draw);
 
       y += 2 * lineSpacing;
-      y = DrawCreditItem("Our sincere thanks and apologies to anyone who deserves", 0, y, draw);
+      y = DrawCreditItem("Our sincere thanks and apologies to anyone who deserves", nullptr, y, draw);
       y += lineSpacing;
-      y = DrawCreditItem("credit but fails to appear in this list.", 0, y, draw);
+      y = DrawCreditItem("credit but fails to appear in this list.", nullptr, y, draw);
 
       struct passwd *pwd = getpwuid(getuid());
       if (pwd) {
@@ -790,9 +790,9 @@ int DrawCredits(bool draw, bool extended)
             snprintf(line, sizeof(line), "Extra special thanks go to %s,", pwd->pw_name);
          delete [] name;
          y += 2*lineSpacing;
-         y = DrawCreditItem(line, 0, y, draw);
+         y = DrawCreditItem(line, nullptr, y, draw);
          y += lineSpacing;
-         y = DrawCreditItem("one of our favorite users.", 0, y, draw);
+         y = DrawCreditItem("one of our favorite users.", nullptr, y, draw);
       }
    }
 
@@ -816,7 +816,7 @@ void ReadContributors()
    snprintf(buf, sizeof(buf), "%s/README/CREDITS", getenv("ROOTSYS"));
 #endif
 
-   gContributors = 0;
+   gContributors = nullptr;
 
    FILE *f = fopen(buf, "r");
    if (!f) return;
@@ -842,7 +842,7 @@ void ReadContributors()
       }
    }
 
-   gContributors[cnt] = 0;
+   gContributors[cnt] = nullptr;
 
    fclose(f);
 }
@@ -879,7 +879,7 @@ void Cleanup()
    if (gFont) {
       assert(gDisplay != 0 && "Cleanup, gDisplay is None");
       XFreeFont(gDisplay, gFont);
-      gFont = 0;
+      gFont = nullptr;
    }
 
    //If any.
@@ -888,13 +888,13 @@ void Cleanup()
    if (gGC) {
       assert(gDisplay != 0 && "Cleanup, gDisplay is None");
       XFreeGC(gDisplay, gGC);
-      gGC = 0;
+      gGC = nullptr;
    }
 
    if (gDisplay) {
       XSync(gDisplay, False);
       XCloseDisplay(gDisplay);
-      gDisplay = 0;
+      gDisplay = nullptr;
    }
 }
 

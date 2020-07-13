@@ -576,7 +576,7 @@ static int ll_getbuf(CPyCppyy::LowLevelView* self, Py_buffer* view, int flags)
            the equality product(shape) * itemsize = len still holds at this
            point. The equality calcsize(format) = itemsize does _not_ hold
            from here on! */
-        view->format = NULL;
+        view->format = nullptr;
     }
 
     if ((flags & PyBUF_F_CONTIGUOUS) == PyBUF_F_CONTIGUOUS) {
@@ -588,7 +588,7 @@ static int ll_getbuf(CPyCppyy::LowLevelView* self, Py_buffer* view, int flags)
     if (!(flags & PyBUF_FORMAT)) {
         /* PyBUF_SIMPLE or PyBUF_WRITABLE: at this point buf is C-contiguous,
            so base->buf = ndbuf->data. */
-        if (view->format != NULL) {
+        if (view->format != nullptr) {
             /* PyBUF_SIMPLE|PyBUF_FORMAT and PyBUF_WRITABLE|PyBUF_FORMAT do
                not make sense. */
             PyErr_Format(PyExc_BufferError,
@@ -598,7 +598,7 @@ static int ll_getbuf(CPyCppyy::LowLevelView* self, Py_buffer* view, int flags)
         /* product(shape) * itemsize = len and calcsize(format) = itemsize
            do _not_ hold from here on! */
         view->ndim = 1;
-        view->shape = NULL;
+        view->shape = nullptr;
     }
 
     view->obj = (PyObject*)self;
@@ -618,15 +618,15 @@ static PyMappingMethods ll_as_mapping = {
 //- sequence methods --------------------------------------------------------
 static PySequenceMethods ll_as_sequence = {
     (lenfunc)ll_length,            // sq_length
-    0,                             // sq_concat
-    0,                             // sq_repeat
+    nullptr,                             // sq_concat
+    nullptr,                             // sq_repeat
     (ssizeargfunc)ll_item,         // sq_item
-    0,                             // sq_slice
-    0,                             // sq_ass_item
-    0,                             // sq_ass_slice
-    0,                             // sq_contains
-    0,                             // sq_inplace_concat
-    0,                             // sq_inplace_repeat
+    nullptr,                             // sq_slice
+    nullptr,                             // sq_ass_item
+    nullptr,                             // sq_ass_slice
+    nullptr,                             // sq_contains
+    nullptr,                             // sq_inplace_concat
+    nullptr,                             // sq_inplace_repeat
 };
 
 //- buffer methods ----------------------------------------------------------
@@ -635,10 +635,10 @@ static PyBufferProcs ll_as_buffer = {
     (readbufferproc)ll_oldgetbuf,   // bf_getreadbuffer
     (writebufferproc)ll_oldgetbuf,  // bf_getwritebuffer
     (segcountproc)ll_getsegcount,   // bf_getsegcount
-    0,                              // bf_getcharbuffer
+    nullptr,                              // bf_getcharbuffer
 #endif
     (getbufferproc)ll_getbuf,       // bf_getbuffer
-    0,                              // bf_releasebuffer
+    nullptr,                              // bf_releasebuffer
 };
 
 
@@ -651,55 +651,55 @@ PyTypeObject LowLevelView_Type = {
     sizeof(CPyCppyy::LowLevelView),// tp_basicsize
     0,                             // tp_itemsize
     (destructor)ll_dealloc,        // tp_dealloc
-    0,                             // tp_print
-    0,                             // tp_getattr
-    0,                             // tp_setattr
-    0,                             // tp_compare
-    0,                             // tp_repr
-    0,                             // tp_as_number
+    nullptr,                             // tp_print
+    nullptr,                             // tp_getattr
+    nullptr,                             // tp_setattr
+    nullptr,                             // tp_compare
+    nullptr,                             // tp_repr
+    nullptr,                             // tp_as_number
     &ll_as_sequence,               // tp_as_sequence
     &ll_as_mapping,                // tp_as_mapping
-    0,                             // tp_hash
-    0,                             // tp_call
-    0,                             // tp_str
-    0,                             // tp_getattro
-    0,                             // tp_setattro
+    nullptr,                             // tp_hash
+    nullptr,                             // tp_call
+    nullptr,                             // tp_str
+    nullptr,                             // tp_getattro
+    nullptr,                             // tp_setattro
     &ll_as_buffer,                 // tp_as_buffer
     Py_TPFLAGS_DEFAULT | Py_TPFLAGS_CHECKTYPES |
         Py_TPFLAGS_BASETYPE,       // tp_flags
     (char*)"memory view on C++ pointer",     // tp_doc
-    0,                             // tp_traverse
-    0,                             // tp_clear
-    0,                             // tp_richcompare
+    nullptr,                             // tp_traverse
+    nullptr,                             // tp_clear
+    nullptr,                             // tp_richcompare
     0,                             // tp_weaklistoffset
-    0,                             // tp_iter
-    0,                             // tp_iternext
+    nullptr,                             // tp_iter
+    nullptr,                             // tp_iternext
     ll_methods,                    // tp_methods
-    0,                             // tp_members
+    nullptr,                             // tp_members
     ll_getset,                     // tp_getset
-    0,                             // tp_base
-    0,                             // tp_dict
-    0,                             // tp_descr_get
-    0,                             // tp_descr_set
+    nullptr,                             // tp_base
+    nullptr,                             // tp_dict
+    nullptr,                             // tp_descr_get
+    nullptr,                             // tp_descr_set
     0,                             // tp_dictoffset
-    0,                             // tp_init
-    0,                             // tp_alloc
+    nullptr,                             // tp_init
+    nullptr,                             // tp_alloc
     (newfunc)ll_new,               // tp_new
-    0,                             // tp_free
-    0,                             // tp_is_gc
-    0,                             // tp_bases
-    0,                             // tp_mro
-    0,                             // tp_cache
-    0,                             // tp_subclasses
-    0                              // tp_weaklist
+    nullptr,                             // tp_free
+    nullptr,                             // tp_is_gc
+    nullptr,                             // tp_bases
+    nullptr,                             // tp_mro
+    nullptr,                             // tp_cache
+    nullptr,                             // tp_subclasses
+    nullptr                              // tp_weaklist
 #if PY_VERSION_HEX >= 0x02030000
-    , 0                            // tp_del
+    , nullptr                            // tp_del
 #endif
 #if PY_VERSION_HEX >= 0x02060000
     , 0                            // tp_version_tag
 #endif
 #if PY_VERSION_HEX >= 0x03040000
-    , 0                            // tp_finalize
+    , nullptr                            // tp_finalize
 #endif
 };
 

@@ -77,7 +77,7 @@ const char* open_mode_new = "NEW";
 const char* open_mode_update = "UPDATE";
 
 static TMutex createLock;
-static Context* davix_context_s = NULL;
+static Context* davix_context_s = nullptr;
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -150,9 +150,9 @@ static void ConfigureDavixLogLevel()
 static void TDavixFile_http_get_ucert(std::string &ucert, std::string &ukey)
 {
    char default_proxy[64];
-   const char *genvvar = 0, *genvvar1 = 0;
+   const char *genvvar = nullptr, *genvvar1 = nullptr;
    // The gEnv has higher priority, let's look for a proxy cert
-   genvvar = gEnv->GetValue("Davix.GSI.UserProxy", (const char *) NULL);
+   genvvar = gEnv->GetValue("Davix.GSI.UserProxy", (const char *) nullptr);
    if (genvvar) {
       ucert = ukey = genvvar;
       if (gDebug > 0)
@@ -180,8 +180,8 @@ static void TDavixFile_http_get_ucert(std::string &ucert, std::string &ukey)
    }
 
    // It seems we got no proxy, let's try to gather the keys
-   genvvar = gEnv->GetValue("Davix.GSI.UserCert", (const char *) NULL);
-   genvvar1 = gEnv->GetValue("Davix.GSI.UserKey", (const char *) NULL);
+   genvvar = gEnv->GetValue("Davix.GSI.UserCert", (const char *) nullptr);
+   genvvar1 = gEnv->GetValue("Davix.GSI.UserKey", (const char *) nullptr);
    if (genvvar || genvvar1) {
       if (gDebug > 0)
          Info("TDavixFile_http_get_ucert", "Found cert and key in gEnv");
@@ -237,9 +237,9 @@ TDavixFileInternal::~TDavixFileInternal()
 
 Context *TDavixFileInternal::getDavixInstance()
 {
-   if (davix_context_s == NULL) {
+   if (davix_context_s == nullptr) {
       TLockGuard guard(&createLock);
-      if (davix_context_s == NULL) {
+      if (davix_context_s == nullptr) {
          davix_context_s = new Context();
       }
    }
@@ -250,18 +250,18 @@ Context *TDavixFileInternal::getDavixInstance()
 
 Davix_fd *TDavixFileInternal::Open()
 {
-   DavixError *davixErr = NULL;
+   DavixError *davixErr = nullptr;
    Davix_fd *fd = davixPosix->open(davixParam, fUrl.GetUrl(), oflags, &davixErr);
-   if (fd == NULL) {
+   if (fd == nullptr) {
        // An error has occurred.. We might be able to recover with metalinks.
        // Try to populate the replicas vector. If successful, TFile will try
        // the replicas one by one
 
        replicas.clear();
-       DavixError *davixErr2 = NULL;
+       DavixError *davixErr2 = nullptr;
        try {
            DavFile file(*davixContext, Davix::Uri(fUrl.GetUrl()));
-           std::vector<DavFile> replicasLocal = file.getReplicas(NULL, &davixErr2);
+           std::vector<DavFile> replicasLocal = file.getReplicas(nullptr, &davixErr2);
            for(size_t i = 0; i < replicasLocal.size(); i++) {
              replicas.push_back(replicasLocal[i].getUri().getString());
            }
@@ -289,8 +289,8 @@ Davix_fd *TDavixFileInternal::Open()
 
 void TDavixFileInternal::Close()
 {
-   DavixError *davixErr = NULL;
-   if (davixFd != NULL && davixPosix->close(davixFd, &davixErr)) {
+   DavixError *davixErr = nullptr;
+   if (davixFd != nullptr && davixPosix->close(davixFd, &davixErr)) {
       Error("DavixClose", "can not to close file with davix: %s (%d)",
             davixErr->getErrMsg().c_str(), davixErr->getStatus());
       DavixError::clearError(&davixErr);
@@ -301,12 +301,12 @@ void TDavixFileInternal::Close()
 
 void TDavixFileInternal::enableGridMode()
 {
-   const char *env_var = NULL;
+   const char *env_var = nullptr;
 
    if (gDebug > 1)
       Info("enableGridMode", " grid mode enabled !");
 
-   if( ( env_var = getenv("X509_CERT_DIR")) == NULL){
+   if( ( env_var = getenv("X509_CERT_DIR")) == nullptr){
       env_var= "/etc/grid-security/certificates/";
    }
    davixParam->addCertificateAuthorityPath(env_var);
@@ -399,13 +399,13 @@ void TDavixFileInternal::setS3Auth(const std::string &secret, const std::string 
 
 void TDavixFileInternal::parseConfig()
 {
-   const char *env_var = NULL, *env_var2 = NULL;
+   const char *env_var = nullptr, *env_var2 = nullptr;
    // default opts
    davixParam->setTransparentRedirectionSupport(true);
-   davixParam->setClientCertCallbackX509(&TDavixFile_http_authn_cert_X509, NULL);
+   davixParam->setClientCertCallbackX509(&TDavixFile_http_authn_cert_X509, nullptr);
 
    // setup CADIR
-   env_var = gEnv->GetValue("Davix.GSI.CAdir", (const char *) NULL);
+   env_var = gEnv->GetValue("Davix.GSI.CAdir", (const char *) nullptr);
    if (env_var) {
       davixParam->addCertificateAuthorityPath(env_var);
       if (gDebug > 0)
@@ -418,21 +418,21 @@ void TDavixFileInternal::parseConfig()
       Info("parseConfig", "Setting CAcheck to %s", ((ca_check_local) ? ("true") : ("false")));
 
    // S3 Auth
-   if (((env_var = gEnv->GetValue("Davix.S3.SecretKey", getenv("S3_SECRET_KEY"))) != NULL)
-         && ((env_var2 = gEnv->GetValue("Davix.S3.AccessKey", getenv("S3_ACCESS_KEY"))) != NULL)) {
+   if (((env_var = gEnv->GetValue("Davix.S3.SecretKey", getenv("S3_SECRET_KEY"))) != nullptr)
+         && ((env_var2 = gEnv->GetValue("Davix.S3.AccessKey", getenv("S3_ACCESS_KEY"))) != nullptr)) {
       Info("parseConfig", "Setting S3 SecretKey and AccessKey. Access Key : %s ", env_var2);
       davixParam->setAwsAuthorizationKeys(env_var, env_var2);
 
       // need to set region?
-      if ( (env_var = gEnv->GetValue("Davix.S3.Region", getenv("S3_REGION"))) != NULL) {
+      if ( (env_var = gEnv->GetValue("Davix.S3.Region", getenv("S3_REGION"))) != nullptr) {
          setAwsRegion(env_var);
       }
       // need to set STS token?
-      if( (env_var = gEnv->GetValue("Davix.S3.Token", getenv("S3_TOKEN"))) != NULL) {
+      if( (env_var = gEnv->GetValue("Davix.S3.Token", getenv("S3_TOKEN"))) != nullptr) {
          setAwsToken(env_var);
       }
       // need to set aws alternate?
-      if( (env_var = gEnv->GetValue("Davix.S3.Alternate", getenv("S3_ALTERNATE"))) != NULL) {
+      if( (env_var = gEnv->GetValue("Davix.S3.Alternate", getenv("S3_ALTERNATE"))) != nullptr) {
          setAwsAlternate(strToBool(env_var, false));
       }
    }
@@ -515,7 +515,7 @@ void TDavixFileInternal::init()
 
 Int_t TDavixFileInternal::DavixStat(const char *url, struct stat *st)
 {
-   DavixError *davixErr = NULL;
+   DavixError *davixErr = nullptr;
 
    if (davixPosix->stat(davixParam, url, st, &davixErr) < 0) {
 
@@ -555,7 +555,7 @@ void TDavixFile::Init(Bool_t init)
    //initialize davix
    d_ptr->init();
    // pre-open file
-   if ((d_ptr->getDavixFileInstance()) == NULL){
+   if ((d_ptr->getDavixFileInstance()) == nullptr){
          MakeZombie();
          gDirectory = gROOT;
          return;
@@ -613,7 +613,7 @@ Bool_t TDavixFile::ReadBuffer(char *buf, Int_t len)
 {
    TLockGuard guard(&(d_ptr->positionLock));
    Davix_fd *fd;
-   if ((fd = d_ptr->getDavixFileInstance()) == NULL)
+   if ((fd = d_ptr->getDavixFileInstance()) == nullptr)
       return kTRUE;
    Long64_t ret = DavixReadBuffer(fd, buf, len);
    if (ret < 0)
@@ -631,7 +631,7 @@ Bool_t TDavixFile::ReadBuffer(char *buf, Int_t len)
 Bool_t TDavixFile::ReadBuffer(char *buf, Long64_t pos, Int_t len)
 {
    Davix_fd *fd;
-   if ((fd = d_ptr->getDavixFileInstance()) == NULL)
+   if ((fd = d_ptr->getDavixFileInstance()) == nullptr)
       return kTRUE;
 
    Long64_t ret = DavixPReadBuffer(fd, buf, pos, len);
@@ -649,7 +649,7 @@ Bool_t TDavixFile::ReadBuffer(char *buf, Long64_t pos, Int_t len)
 Bool_t TDavixFile::ReadBufferAsync(Long64_t offs, Int_t len)
 {
    Davix_fd *fd;
-   if ((fd = d_ptr->getDavixFileInstance()) == NULL)
+   if ((fd = d_ptr->getDavixFileInstance()) == nullptr)
       return kFALSE;
 
    d_ptr->davixPosix->fadvise(fd, static_cast<dav_off_t>(offs), static_cast<dav_size_t>(len), Davix::AdviseRandom);
@@ -665,7 +665,7 @@ Bool_t TDavixFile::ReadBufferAsync(Long64_t offs, Int_t len)
 Bool_t TDavixFile::ReadBuffers(char *buf, Long64_t *pos, Int_t *len, Int_t nbuf)
 {
    Davix_fd *fd;
-   if ((fd = d_ptr->getDavixFileInstance()) == NULL)
+   if ((fd = d_ptr->getDavixFileInstance()) == nullptr)
       return kTRUE;
 
    Long64_t ret = DavixReadBuffers(fd, buf, pos, len, nbuf);
@@ -684,7 +684,7 @@ Bool_t TDavixFile::ReadBuffers(char *buf, Long64_t *pos, Int_t *len, Int_t nbuf)
 Bool_t TDavixFile::WriteBuffer(const char *buf, Int_t len)
 {
    Davix_fd *fd;
-   if ((fd = d_ptr->getDavixFileInstance()) == NULL)
+   if ((fd = d_ptr->getDavixFileInstance()) == nullptr)
       return kTRUE;
 
    Long64_t ret = DavixWriteBuffer(fd, buf, len);
@@ -785,7 +785,7 @@ void TDavixFile::eventStop(Double_t t_start, Long64_t len, bool read)
 
 Long64_t TDavixFile::DavixReadBuffer(Davix_fd *fd, char *buf, Int_t len)
 {
-   DavixError *davixErr = NULL;
+   DavixError *davixErr = nullptr;
    Double_t start_time = eventStart();
 
    Long64_t ret = d_ptr->davixPosix->pread(fd, buf, len, fOffset, &davixErr);
@@ -805,7 +805,7 @@ Long64_t TDavixFile::DavixReadBuffer(Davix_fd *fd, char *buf, Int_t len)
 
 Long64_t TDavixFile::DavixWriteBuffer(Davix_fd *fd, const char *buf, Int_t len)
 {
-   DavixError *davixErr = NULL;
+   DavixError *davixErr = nullptr;
    Double_t start_time = eventStart();
 
    Long64_t ret = d_ptr->davixPosix->pwrite(fd, buf, len, fOffset, &davixErr);
@@ -825,7 +825,7 @@ Long64_t TDavixFile::DavixWriteBuffer(Davix_fd *fd, const char *buf, Int_t len)
 
 Long64_t TDavixFile::DavixPReadBuffer(Davix_fd *fd, char *buf, Long64_t pos, Int_t len)
 {
-   DavixError *davixErr = NULL;
+   DavixError *davixErr = nullptr;
    Double_t start_time = eventStart();
 
    Long64_t ret = d_ptr->davixPosix->pread(fd, buf, len, pos, &davixErr);
@@ -845,7 +845,7 @@ Long64_t TDavixFile::DavixPReadBuffer(Davix_fd *fd, char *buf, Long64_t pos, Int
 
 Long64_t TDavixFile::DavixReadBuffers(Davix_fd *fd, char *buf, Long64_t *pos, Int_t *len, Int_t nbuf)
 {
-   DavixError *davixErr = NULL;
+   DavixError *davixErr = nullptr;
    Double_t start_time = eventStart();
    DavIOVecInput in[nbuf];
    DavIOVecOuput out[nbuf];

@@ -113,10 +113,10 @@ TMySQLServer::TMySQLServer(const char *db, const char *uid, const char *pw)
 
    TString optstr = url.GetOptions();
    TObjArray* optarr = optstr.Tokenize("&");
-   if (optarr!=0) {
+   if (optarr!=nullptr) {
       TIter next(optarr);
-      TObject *obj = 0;
-      while ((obj = next()) != 0) {
+      TObject *obj = nullptr;
+      while ((obj = next()) != nullptr) {
          TString opt = obj->GetName();
          opt.ToLower();
          opt.ReplaceAll(" ","");
@@ -187,7 +187,7 @@ TMySQLServer::TMySQLServer(const char *db, const char *uid, const char *pw)
            #endif
          } else
          if (opt.Contains("compress")) {
-            mysql_options(fMySQL, MYSQL_OPT_COMPRESS, 0);
+            mysql_options(fMySQL, MYSQL_OPT_COMPRESS, nullptr);
             if (gDebug) Info("TMySQLServer","Use compressed client/server protocol");
          } else
          if (opt.Contains("cnf_file=")) {
@@ -209,7 +209,7 @@ TMySQLServer::TMySQLServer(const char *db, const char *uid, const char *pw)
    if (url.GetPort()>0) port = url.GetPort();
 
    if (mysql_real_connect(fMySQL, url.GetHost(), uid, pw, dbase, port,
-                         (socket.Length()>0) ? socket.Data() : 0 , client_flag)) {
+                         (socket.Length()>0) ? socket.Data() : nullptr , client_flag)) {
       fType = "MySQL";
       fHost = url.GetHost();
       fDB   = dbase;
@@ -275,13 +275,13 @@ void TMySQLServer::Close(Option_t *)
 
 TSQLResult *TMySQLServer::Query(const char *sql)
 {
-   CheckConnect("Query", 0);
+   CheckConnect("Query", nullptr);
 
    if (mysql_query(fMySQL, sql))
-      CheckErrNo("Query",kTRUE,0);
+      CheckErrNo("Query",kTRUE,nullptr);
 
    MYSQL_RES *res = mysql_store_result(fMySQL);
-   CheckErrNo("Query", kFALSE, 0);
+   CheckErrNo("Query", kFALSE, nullptr);
 
    return new TMySQLResult(res);
 }
@@ -322,11 +322,11 @@ Int_t TMySQLServer::SelectDataBase(const char *dbname)
 
 TSQLResult *TMySQLServer::GetDataBases(const char *wild)
 {
-   CheckConnect("GetDataBases", 0);
+   CheckConnect("GetDataBases", nullptr);
 
    MYSQL_RES *res = mysql_list_dbs(fMySQL, wild);
 
-   CheckErrNo("GetDataBases", kFALSE, 0);
+   CheckErrNo("GetDataBases", kFALSE, nullptr);
 
    return new TMySQLResult(res);
 }
@@ -339,13 +339,13 @@ TSQLResult *TMySQLServer::GetDataBases(const char *wild)
 
 TSQLResult *TMySQLServer::GetTables(const char *dbname, const char *wild)
 {
-   CheckConnect("GetTables", 0);
+   CheckConnect("GetTables", nullptr);
 
    if (SelectDataBase(dbname) != 0) return nullptr;
 
    MYSQL_RES *res = mysql_list_tables(fMySQL, wild);
 
-   CheckErrNo("GetTables", kFALSE, 0);
+   CheckErrNo("GetTables", kFALSE, nullptr);
 
    return new TMySQLResult(res);
 }
@@ -356,17 +356,17 @@ TSQLResult *TMySQLServer::GetTables(const char *dbname, const char *wild)
 
 TList* TMySQLServer::GetTablesList(const char* wild)
 {
-   CheckConnect("GetTablesList", 0);
+   CheckConnect("GetTablesList", nullptr);
 
    MYSQL_RES *res = mysql_list_tables(fMySQL, wild);
 
-   CheckErrNo("GetTablesList", kFALSE, 0);
+   CheckErrNo("GetTablesList", kFALSE, nullptr);
 
    MYSQL_ROW row = mysql_fetch_row(res);
 
    TList *lst = nullptr;
 
-   while (row!=0) {
+   while (row!=nullptr) {
       CheckErrNo("GetTablesList", kFALSE, lst);
 
       const char *tablename = row[0];
@@ -393,7 +393,7 @@ TList* TMySQLServer::GetTablesList(const char* wild)
 
 TSQLTableInfo *TMySQLServer::GetTableInfo(const char* tablename)
 {
-   CheckConnect("GetTableInfo", 0);
+   CheckConnect("GetTableInfo", nullptr);
 
    if (!tablename || (*tablename==0)) return nullptr;
 
@@ -401,10 +401,10 @@ TSQLTableInfo *TMySQLServer::GetTableInfo(const char* tablename)
    sql.Form("SELECT * FROM `%s` LIMIT 1", tablename);
 
    if (mysql_query(fMySQL, sql.Data()) != 0)
-      CheckErrNo("GetTableInfo", kTRUE, 0);
+      CheckErrNo("GetTableInfo", kTRUE, nullptr);
 
    MYSQL_RES *res = mysql_store_result(fMySQL);
-   CheckErrNo("GetTableInfo", kFALSE, 0);
+   CheckErrNo("GetTableInfo", kFALSE, nullptr);
 
    unsigned int numfields = mysql_num_fields(res);
 
@@ -424,7 +424,7 @@ TSQLTableInfo *TMySQLServer::GetTableInfo(const char* tablename)
 
    TSQLRow* row = nullptr;
 
-   while ((row = showres->Next()) != 0) {
+   while ((row = showres->Next()) != nullptr) {
       const char* column_name = row->GetField(0);
       const char* type_name = row->GetField(1);
 
@@ -535,22 +535,22 @@ TSQLTableInfo *TMySQLServer::GetTableInfo(const char* tablename)
 
    sql.Form("SHOW TABLE STATUS LIKE '%s'", tablename);
 
-   TSQLTableInfo* info = 0;
+   TSQLTableInfo* info = nullptr;
 
    TSQLResult* stats = Query(sql.Data());
 
-   if (stats!=0) {
-      row = 0;
+   if (stats!=nullptr) {
+      row = nullptr;
 
-      while ((row = stats->Next()) != 0) {
+      while ((row = stats->Next()) != nullptr) {
          if (strcmp(row->GetField(0), tablename)!=0) {
             delete row;
             continue;
          }
-         const char* comments = 0;
-         const char* engine = 0;
-         const char* create_time = 0;
-         const char* update_time = 0;
+         const char* comments = nullptr;
+         const char* engine = nullptr;
+         const char* create_time = nullptr;
+         const char* update_time = nullptr;
 
          for (int n=1;n<stats->GetFieldCount();n++) {
             TString fname = stats->GetFieldName(n);
@@ -574,7 +574,7 @@ TSQLTableInfo *TMySQLServer::GetTableInfo(const char* tablename)
       delete stats;
    }
 
-   if (info==0)
+   if (info==nullptr)
       info = new TSQLTableInfo(tablename, lst);
 
    return info;
@@ -589,7 +589,7 @@ TSQLTableInfo *TMySQLServer::GetTableInfo(const char* tablename)
 TSQLResult *TMySQLServer::GetColumns(const char *dbname, const char *table,
                                      const char *wild)
 {
-   CheckConnect("GetColumns", 0);
+   CheckConnect("GetColumns", nullptr);
 
    if (SelectDataBase(dbname) != 0) return nullptr;
 
@@ -673,7 +673,7 @@ Int_t TMySQLServer::Shutdown()
 
 const char *TMySQLServer::ServerInfo()
 {
-   CheckConnect("ServerInfo", 0);
+   CheckConnect("ServerInfo", nullptr);
 
    const char* res = mysql_get_server_info(fMySQL);
 
@@ -710,7 +710,7 @@ TSQLStatement *TMySQLServer::Statement(const char *sql, Int_t)
    return nullptr;
 #else
 
-   CheckConnect("Statement", 0);
+   CheckConnect("Statement", nullptr);
 
    if (!sql || !*sql) {
       SetError(-1, "no query string specified","Statement");
@@ -719,7 +719,7 @@ TSQLStatement *TMySQLServer::Statement(const char *sql, Int_t)
 
    MYSQL_STMT *stmt = mysql_stmt_init(fMySQL);
    if (!stmt)
-      CheckErrNo("Statement", kTRUE, 0);
+      CheckErrNo("Statement", kTRUE, nullptr);
 
    if (mysql_stmt_prepare(stmt, sql, strlen(sql))) {
       SetError(mysql_errno(fMySQL), mysql_error(fMySQL), "Statement");

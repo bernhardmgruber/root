@@ -109,7 +109,7 @@ TModuleGenerator::GetSourceFileKind(const char *filename) const
       // via the FileManager.
       clang::Preprocessor &PP = fCI->getPreprocessor();
       clang::HeaderSearch &HdrSearch = PP.getHeaderSearchInfo();
-      const clang::DirectoryLookup *CurDir = 0;
+      const clang::DirectoryLookup *CurDir = nullptr;
       const clang::FileEntry *hdrFileEntry
          =  HdrSearch.LookupFile(filename, clang::SourceLocation(),
                                  true /*isAngled*/, 0 /*FromDir*/, CurDir,
@@ -463,7 +463,7 @@ void TModuleGenerator::WriteRegistrationSource(std::ostream &out, const std::str
    auto findAndAddToInlineHeaders = [&](const std::string& hdrName) {
       bool headerFound = FindHeader(hdrName,hdrFullPath);
       if (!headerFound) {
-         ROOT::TMetaUtils::Error(0, "Cannot find header %s: cannot inline it.\n", hdrName.c_str());
+         ROOT::TMetaUtils::Error(nullptr, "Cannot find header %s: cannot inline it.\n", hdrName.c_str());
       } else {
          std::ifstream headerFile(hdrFullPath.c_str());
          const std::string headerFileAsStr((std::istreambuf_iterator<char>(headerFile)),
@@ -570,7 +570,7 @@ bool TModuleGenerator::FindHeader(const std::string &hdrName, std::string &hdrFu
    }
    clang::Preprocessor &PP = fCI->getPreprocessor();
    clang::HeaderSearch &HdrSearch = PP.getHeaderSearchInfo();
-   const clang::DirectoryLookup *CurDir = 0;
+   const clang::DirectoryLookup *CurDir = nullptr;
    if (const clang::FileEntry *hdrFileEntry
          =  HdrSearch.LookupFile(hdrName, clang::SourceLocation(),
                                  true /*isAngled*/, 0 /*FromDir*/, CurDir,

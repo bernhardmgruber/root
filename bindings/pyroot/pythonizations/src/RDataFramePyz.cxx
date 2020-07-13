@@ -30,17 +30,17 @@ PyObject *PyROOT::MakeNumpyDataFrame(PyObject * /*self*/, PyObject * pydata)
 {
    if (!pydata) {
       PyErr_SetString(PyExc_RuntimeError, "Object not convertible: Invalid Python object.");
-      return NULL;
+      return nullptr;
    }
 
    if (!PyDict_Check(pydata)) {
       PyErr_SetString(PyExc_RuntimeError, "Object not convertible: Python object is not a dictionary.");
-      return NULL;
+      return nullptr;
    }
 
    if (PyDict_Size(pydata) == 0) {
       PyErr_SetString(PyExc_RuntimeError, "Object not convertible: Dictionary is empty.");
-      return NULL;
+      return nullptr;
    }
 
 
@@ -64,16 +64,16 @@ PyObject *PyROOT::MakeNumpyDataFrame(PyObject * /*self*/, PyObject * pydata)
       // Get name of key
       if (!CPyCppyy_PyText_Check(key)) {
          PyErr_SetString(PyExc_RuntimeError, "Object not convertible: Dictionary key is not convertible to a string.");
-         return NULL;
+         return nullptr;
       }
       std::string keystr = CPyCppyy_PyText_AsString(key);
 
       // Convert value to RVec and attach to dictionary
-      auto pyvec = PyROOT::AsRVec(NULL, value);
-      if (pyvec == NULL) {
+      auto pyvec = PyROOT::AsRVec(nullptr, value);
+      if (pyvec == nullptr) {
          PyErr_SetString(PyExc_RuntimeError,
                          ("Object not convertible: Dictionary entry " + keystr + " is not convertible with AsRVec.").c_str());
-         return NULL;
+         return nullptr;
       }
       PyDict_SetItem(pyvecs, key, pyvec);
       Py_DECREF(pyvec);
@@ -99,7 +99,7 @@ PyObject *PyROOT::MakeNumpyDataFrame(PyObject * /*self*/, PyObject * pydata)
    const auto err = gInterpreter->Declare("#include \"ROOT/RNumpyDS.hxx\"");
    if (!err) {
       PyErr_SetString(PyExc_RuntimeError, "Failed to find \"ROOT/RNumpyDS.hxx\".");
-      return NULL;
+      return nullptr;
    }
    const auto codeStr = code.str();
    auto address = (void*) gInterpreter->Calc(codeStr.c_str());
@@ -109,7 +109,7 @@ PyObject *PyROOT::MakeNumpyDataFrame(PyObject * /*self*/, PyObject * pydata)
    // Bind pyobject holding adopted memory to the RVec
    if (PyObject_SetAttrString(pyobj, "__data__", pyvecs)) {
       PyErr_SetString(PyExc_RuntimeError, "Object not convertible: Failed to set dictionary as attribute __data__.");
-      return NULL;
+      return nullptr;
    }
    Py_DECREF(pyvecs);
 

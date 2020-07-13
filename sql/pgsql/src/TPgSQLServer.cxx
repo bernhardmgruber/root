@@ -42,7 +42,7 @@ ClassImp(TPgSQLServer);
 
 TPgSQLServer::TPgSQLServer(const char *db, const char *uid, const char *pw)
 {
-   fPgSQL = 0;
+   fPgSQL = nullptr;
    fSrvInfo="";
 
    TUrl url(db);
@@ -65,9 +65,9 @@ TPgSQLServer::TPgSQLServer(const char *db, const char *uid, const char *pw)
    if (url.GetPort()) {
       TString port;
       port += url.GetPort();
-      fPgSQL = PQsetdbLogin(url.GetHost(), port, 0, 0, dbase, uid, pw);
+      fPgSQL = PQsetdbLogin(url.GetHost(), port, nullptr, nullptr, dbase, uid, pw);
    } else {
-      fPgSQL = PQsetdbLogin(url.GetHost(), 0, 0, 0, dbase, uid, pw);
+      fPgSQL = PQsetdbLogin(url.GetHost(), nullptr, nullptr, nullptr, dbase, uid, pw);
    }
 
    if (PQstatus(fPgSQL) != CONNECTION_BAD) {
@@ -124,7 +124,7 @@ TSQLResult *TPgSQLServer::Query(const char *sql)
 {
    if (!IsConnected()) {
       Error("Query", "not connected");
-      return 0;
+      return nullptr;
    }
 
    PGresult *res = PQexec(fPgSQL, sql);
@@ -134,7 +134,7 @@ TSQLResult *TPgSQLServer::Query(const char *sql)
        (PQresultStatus(res) != PGRES_TUPLES_OK)) {
       Error("Query", "%s",PQresultErrorMessage(res));
       PQclear(res);
-      return 0;
+      return nullptr;
    }
 
    return new TPgSQLResult(res);
@@ -165,7 +165,7 @@ Int_t TPgSQLServer::SelectDataBase(const char *dbname)
 
       Close();
       fPgSQL = PQsetdbLogin(fHost.Data(), port.Data(),
-                            opts.Data(), 0, dbname,
+                            opts.Data(), nullptr, dbname,
                             usr.Data(), pwd.Data());
 
       if (PQstatus(fPgSQL) == CONNECTION_OK) {
@@ -189,7 +189,7 @@ TSQLResult *TPgSQLServer::GetDataBases(const char *wild)
 {
    if (!IsConnected()) {
       Error("GetDataBases", "not connected");
-      return 0;
+      return nullptr;
    }
 
    TString sql = "SELECT pg_database.datname FROM pg_database";
@@ -209,12 +209,12 @@ TSQLResult *TPgSQLServer::GetTables(const char *dbname, const char *wild)
 {
    if (!IsConnected()) {
       Error("GetTables", "not connected");
-      return 0;
+      return nullptr;
    }
 
    if (SelectDataBase(dbname) != 0) {
       Error("GetTables", "no such database %s", dbname);
-      return 0;
+      return nullptr;
    }
 
    TString sql = "SELECT relname FROM pg_class where relkind='r'";
@@ -235,12 +235,12 @@ TSQLResult *TPgSQLServer::GetColumns(const char *dbname, const char *table,
 {
    if (!IsConnected()) {
       Error("GetColumns", "not connected");
-      return 0;
+      return nullptr;
    }
 
    if (SelectDataBase(dbname) != 0) {
       Error("GetColumns", "no such database %s", dbname);
-      return 0;
+      return nullptr;
    }
 
    char *sql;
@@ -329,7 +329,7 @@ const char *TPgSQLServer::ServerInfo()
 {
    if (!IsConnected()) {
       Error("ServerInfo", "not connected");
-      return 0;
+      return nullptr;
    }
 
    return fSrvInfo.Data();
@@ -361,16 +361,16 @@ TSQLStatement* TPgSQLServer::Statement(const char *, Int_t)
 #ifdef PG_VERSION_NUM
    if (!sql || !*sql) {
       SetError(-1, "no query string specified","Statement");
-      return 0;
+      return nullptr;
    }
 
    PgSQL_Stmt_t *stmt = new PgSQL_Stmt_t;
    if (!stmt){
       SetError(-1, "cannot allocate PgSQL_Stmt_t", "Statement");
-      return 0;
+      return nullptr;
    }
    stmt->fConn = fPgSQL;
-   stmt->fRes  = PQprepare(fPgSQL, "preparedstmt", sql, 0, (const Oid*)0);
+   stmt->fRes  = PQprepare(fPgSQL, "preparedstmt", sql, 0, (const Oid*)nullptr);
 
    ExecStatusType stat = PQresultStatus(stmt->fRes);
    if (pgsql_success(stat)) {
@@ -378,14 +378,14 @@ TSQLStatement* TPgSQLServer::Statement(const char *, Int_t)
       return new TPgSQLStatement(stmt, fErrorOut);
    } else {
       SetError(stat, PQresultErrorMessage(stmt->fRes), "Statement");
-      stmt->fConn = 0;
+      stmt->fConn = nullptr;
       delete stmt;
-      return 0;
+      return nullptr;
    }
 #else
    Error("Statement", "not implemented for pgsql < 8.2");
 #endif
-   return 0;
+   return nullptr;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -395,11 +395,11 @@ TSQLTableInfo *TPgSQLServer::GetTableInfo(const char* tablename)
 {
    if (!IsConnected()) {
       Error("GetColumns", "not connected");
-      return NULL;
+      return nullptr;
    }
 
    // Check table name
-   if ((tablename==0) || (*tablename==0)) return 0;
+   if ((tablename==nullptr) || (*tablename==0)) return nullptr;
       // Query first row ( works same way as MySQL)
       PGresult *res = PQexec(fPgSQL, TString::Format("SELECT * FROM %s LIMIT 1;", tablename));
 
@@ -407,7 +407,7 @@ TSQLTableInfo *TPgSQLServer::GetTableInfo(const char* tablename)
        (PQresultStatus(res) != PGRES_TUPLES_OK)) {
       Error("Query", "%s",PQresultErrorMessage(res));
       PQclear(res);
-      return 0;
+      return nullptr;
    }
 
    if (fOidTypNameMap.empty()) {
@@ -420,7 +420,7 @@ TSQLTableInfo *TPgSQLServer::GetTableInfo(const char* tablename)
          Error("Query", "%s", PQresultErrorMessage(res_type));
          PQclear(res);
          PQclear(res_type);
-         return 0;
+         return nullptr;
       }
 
       Int_t nOids = PQntuples(res_type);
@@ -436,7 +436,7 @@ TSQLTableInfo *TPgSQLServer::GetTableInfo(const char* tablename)
       PQclear(res_type);
    }
 
-   TList * lst = NULL;
+   TList * lst = nullptr;
 
    Int_t nfields  = PQnfields(res);
 

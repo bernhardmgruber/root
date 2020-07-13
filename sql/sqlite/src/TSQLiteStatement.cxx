@@ -213,7 +213,7 @@ Int_t TSQLiteStatement::GetNumFields()
 const char* TSQLiteStatement::GetFieldName(Int_t nfield)
 {
    if (!IsResultSetMode() || (nfield < 0) || (nfield >= sqlite3_column_count(fStmt->fRes))) {
-      return 0;
+      return nullptr;
    }
 
    return sqlite3_column_name(fStmt->fRes, nfield);

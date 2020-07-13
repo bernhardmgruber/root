@@ -57,7 +57,7 @@ ClassImp(TXMLParser);
 /// Initializes parser variables.
 
 TXMLParser::TXMLParser()
-   : fContext(0), fValidate(kTRUE), fReplaceEntities(kFALSE), fStopError(kFALSE), fParseCode(0)
+   : fContext(nullptr), fValidate(kTRUE), fReplaceEntities(kFALSE), fStopError(kFALSE), fParseCode(0)
 {
 }
 
@@ -92,9 +92,9 @@ void TXMLParser::SetReplaceEntities(Bool_t val)
 void TXMLParser::ReleaseUnderlying()
 {
    if (fContext) {
-      fContext->_private = 0;
+      fContext->_private = nullptr;
       xmlFreeParserCtxt(fContext);
-      fContext = 0;
+      fContext = nullptr;
    }
 }
 

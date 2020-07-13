@@ -101,7 +101,7 @@ TGCommandPlugin::~TGCommandPlugin()
    gSystem->Unlink(pathtmp);
    fCommand->Disconnect("ReturnPressed()");
    delete fTimer;
-   fTimer = 0;
+   fTimer = nullptr;
    Cleanup();
 }
 
@@ -157,7 +157,7 @@ void TGCommandPlugin::HandleCommand()
       fComboCmd->InsertEntry(string, 0, -1);
       if (app->InheritsFrom("TRint"))
          Gl_histadd((char *)string);
-      gSystem->RedirectOutput(0);
+      gSystem->RedirectOutput(nullptr);
       fStatus->LoadFile(pathtmp.Data());
       fStatus->ShowBottom();
       CheckRemote(string);
@@ -170,7 +170,7 @@ void TGCommandPlugin::HandleCommand()
 
 Bool_t TGCommandPlugin::HandleTimer(TTimer *t)
 {
-   if ((fTimer == 0) || (t != fTimer)) return kTRUE;
+   if ((fTimer == nullptr) || (t != fTimer)) return kTRUE;
    CheckRemote("");
    return kTRUE;
 }

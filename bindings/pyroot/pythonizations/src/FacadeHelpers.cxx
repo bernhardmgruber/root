@@ -29,13 +29,13 @@ PyObject *PyROOT::CreateBufferFromAddress(PyObject * /* self */, PyObject *addr)
 {
    if (!addr) {
       PyErr_SetString(PyExc_RuntimeError, "Unable to create buffer from invalid address");
-      return NULL;
+      return nullptr;
    }
 
    Long64_t cAddr = PyLong_AsLongLong(addr);
    if (cAddr == -1 && PyErr_Occurred()) {
       PyErr_SetString(PyExc_RuntimeError, "Unable to create buffer: address is not a valid integer");
-      return NULL;
+      return nullptr;
    }
 
 #ifdef R__B64

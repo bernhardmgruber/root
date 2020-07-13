@@ -90,7 +90,7 @@ size_t ROOT::Internal::RRawFileDavix::ReadAtImpl(void *buffer, size_t nbytes, st
 
 void ROOT::Internal::RRawFileDavix::ReadVImpl(RIOVec *ioVec, unsigned int nReq)
 {
-   Davix::DavixError *davixErr = NULL;
+   Davix::DavixError *davixErr = nullptr;
    Davix::DavIOVecInput in[nReq];
    Davix::DavIOVecOuput out[nReq];
 

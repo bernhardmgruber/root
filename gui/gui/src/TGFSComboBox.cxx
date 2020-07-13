@@ -74,7 +74,7 @@ TGTreeLBEntry::TGTreeLBEntry(const TGWindow *p, TGString *text,
       Error("TGTreeLBEntry", "icon not found for entry %s", text->GetString());
 
    fPic    = pic;
-   fSelPic = 0;
+   fSelPic = nullptr;
    fTWidth = 0;
    fText   = text;
    fPath   = path;
@@ -114,7 +114,7 @@ void TGTreeLBEntry::Activate(Bool_t a)
       fSelPic = new TGSelectedPicture(fClient, fPic);
    } else {
       if (fSelPic) delete fSelPic;
-      fSelPic = 0;
+      fSelPic = nullptr;
    }
    DoRedraw();
 }
@@ -339,15 +339,15 @@ TGFSComboBox::TGFSComboBox(const TGWindow *parent, Int_t id, UInt_t options,
       delete volumes;
       delete curvol;
    }
-   gLbc[idx].fName   = 0;
-   gLbc[idx].fPath   = 0;
-   gLbc[idx].fPixmap = 0;
+   gLbc[idx].fName   = nullptr;
+   gLbc[idx].fPath   = nullptr;
+   gLbc[idx].fPixmap = nullptr;
    gLbc[idx].fId     = (idx+1) * 1000;
    gLbc[idx].fIndent = 0;
    gLbc[idx].fFlags  = 0;
 
-   for (i = 0; gLbc[i].fPath != 0; ++i) {
-      if (strstr(gLbc[i].fPath, "$HOME") != 0) {
+   for (i = 0; gLbc[i].fPath != nullptr; ++i) {
+      if (strstr(gLbc[i].fPath, "$HOME") != nullptr) {
          if (homeDir) {
             int hlen = strlen(homeDir);
             int blen = hlen + strlen(gLbc[i].fPath) - 3;
@@ -367,7 +367,7 @@ TGFSComboBox::TGFSComboBox(const TGWindow *parent, Int_t id, UInt_t options,
       // build time, we do not need to expand the prefix, as it is
       // already known, so the entries in the table above are actually
       // fully expanded.
-      if (strstr(gLbc[i].fPath, "$ROOTSYS") != 0) {
+      if (strstr(gLbc[i].fPath, "$ROOTSYS") != nullptr) {
          // Get the size of the prefix template
          const int plen = 8;
          if (rootSys) {
@@ -396,7 +396,7 @@ TGFSComboBox::TGFSComboBox(const TGWindow *parent, Int_t id, UInt_t options,
 
    //--- then init the contents...
 
-   for (i = 0; gLbc[i].fName != 0; ++i) {
+   for (i = 0; gLbc[i].fName != nullptr; ++i) {
       if (gLbc[i].fFlags) {
          indent = 4 + (gLbc[i].fIndent * 10);
          pic = fClient->GetPicture(gLbc[i].fPixmap);
@@ -416,16 +416,16 @@ TGFSComboBox::TGFSComboBox(const TGWindow *parent, Int_t id, UInt_t options,
 void TGFSComboBox::Update(const char *path)
 {
    char dirname[1024], mpath[1024];
-   const char *tailpath = 0;
+   const char *tailpath = nullptr;
    int  i, indent_lvl = 0, afterID = -1, sel = -1;
 
    if (!path) return;
 
-   for (i = 0; gLbc[i].fPath != 0; ++i)
+   for (i = 0; gLbc[i].fPath != nullptr; ++i)
       RemoveEntries(gLbc[i].fId+1, gLbc[i+1].fId-1);
 
    int len = 0;
-   for (i = 0; gLbc[i].fName != 0; ++i) {
+   for (i = 0; gLbc[i].fName != nullptr; ++i) {
       if (gLbc[i].fFlags) {
          int slen = strlen(gLbc[i].fPath);
          if (strncmp(path, gLbc[i].fPath, slen) == 0) {
@@ -448,8 +448,8 @@ void TGFSComboBox::Update(const char *path)
          while (1) {
             const char *picname;
             const char *semi = strchr(tailpath, '/');
-            if (semi == 0) semi = strchr(tailpath, '\\');
-            if (semi == 0) {
+            if (semi == nullptr) semi = strchr(tailpath, '\\');
+            if (semi == nullptr) {
                strlcpy(dirname, tailpath, 1024);
                picname = "ofolder_t.xpm";
             } else {
@@ -472,7 +472,7 @@ void TGFSComboBox::Update(const char *path)
                         afterID);
             sel = ++afterID;
             ++indent_lvl;
-            if (semi == 0) break;
+            if (semi == nullptr) break;
             tailpath = ++semi;
          }
    }

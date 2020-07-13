@@ -105,9 +105,9 @@ using namespace RooFit;
 RooWorkspace* RooStats::HistFactory::MakeModelAndMeasurementFast( RooStats::HistFactory::Measurement& measurement ) {
 
   // This will be returned
-  RooWorkspace* ws = NULL;
-  TFile* outFile = NULL;
-  FILE*  tableFile=NULL;
+  RooWorkspace* ws = nullptr;
+  TFile* outFile = nullptr;
+  FILE*  tableFile=nullptr;
 
   auto& msgSvc = RooMsgService::instance();
   msgSvc.getStream(1).removeTopic(RooFit::ObjectHandling);
@@ -145,7 +145,7 @@ RooWorkspace* RooStats::HistFactory::MakeModelAndMeasurementFast( RooStats::Hist
     if (pos != std::string::npos) {
        std::string outputDir = prefix.substr(0,pos);
        cxcoutDHF << "Checking if output directory : " << outputDir << " -  exists" << std::endl;
-       if (gSystem->OpenDirectory( outputDir.c_str() )  == 0 ) { 
+       if (gSystem->OpenDirectory( outputDir.c_str() )  == nullptr ) { 
           cxcoutDHF << "Output directory : " << outputDir << " - does not exist, try to create" << std::endl;
           int success = gSystem->MakeDirectory( outputDir.c_str() );    
           if( success != 0 ) {
@@ -255,7 +255,7 @@ RooWorkspace* RooStats::HistFactory::MakeModelAndMeasurementFast( RooStats::Hist
     ws->writeToFile( CombinedFileName.c_str() );
     cxcoutPHF << "Writing combined measurement to file: " << CombinedFileName << std::endl;
     TFile* combFile = TFile::Open( CombinedFileName.c_str(), "UPDATE" );
-    if( combFile == NULL ) {
+    if( combFile == nullptr ) {
       cxcoutEHF << "Error: Failed to open file " << CombinedFileName << std::endl;
       throw hf_exc();
     }
@@ -308,17 +308,17 @@ void RooStats::HistFactory::FitModelAndPlot(const std::string& MeasurementName,
 					    std::string data_name, 
 					    TFile* outFile, FILE* tableFile  ) {
 
-  if( outFile == NULL ) {
+  if( outFile == nullptr ) {
     cxcoutEHF << "Error: Output File in FitModelAndPlot is NULL" << std::endl;
     throw hf_exc();
   }
 
-  if( tableFile == NULL ) {
+  if( tableFile == nullptr ) {
     cxcoutEHF << "Error: tableFile in FitModelAndPlot is NULL" << std::endl;
     throw hf_exc();
   }
 
-  if( combined == NULL ) {
+  if( combined == nullptr ) {
     cxcoutEHF << "Error: Supplied workspace in FitModelAndPlot is NULL" << std::endl;
     throw hf_exc();
   }
@@ -346,7 +346,7 @@ void RooStats::HistFactory::FitModelAndPlot(const std::string& MeasurementName,
   }
 
   RooAbsPdf* model = combined_config->GetPdf();
-  if( model==NULL ) {
+  if( model==nullptr ) {
     cxcoutEHF << "Error: Failed to find pdf in ModelConfig: " << combined_config->GetName()
 	      << std::endl;
     throw hf_exc();
@@ -375,9 +375,9 @@ void RooStats::HistFactory::FitModelAndPlot(const std::string& MeasurementName,
   }
 
   // Loop over all POIs and print their fitted values
-  RooRealVar* poi = NULL; // (RooRealVar*) POIs->first();
+  RooRealVar* poi = nullptr; // (RooRealVar*) POIs->first();
   TIterator* params_itr = POIs->createIterator();
-  TObject* poi_obj=NULL;
+  TObject* poi_obj=nullptr;
   while( (poi_obj=params_itr->Next()) ) {
     //poi = (RooRealVar*) poi_obj;
     poi = dynamic_cast<RooRealVar*>(poi_obj);
@@ -397,7 +397,7 @@ void RooStats::HistFactory::FitModelAndPlot(const std::string& MeasurementName,
   // Make the Profile Likelihood Plot
   RooAbsReal* nll = model->createNLL(*simData);
   RooAbsReal* profile = nll->createProfile(*poi);
-  if( profile==NULL ) {
+  if( profile==nullptr ) {
     cxcoutEHF << "Error: Failed to make ProfileLikelihood for: " << poi->GetName()
 	      << " using model: " << model->GetName()
 	      << " and data: " << simData->GetName()
@@ -406,7 +406,7 @@ void RooStats::HistFactory::FitModelAndPlot(const std::string& MeasurementName,
   }
 
   RooPlot* frame = poi->frame();
-  if( frame == NULL ) {
+  if( frame == nullptr ) {
     cxcoutEHF << "Error: Failed to create RooPlot frame for: " << poi->GetName() << std::endl;
     throw hf_exc();
   }
@@ -430,12 +430,12 @@ void RooStats::HistFactory::FitModelAndPlot(const std::string& MeasurementName,
 
   // Save to the output file
   TDirectory* channel_dir = outFile->mkdir(channel.c_str());
-  if( channel_dir == NULL ) {
+  if( channel_dir == nullptr ) {
     cxcoutEHF << "Error: Failed to make channel directory: " << channel << std::endl;
     throw hf_exc();
   }
   TDirectory* summary_dir = channel_dir->mkdir("Summary");
-  if( summary_dir == NULL ) {
+  if( summary_dir == nullptr ) {
     cxcoutEHF << "Error: Failed to make Summary directory for channel: "
 	      << channel << std::endl;
     throw hf_exc();

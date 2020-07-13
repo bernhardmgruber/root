@@ -192,7 +192,7 @@ Int_t TH2::BufferEmpty(Int_t action)
       nbentries  = -nbentries;
       //  a reset might call BufferEmpty() giving an infinite loop
       // Protect it by setting fBuffer = 0
-      fBuffer=0;
+      fBuffer=nullptr;
        //do not reset the list of functions
       Reset("ICES");
       fBuffer = buffer;
@@ -215,7 +215,7 @@ Int_t TH2::BufferEmpty(Int_t action)
       if (fXaxis.GetXmax() <= fXaxis.GetXmin() || fYaxis.GetXmax() <= fYaxis.GetXmin()) {
          THLimitsFinder::GetLimitsFinder()->FindGoodLimits(this,xmin,xmax,ymin,ymax);
       } else {
-         fBuffer = 0;
+         fBuffer = nullptr;
          Int_t keep = fBufferSize; fBufferSize = 0;
          if (xmin <  fXaxis.GetXmin()) ExtendAxis(xmin,&fXaxis);
          if (xmax >= fXaxis.GetXmax()) ExtendAxis(xmax,&fXaxis);
@@ -226,13 +226,13 @@ Int_t TH2::BufferEmpty(Int_t action)
       }
    }
 
-   fBuffer = 0;
+   fBuffer = nullptr;
    for (Int_t i=0;i<nbentries;i++) {
       Fill(buffer[3*i+2],buffer[3*i+3],buffer[3*i+1]);
    }
    fBuffer = buffer;
 
-   if (action > 0) { delete [] fBuffer; fBuffer = 0; fBufferSize = 0;}
+   if (action > 0) { delete [] fBuffer; fBuffer = nullptr; fBufferSize = 0;}
    else {
       if (nbentries == (Int_t)fEntries) fBuffer[0] = -nbentries;
       else                              fBuffer[0] = 0;
@@ -258,7 +258,7 @@ Int_t TH2::BufferFill(Double_t x, Double_t y, Double_t w)
       nbentries  = -nbentries;
       fBuffer[0] =  nbentries;
       if (fEntries > 0) {
-         Double_t *buffer = fBuffer; fBuffer=0;
+         Double_t *buffer = fBuffer; fBuffer=nullptr;
          Reset("ICES");
          fBuffer = buffer;
       }
@@ -547,7 +547,7 @@ void TH2::FillN(Int_t ntimes, const Double_t *x, const Double_t *y, const Double
          else BufferFill(x[i], y[i], 1.);
       }
       // fill the remaining entries if the buffer has been deleted
-      if (i < ntimes && fBuffer==0)
+      if (i < ntimes && fBuffer==nullptr)
          ifirst = i;
       else
          return;
@@ -738,9 +738,9 @@ void TH2::DoFitSlices(bool onX,
    if (opt.Contains("s"))  nstep = 1;
 
    //default is to fit with a gaussian
-   if (f1 == 0) {
+   if (f1 == nullptr) {
       f1 = (TF1*)gROOT->GetFunction("gaus");
-      if (f1 == 0) f1 = new TF1("gaus","gaus",innerAxis.GetXmin(),innerAxis.GetXmax());
+      if (f1 == nullptr) f1 = new TF1("gaus","gaus",innerAxis.GetXmin(),innerAxis.GetXmax());
       else         f1->SetRange(innerAxis.GetXmin(),innerAxis.GetXmax());
    }
    Int_t npar = f1->GetNpar();
@@ -781,7 +781,7 @@ void TH2::DoFitSlices(bool onX,
    }
    snprintf(name,2000,"%s_chi2",GetName());
    delete gDirectory->FindObject(name);
-   TH1D *hchi2 = 0;
+   TH1D *hchi2 = nullptr;
    if (bins->fN == 0) {
       hchi2 = new TH1D(name,"chisquare", nOutBins, outerAxis.GetBinLowEdge(firstOutBin), outerAxis.GetBinUpEdge(lastOutBin));
    } else {
@@ -804,7 +804,7 @@ void TH2::DoFitSlices(bool onX,
          hp= ProjectionX("_temp",bin,bin+ngroup-1,proj_opt);
       else
          hp= ProjectionY("_temp",bin,bin+ngroup-1,proj_opt);
-      if (hp == 0) continue;
+      if (hp == nullptr) continue;
       // nentries can be the effective entries and it could be a very small number but not zero!
       Double_t nentries = hp->GetEntries();
       if ( nentries <= 0 || nentries < cut) {
@@ -1345,7 +1345,7 @@ Double_t TH2::KolmogorovTest(const TH1 *h2, Option_t *option) const
 
    Double_t prb = 0;
    TH1 *h1 = (TH1*)this;
-   if (h2 == 0) return 0;
+   if (h2 == nullptr) return 0;
    const TAxis *xaxis1 = h1->GetXaxis();
    const TAxis *xaxis2 = h2->GetXaxis();
    const TAxis *yaxis1 = h1->GetYaxis();
@@ -1579,15 +1579,15 @@ TH2 *TH2::Rebin2D(Int_t nxgroup, Int_t nygroup, const char *newname)
 
    if (GetDimension() != 2) {
       Error("Rebin2D", "Histogram must be TH2. This histogram has %d dimensions.", GetDimension());
-      return 0;
+      return nullptr;
    }
    if ((nxgroup <= 0) || (nxgroup > nxbins)) {
       Error("Rebin2D", "Illegal value of nxgroup=%d",nxgroup);
-      return 0;
+      return nullptr;
    }
    if ((nygroup <= 0) || (nygroup > nybins)) {
       Error("Rebin2D", "Illegal value of nygroup=%d",nygroup);
-      return 0;
+      return nullptr;
    }
 
    Int_t newxbins = nxbins / nxgroup;
@@ -1599,7 +1599,7 @@ TH2 *TH2::Rebin2D(Int_t nxgroup, Int_t nygroup, const char *newname)
    Double_t *oldBins = new Double_t[fNcells];
    for (Int_t i = 0; i < fNcells; ++i) oldBins[i] = RetrieveBinContent(i);
 
-   Double_t* oldErrors = NULL;
+   Double_t* oldErrors = nullptr;
    if (fSumw2.fN) {
       oldErrors = new Double_t[fNcells];
       for (Int_t i = 0; i < fNcells; ++i) oldErrors[i] = GetBinErrorSqUnchecked(i);
@@ -1794,14 +1794,14 @@ TProfile *TH2::DoProfile(bool onX, const char *name, Int_t firstbin, Int_t lastb
       pname = new char[nch];
       snprintf(pname,nch,"%s%s",GetName(),name);
    }
-   TProfile *h1=0;
+   TProfile *h1=nullptr;
    //check if a profile with identical name exist
    // if compatible reset and re-use previous histogram
    TObject *h1obj = gROOT->FindObject(pname);
    if (h1obj && h1obj->InheritsFrom(TH1::Class())) {
       if (h1obj->IsA() != TProfile::Class() ) {
          Error("DoProfile","Histogram with name %s must be a TProfile and is a %s",name,h1obj->ClassName());
-         return 0;
+         return nullptr;
       }
       h1 = (TProfile*)h1obj;
       // reset the existing histogram and set always the new binning for the axis
@@ -2033,7 +2033,7 @@ TProfile *TH2::ProfileY(const char *name, Int_t firstxbin, Int_t lastxbin, Optio
 
 TH1D *TH2::DoProjection(bool onX, const char *name, Int_t firstbin, Int_t lastbin, Option_t *option) const
 {
-   const char *expectedName = 0;
+   const char *expectedName = nullptr;
    Int_t inNbin;
    const TAxis* outAxis;
    const TAxis* inAxis;
@@ -2091,7 +2091,7 @@ TH1D *TH2::DoProjection(bool onX, const char *name, Int_t firstbin, Int_t lastbi
       pname = new char[nch];
       snprintf(pname,nch,"%s%s",GetName(),name);
    }
-   TH1D *h1=0;
+   TH1D *h1=nullptr;
    //check if histogram with identical name exist
    // if compatible reset and re-use previous histogram
    // (see https://savannah.cern.ch/bugs/?54340)
@@ -2099,7 +2099,7 @@ TH1D *TH2::DoProjection(bool onX, const char *name, Int_t firstbin, Int_t lastbi
    if (h1obj && h1obj->InheritsFrom(TH1::Class())) {
       if (h1obj->IsA() != TH1D::Class() ) {
          Error("DoProjection","Histogram with name %s must be a TH1D and is a %s",name,h1obj->ClassName());
-         return 0;
+         return nullptr;
       }
       h1 = (TH1D*)h1obj;
       // reset the existing histogram and set always the new binning for the axis
@@ -2390,7 +2390,7 @@ TH1D* TH2::QuantilesY( Double_t prob, const char * name) const
 
 TH1D* TH2::DoQuantiles(bool onX, const char * name, Double_t prob) const
 {
-   const TAxis *outAxis = 0;
+   const TAxis *outAxis = nullptr;
    if ( onX )   {
       outAxis = GetXaxis();
    }  else {
@@ -2404,14 +2404,14 @@ TH1D* TH2::DoQuantiles(bool onX, const char * name, Double_t prob) const
       qname = TString::Format("%s_%s_%3.2f",GetName(),qtype, prob);
    }
    // check if the histogram is already existing
-   TH1D *h1=0;
+   TH1D *h1=nullptr;
    //check if histogram with identical name exist
    TObject *h1obj = gROOT->FindObject(qname);
    if (h1obj) {
       h1 = dynamic_cast<TH1D*>(h1obj);
       if (!h1) {
          Error("DoQuantiles","Histogram with name %s must be a TH1D and is a %s",qname.Data(),h1obj->ClassName());
-         return 0;
+         return nullptr;
       }
    }
    if (h1) {
@@ -2433,7 +2433,7 @@ TH1D* TH2::DoQuantiles(bool onX, const char * name, Double_t prob) const
   Double_t pp[1];
   pp[0] = prob;
 
-  TH1D * slice = 0;
+  TH1D * slice = nullptr;
   for (int ibin = outAxis->GetFirst() ; ibin <= outAxis->GetLast() ; ++ibin) {
     Double_t qq[1];
     // do a projection on the opposite axis
@@ -2610,7 +2610,7 @@ void TH2::Smooth(Int_t ntimes, Option_t *option)
    Int_t ny = GetNbinsY();
    Int_t bufSize  = (nx+2)*(ny+2);
    Double_t *buf  = new Double_t[bufSize];
-   Double_t *ebuf = 0;
+   Double_t *ebuf = nullptr;
    if (fSumw2.fN) ebuf = new Double_t[bufSize];
 
    // Copy all the data to the temporary buffers
@@ -2894,7 +2894,7 @@ TH2C operator*(Float_t c1, TH2C &h1)
 {
    TH2C hnew = h1;
    hnew.Scale(c1);
-   hnew.SetDirectory(0);
+   hnew.SetDirectory(nullptr);
    return hnew;
 }
 
@@ -2906,7 +2906,7 @@ TH2C operator+(TH2C &h1, TH2C &h2)
 {
    TH2C hnew = h1;
    hnew.Add(&h2,1);
-   hnew.SetDirectory(0);
+   hnew.SetDirectory(nullptr);
    return hnew;
 }
 
@@ -2918,7 +2918,7 @@ TH2C operator-(TH2C &h1, TH2C &h2)
 {
    TH2C hnew = h1;
    hnew.Add(&h2,-1);
-   hnew.SetDirectory(0);
+   hnew.SetDirectory(nullptr);
    return hnew;
 }
 
@@ -2930,7 +2930,7 @@ TH2C operator*(TH2C &h1, TH2C &h2)
 {
    TH2C hnew = h1;
    hnew.Multiply(&h2);
-   hnew.SetDirectory(0);
+   hnew.SetDirectory(nullptr);
    return hnew;
 }
 
@@ -2942,7 +2942,7 @@ TH2C operator/(TH2C &h1, TH2C &h2)
 {
    TH2C hnew = h1;
    hnew.Divide(&h2);
-   hnew.SetDirectory(0);
+   hnew.SetDirectory(nullptr);
    return hnew;
 }
 
@@ -3148,7 +3148,7 @@ TH2S operator*(Float_t c1, TH2S &h1)
 {
    TH2S hnew = h1;
    hnew.Scale(c1);
-   hnew.SetDirectory(0);
+   hnew.SetDirectory(nullptr);
    return hnew;
 }
 
@@ -3160,7 +3160,7 @@ TH2S operator+(TH2S &h1, TH2S &h2)
 {
    TH2S hnew = h1;
    hnew.Add(&h2,1);
-   hnew.SetDirectory(0);
+   hnew.SetDirectory(nullptr);
    return hnew;
 }
 
@@ -3172,7 +3172,7 @@ TH2S operator-(TH2S &h1, TH2S &h2)
 {
    TH2S hnew = h1;
    hnew.Add(&h2,-1);
-   hnew.SetDirectory(0);
+   hnew.SetDirectory(nullptr);
    return hnew;
 }
 
@@ -3184,7 +3184,7 @@ TH2S operator*(TH2S &h1, TH2S &h2)
 {
    TH2S hnew = h1;
    hnew.Multiply(&h2);
-   hnew.SetDirectory(0);
+   hnew.SetDirectory(nullptr);
    return hnew;
 }
 
@@ -3196,7 +3196,7 @@ TH2S operator/(TH2S &h1, TH2S &h2)
 {
    TH2S hnew = h1;
    hnew.Divide(&h2);
-   hnew.SetDirectory(0);
+   hnew.SetDirectory(nullptr);
    return hnew;
 }
 
@@ -3367,7 +3367,7 @@ TH2I operator*(Float_t c1, TH2I &h1)
 {
    TH2I hnew = h1;
    hnew.Scale(c1);
-   hnew.SetDirectory(0);
+   hnew.SetDirectory(nullptr);
    return hnew;
 }
 
@@ -3379,7 +3379,7 @@ TH2I operator+(TH2I &h1, TH2I &h2)
 {
    TH2I hnew = h1;
    hnew.Add(&h2,1);
-   hnew.SetDirectory(0);
+   hnew.SetDirectory(nullptr);
    return hnew;
 }
 
@@ -3391,7 +3391,7 @@ TH2I operator-(TH2I &h1, TH2I &h2)
 {
    TH2I hnew = h1;
    hnew.Add(&h2,-1);
-   hnew.SetDirectory(0);
+   hnew.SetDirectory(nullptr);
    return hnew;
 }
 
@@ -3403,7 +3403,7 @@ TH2I operator*(TH2I &h1, TH2I &h2)
 {
    TH2I hnew = h1;
    hnew.Multiply(&h2);
-   hnew.SetDirectory(0);
+   hnew.SetDirectory(nullptr);
    return hnew;
 }
 
@@ -3415,7 +3415,7 @@ TH2I operator/(TH2I &h1, TH2I &h2)
 {
    TH2I hnew = h1;
    hnew.Divide(&h2);
-   hnew.SetDirectory(0);
+   hnew.SetDirectory(nullptr);
    return hnew;
 }
 
@@ -3619,7 +3619,7 @@ TH2F operator*(Float_t c1, TH2F &h1)
 {
    TH2F hnew = h1;
    hnew.Scale(c1);
-   hnew.SetDirectory(0);
+   hnew.SetDirectory(nullptr);
    return hnew;
 }
 
@@ -3631,7 +3631,7 @@ TH2F operator*(TH2F &h1, Float_t c1)
 {
    TH2F hnew = h1;
    hnew.Scale(c1);
-   hnew.SetDirectory(0);
+   hnew.SetDirectory(nullptr);
    return hnew;
 }
 
@@ -3643,7 +3643,7 @@ TH2F operator+(TH2F &h1, TH2F &h2)
 {
    TH2F hnew = h1;
    hnew.Add(&h2,1);
-   hnew.SetDirectory(0);
+   hnew.SetDirectory(nullptr);
    return hnew;
 }
 
@@ -3655,7 +3655,7 @@ TH2F operator-(TH2F &h1, TH2F &h2)
 {
    TH2F hnew = h1;
    hnew.Add(&h2,-1);
-   hnew.SetDirectory(0);
+   hnew.SetDirectory(nullptr);
    return hnew;
 }
 
@@ -3667,7 +3667,7 @@ TH2F operator*(TH2F &h1, TH2F &h2)
 {
    TH2F hnew = h1;
    hnew.Multiply(&h2);
-   hnew.SetDirectory(0);
+   hnew.SetDirectory(nullptr);
    return hnew;
 }
 
@@ -3679,7 +3679,7 @@ TH2F operator/(TH2F &h1, TH2F &h2)
 {
    TH2F hnew = h1;
    hnew.Divide(&h2);
-   hnew.SetDirectory(0);
+   hnew.SetDirectory(nullptr);
    return hnew;
 }
 
@@ -3885,7 +3885,7 @@ TH2D operator*(Float_t c1, TH2D &h1)
 {
    TH2D hnew = h1;
    hnew.Scale(c1);
-   hnew.SetDirectory(0);
+   hnew.SetDirectory(nullptr);
    return hnew;
 }
 
@@ -3897,7 +3897,7 @@ TH2D operator+(TH2D &h1, TH2D &h2)
 {
    TH2D hnew = h1;
    hnew.Add(&h2,1);
-   hnew.SetDirectory(0);
+   hnew.SetDirectory(nullptr);
    return hnew;
 }
 
@@ -3909,7 +3909,7 @@ TH2D operator-(TH2D &h1, TH2D &h2)
 {
    TH2D hnew = h1;
    hnew.Add(&h2,-1);
-   hnew.SetDirectory(0);
+   hnew.SetDirectory(nullptr);
    return hnew;
 }
 
@@ -3921,7 +3921,7 @@ TH2D operator*(TH2D &h1, TH2D &h2)
 {
    TH2D hnew = h1;
    hnew.Multiply(&h2);
-   hnew.SetDirectory(0);
+   hnew.SetDirectory(nullptr);
    return hnew;
 }
 
@@ -3933,6 +3933,6 @@ TH2D operator/(TH2D &h1, TH2D &h2)
 {
    TH2D hnew = h1;
    hnew.Divide(&h2);
-   hnew.SetDirectory(0);
+   hnew.SetDirectory(nullptr);
    return hnew;
 }

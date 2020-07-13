@@ -38,13 +38,13 @@ extern PyObject *gRootModule;
 /// itself calling it when trying to expand a serialized object.
 PyObject *PyROOT::CPPInstanceExpand(PyObject * /*self*/, PyObject *args)
 {
-   PyObject *pybuf = 0, *pyname = 0;
+   PyObject *pybuf = nullptr, *pyname = nullptr;
    if (!PyArg_ParseTuple(args, const_cast<char *>("O!O!:__expand__"), &PyBytes_Type, &pybuf, &PyBytes_Type, &pyname))
-      return 0;
+      return nullptr;
    const char *clname = PyBytes_AS_STRING(pyname);
    // TBuffer and its derived classes can't write themselves, but can be created
    // directly from the buffer, so handle them in a special case
-   void *newObj = 0;
+   void *newObj = nullptr;
    if (strcmp(clname, "TBufferFile") == 0) {
       TBufferFile *buf = new TBufferFile(TBuffer::kWrite);
       buf->WriteFastArray(PyBytes_AS_STRING(pybuf), PyBytes_GET_SIZE(pybuf));
@@ -53,7 +53,7 @@ PyObject *PyROOT::CPPInstanceExpand(PyObject * /*self*/, PyObject *args)
       // use the PyString macro's to by-pass error checking; do not adopt the buffer,
       // as the local TBufferFile can go out of scope (there is no copying)
       TBufferFile buf(TBuffer::kRead, PyBytes_GET_SIZE(pybuf), PyBytes_AS_STRING(pybuf), kFALSE);
-      newObj = buf.ReadObjectAny(0);
+      newObj = buf.ReadObjectAny(nullptr);
    }
    PyObject *result = BindCppObject(newObj, Cppyy::GetScope(clname));
    if (result) {
@@ -79,7 +79,7 @@ PyObject *op_reduce(CPPInstance *self, PyObject * /*args*/)
    // TBuffer and its derived classes can't write themselves, but can be created
    // directly from the buffer, so handle them in a special case
    static Cppyy::TCppType_t s_bfClass = Cppyy::GetScope("TBufferFile");
-   TBufferFile *buff = 0;
+   TBufferFile *buff = nullptr;
    if (s_bfClass == self->ObjectIsA()) {
       buff = (TBufferFile *)self->GetObject();
    } else {
@@ -92,7 +92,7 @@ PyObject *op_reduce(CPPInstance *self, PyObject * /*args*/)
                                 TClass::GetClass(Cppyy::GetScopedFinalName(self->ObjectIsA()).c_str())) != 1) {
          PyErr_Format(PyExc_IOError, "could not stream object of type %s",
                       Cppyy::GetScopedFinalName(self->ObjectIsA()).c_str());
-         return 0;
+         return nullptr;
       }
       buff = &s_buff;
    }

@@ -3079,7 +3079,7 @@ For more complex demo please see for example `$ROOTSYS/tutorials/tree/temperatur
 
 */
 
-TH1 *gCurrentHist = 0;
+TH1 *gCurrentHist = nullptr;
 
 Hoption_t Hoption;
 Hparam_t  Hparam;
@@ -3089,8 +3089,8 @@ const Int_t kNMAX = 2000;
 const Int_t kMAXCONTOUR  = 104;
 const UInt_t kCannotRotate = BIT(11);
 
-static TBox *gXHighlightBox = 0;   // highlight X box
-static TBox *gYHighlightBox = 0;   // highlight Y box
+static TBox *gXHighlightBox = nullptr;   // highlight X box
+static TBox *gYHighlightBox = nullptr;   // highlight Y box
 
 static TString gStringEntries;
 static TString gStringMean;
@@ -3122,22 +3122,22 @@ ClassImp(THistPainter);
 THistPainter::THistPainter()
 {
 
-   fH = 0;
-   fXaxis = 0;
-   fYaxis = 0;
-   fZaxis = 0;
-   fFunctions = 0;
-   fXbuf  = 0;
-   fYbuf  = 0;
+   fH = nullptr;
+   fXaxis = nullptr;
+   fYaxis = nullptr;
+   fZaxis = nullptr;
+   fFunctions = nullptr;
+   fXbuf  = nullptr;
+   fYbuf  = nullptr;
    fNcuts = 0;
-   fStack = 0;
-   fLego  = 0;
-   fPie   = 0;
-   fGraph2DPainter = 0;
+   fStack = nullptr;
+   fLego  = nullptr;
+   fPie   = nullptr;
+   fGraph2DPainter = nullptr;
    fShowProjection = 0;
    fShowOption = "";
    for (int i=0; i<kMaxCuts; i++) {
-      fCuts[i] = 0;
+      fCuts[i] = nullptr;
       fCutsOpt[i] = 0;
    }
    fXHighlightBin = -1;
@@ -3603,7 +3603,7 @@ void THistPainter::ExecuteEvent(Int_t event, Int_t px, Int_t py)
                yaxis->SetRangeUser(y1, y2);
             }
             zoombox->Delete();
-            zoombox = 0;
+            zoombox = nullptr;
          }
       }
       gPad->Modified(kTRUE);
@@ -3795,8 +3795,8 @@ void THistPainter::SetHighlight()
    fXHighlightBin = -1;
    fYHighlightBin = -1;
    // delete previous highlight box
-   if (gXHighlightBox) { gXHighlightBox->Delete(); gXHighlightBox = 0; }
-   if (gYHighlightBox) { gYHighlightBox->Delete(); gYHighlightBox = 0; }
+   if (gXHighlightBox) { gXHighlightBox->Delete(); gXHighlightBox = nullptr; }
+   if (gYHighlightBox) { gYHighlightBox->Delete(); gYHighlightBox = nullptr; }
    // emit Highlighted() signal (user can check on disabled)
    if (gPad->GetCanvas()) gPad->GetCanvas()->Highlighted(gPad, fH, fXHighlightBin, fYHighlightBin);
 }
@@ -4365,7 +4365,7 @@ Int_t THistPainter::MakeCuts(char *choptin)
       Int_t nc = strlen(cuts);
       while (cuts[nc-1] == ' ') {cuts[nc-1] = 0; nc--;}
       TIter next(gROOT->GetListOfSpecials());
-      TCutG *cut=0;
+      TCutG *cut=nullptr;
       TObject *obj;
       while ((obj = next())) {
          if (!obj->InheritsFrom(TCutG::Class())) continue;
@@ -4425,7 +4425,7 @@ void THistPainter::Paint(Option_t *option)
       return;
    } else {
       if (fPie) delete fPie;
-      fPie = 0;
+      fPie = nullptr;
    }
 
    fXbuf  = new Double_t[kNMAX];
@@ -4449,7 +4449,7 @@ void THistPainter::Paint(Option_t *option)
    if (view) {
       if (!Hoption.Lego && !Hoption.Surf && !Hoption.Tri) {
          delete view;
-         gPad->SetView(0);
+         gPad->SetView(nullptr);
       }
    }
    if (fH->GetDimension() > 1 || Hoption.Lego || Hoption.Surf) {
@@ -4556,10 +4556,10 @@ void THistPainter::Paint(Option_t *option)
 paintstat:
    if ((Hoption.Same%10) != 1 && !fH->TestBit(TH1::kNoStats)) {  // bit set via TH1::SetStats
       TIter next(fFunctions);
-      TObject *obj = 0;
+      TObject *obj = nullptr;
       while ((obj = next())) {
          if (obj->InheritsFrom(TF1::Class())) break;
-         obj = 0;
+         obj = nullptr;
       }
 
       //Stat is painted twice (first, it will be in canvas' list of primitives),
@@ -4570,8 +4570,8 @@ paintstat:
    }
    fH->SetMinimum(minsav);
    gCurrentHist = oldhist;
-   delete [] fXbuf; fXbuf = 0;
-   delete [] fYbuf; fYbuf = 0;
+   delete [] fXbuf; fXbuf = nullptr;
+   delete [] fYbuf; fYbuf = nullptr;
 
 }
 
@@ -4689,8 +4689,8 @@ void THistPainter::PaintAxis(Bool_t drawGridOnly)
 
    // Repainting alphanumeric labels axis on a plot done with
    // the option HBAR (horizontal) needs some adjustments.
-   TAxis *xaxis = 0;
-   TAxis *yaxis = 0;
+   TAxis *xaxis = nullptr;
+   TAxis *yaxis = nullptr;
    if (Hoption.Same && Hoption.Axis) { // Axis repainted (TPad::RedrawAxis)
       if (fXaxis->GetLabels() || fYaxis->GetLabels()) { // One axis has alphanumeric labels
          TIter next(gPad->GetListOfPrimitives());
@@ -4728,7 +4728,7 @@ void THistPainter::PaintAxis(Bool_t drawGridOnly)
    Double_t axmax = gPad->GetUxmax();
    Double_t aymin = gPad->GetUymin();
    Double_t aymax = gPad->GetUymax();
-   char *cw = 0;
+   char *cw = nullptr;
    TGaxis axis;
 
    // In case of option 'cont4' or in case of option 'same' over a 'cont4 plot'
@@ -5064,10 +5064,10 @@ void THistPainter::PaintBarH(Option_t *)
    //    Draw box with histogram statistics and/or fit parameters
    if ((Hoption.Same%10) != 1 && !fH->TestBit(TH1::kNoStats)) {  // bit set via TH1::SetStats
       TIter next(fFunctions);
-      TObject *obj = 0;
+      TObject *obj = nullptr;
       while ((obj = next())) {
          if (obj->InheritsFrom(TF1::Class())) break;
-         obj = 0;
+         obj = nullptr;
       }
       PaintStat(gStyle->GetOptStat(),(TF1*)obj);
    }
@@ -5914,12 +5914,12 @@ void THistPainter::PaintContour(Option_t *option)
       fH->TAttLine::Modify();
    }
 
-   TPolyLine **polys = 0;
-   TPolyLine *poly=0;
-   TObjArray *contours = 0;
-   TList *list = 0;
-   TGraph *graph = 0;
-   Int_t *np = 0;
+   TPolyLine **polys = nullptr;
+   TPolyLine *poly=nullptr;
+   TObjArray *contours = nullptr;
+   TList *list = nullptr;
+   TGraph *graph = nullptr;
+   Int_t *np = nullptr;
    if (Hoption.Contour == 1) {
       np = new Int_t[ncontour];
       for (i=0;i<ncontour;i++) np[i] = 0;
@@ -6066,7 +6066,7 @@ void THistPainter::PaintContour(Option_t *option)
    Double_t *xx, *yy;
    Int_t istart;
    Int_t first = ncontour;
-   Int_t *polysort = 0;
+   Int_t *polysort = nullptr;
    Int_t contListNb;
    if (Hoption.Contour != 1) goto theEND;
 
@@ -6252,8 +6252,8 @@ void THistPainter::PaintErrors(Option_t *)
    Int_t drawmarker, errormarker;
    Int_t option0, option1, option2, option3, option4, optionE, optionEX0, optionI0;
 
-   Double_t *xline = 0;
-   Double_t *yline = 0;
+   Double_t *xline = nullptr;
+   Double_t *yline = nullptr;
    option0 = option1 = option2 = option3 = option4 = optionE = optionEX0 = optionI0 = 0;
    if (Int_t(Hoption.Error/10) == 2) {optionEX0 = 1; Hoption.Error -= 10;}
    if (Hoption.Error == 31) {optionEX0 = 1; Hoption.Error = 1;}
@@ -6676,7 +6676,7 @@ void THistPainter::Paint2DErrors(Option_t *)
       delete axis;
    }
 
-   delete fLego; fLego = 0;
+   delete fLego; fLego = nullptr;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -6777,8 +6777,8 @@ void THistPainter::PaintHist(Option_t *)
    last  = Hparam.xlast;
    nbins = last - first + 1;
 
-   Double_t *keepx = 0;
-   Double_t *keepy = 0;
+   Double_t *keepx = nullptr;
+   Double_t *keepy = nullptr;
    if (fXaxis->GetXbins()->fN) fixbin = 0;
    else                        fixbin = 1;
    if (fixbin) keepx = new Double_t[2];
@@ -6958,7 +6958,7 @@ void THistPainter::PaintH3(Option_t *option)
    PaintTitle();
 
    //Draw stats and fit results
-   TF1 *fit  = 0;
+   TF1 *fit  = nullptr;
    TIter next(fFunctions);
    TObject *obj;
    while ((obj = next())) {
@@ -7544,7 +7544,7 @@ void THistPainter::PaintH3Box(Int_t iopt)
    }
 
    delete axis;
-   delete fLego; fLego = 0;
+   delete fLego; fLego = nullptr;
 
    fH->SetFillStyle(fillsav);
    fH->SetFillColor(colsav);
@@ -7734,7 +7734,7 @@ void THistPainter::PaintH3BoxRaster()
    PaintTitle();
 
    delete axis;
-   delete fLego; fLego = 0;
+   delete fLego; fLego = nullptr;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -7849,7 +7849,7 @@ void THistPainter::PaintH3Iso()
    PaintTitle();
 
    delete axis;
-   delete fLego; fLego = 0;
+   delete fLego; fLego = nullptr;
    delete [] x;
    delete [] y;
    delete [] z;
@@ -7920,7 +7920,7 @@ void THistPainter::PaintLego(Option_t *)
    fLego = new TPainter3dAlgorithms(fXbuf, fYbuf, Hoption.System);
 
    Int_t nids = -1;
-   TH1 * hid = NULL;
+   TH1 * hid = nullptr;
    Color_t colormain = -1, colordark = -1;
    Bool_t drawShadowsInLego1 = kTRUE;
 
@@ -8069,7 +8069,7 @@ void THistPainter::PaintLego(Option_t *)
    if (!Hoption.Axis && !Hoption.Same) PaintLegoAxis(axis, 90);
    if (Hoption.Zscale) PaintPalette();
    delete axis;
-   delete fLego; fLego = 0;
+   delete fLego; fLego = nullptr;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -8268,12 +8268,12 @@ void THistPainter::PaintPalette()
       if (view) {
          if (!palette->TestBit(TPaletteAxis::kHasView)) {
             fFunctions->Remove(palette);
-            delete palette; palette = 0;
+            delete palette; palette = nullptr;
          }
       } else {
          if (palette->TestBit(TPaletteAxis::kHasView)) {
             fFunctions->Remove(palette);
-            delete palette; palette = 0;
+            delete palette; palette = nullptr;
          }
       }
       // make sure the histogram member of the palette is setup correctly. It may not be after a Clone()
@@ -8457,7 +8457,7 @@ void THistPainter::PaintStat(Int_t dostat, TF1 *fit)
 
    TString tt, tf;
    Int_t dofit;
-   TPaveStats *stats  = 0;
+   TPaveStats *stats  = nullptr;
    TIter next(fFunctions);
    TObject *obj;
    while ((obj = next())) {
@@ -8473,7 +8473,7 @@ void THistPainter::PaintStat(Int_t dostat, TF1 *fit)
    } else {
       dofit  = gStyle->GetOptFit();
    }
-   if (!dofit) fit = 0;
+   if (!dofit) fit = nullptr;
    if (dofit  == 1) dofit  =  111;
    if (dostat == 1) dostat = 1111;
    Int_t print_name    = dostat%10;
@@ -8677,7 +8677,7 @@ void THistPainter::PaintStat2(Int_t dostat, TF1 *fit)
 
    TString tt, tf;
    Int_t dofit;
-   TPaveStats *stats  = 0;
+   TPaveStats *stats  = nullptr;
    TIter next(fFunctions);
    TObject *obj;
    while ((obj = next())) {
@@ -8706,7 +8706,7 @@ void THistPainter::PaintStat2(Int_t dostat, TF1 *fit)
    if (print_under || print_over) nlines += 3;
 
    // Pavetext with statistics
-   if (!gStyle->GetOptFit()) fit = 0;
+   if (!gStyle->GetOptFit()) fit = nullptr;
    Bool_t done = kFALSE;
    if (!dostat && !fit) {
       if (stats) { fFunctions->Remove(stats); delete stats;}
@@ -8894,7 +8894,7 @@ void THistPainter::PaintStat3(Int_t dostat, TF1 *fit)
 
    TString tt, tf;
    Int_t dofit;
-   TPaveStats *stats  = 0;
+   TPaveStats *stats  = nullptr;
    TIter next(fFunctions);
    TObject *obj;
    while ((obj = next())) {
@@ -8923,7 +8923,7 @@ void THistPainter::PaintStat3(Int_t dostat, TF1 *fit)
    if (print_under || print_over) nlines += 3;
 
    // Pavetext with statistics
-   if (!gStyle->GetOptFit()) fit = 0;
+   if (!gStyle->GetOptFit()) fit = nullptr;
    Bool_t done = kFALSE;
    if (!dostat && !fit) {
       if (stats) { fFunctions->Remove(stats); delete stats;}
@@ -9344,7 +9344,7 @@ void THistPainter::PaintSurface(Option_t *)
    if (Hoption.Zscale) PaintPalette();
 
    delete axis;
-   delete fLego; fLego = 0;
+   delete fLego; fLego = nullptr;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -9444,7 +9444,7 @@ void THistPainter::PaintTriangles(Option_t *option)
 
    if (Hoption.Zscale) PaintPalette();
 
-   delete fLego; fLego = 0;
+   delete fLego; fLego = nullptr;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -9538,7 +9538,7 @@ void THistPainter::PaintTable(Option_t *option)
    if (!Hoption.Lego && !Hoption.Surf &&
        !Hoption.Tri  && !(Hoption.Error >= 100)) PaintAxis(kFALSE);
 
-   TF1 *fit  = 0;
+   TF1 *fit  = nullptr;
    TIter next(fFunctions);
    TObject *obj;
    while ((obj = next())) {
@@ -10058,7 +10058,7 @@ void THistPainter::PaintTF3()
    PaintTitle();
 
    delete axis;
-   delete fLego; fLego = 0;
+   delete fLego; fLego = nullptr;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -10084,13 +10084,13 @@ void THistPainter::PaintTitle()
    if (Hoption.Same) return;
    if (fH->TestBit(TH1::kNoTitle)) return;
    Int_t nt = strlen(fH->GetTitle());
-   TPaveText *title = 0;
+   TPaveText *title = nullptr;
    TObject *obj;
    TIter next(gPad->GetListOfPrimitives());
    while ((obj = next())) {
       if (!obj->InheritsFrom(TPaveText::Class())) continue;
       title = (TPaveText*)obj;
-      if (strcmp(title->GetName(),"title")) {title = 0; continue;}
+      if (strcmp(title->GetName(),"title")) {title = nullptr; continue;}
       break;
    }
    if (nt == 0 || gStyle->GetOptTitle() <= 0) {
@@ -10366,7 +10366,7 @@ void THistPainter::RecalculateRange()
 void THistPainter::SetHistogram(TH1 *h)
 {
 
-   if (h == 0)  return;
+   if (h == nullptr)  return;
    fH = h;
    fXaxis = h->GetXaxis();
    fYaxis = h->GetYaxis();
@@ -10688,7 +10688,7 @@ void THistPainter::ShowProjectionX(Int_t /*px*/, Int_t py)
          Double_t valueTo     = fH->GetYaxis()->GetBinUpEdge(biny1);
          // Limit precision to 1 digit more than the difference between upper and lower bound (to also catch 121.5-120.5).
          Int_t valuePrecision = -TMath::Nint(TMath::Log10(valueTo-valueFrom))+1;
-         if (fH->GetYaxis()->GetLabels() != NULL) {
+         if (fH->GetYaxis()->GetLabels() != nullptr) {
             hp->SetTitle(TString::Format("ProjectionX of biny=%d [y=%.*lf..%.*lf] %s", biny1, valuePrecision, valueFrom, valuePrecision, valueTo, fH->GetYaxis()->GetBinLabel(biny1)));
          } else {
             hp->SetTitle(TString::Format("ProjectionX of biny=%d [y=%.*lf..%.*lf]", biny1, valuePrecision, valueFrom, valuePrecision, valueTo));
@@ -10700,7 +10700,7 @@ void THistPainter::ShowProjectionX(Int_t /*px*/, Int_t py)
          // biny1 is used here to get equal precision no matter how large the binrange is,
          // otherwise precision may change when moving the mouse to the histogram boundaries (limiting effective binrange).
          Int_t valuePrecision = -TMath::Nint(TMath::Log10(fH->GetYaxis()->GetBinUpEdge(biny1)-valueFrom))+1;
-         if (fH->GetYaxis()->GetLabels() != NULL) {
+         if (fH->GetYaxis()->GetLabels() != nullptr) {
             hp->SetTitle(TString::Format("ProjectionX of biny=[%d,%d] [y=%.*lf..%.*lf] [%s..%s]", biny1, biny2, valuePrecision, valueFrom, valuePrecision, valueTo, fH->GetYaxis()->GetBinLabel(biny1), fH->GetYaxis()->GetBinLabel(biny2)));
          } else {
             hp->SetTitle(TString::Format("ProjectionX of biny=[%d,%d] [y=%.*lf..%.*lf]", biny1, biny2, valuePrecision, valueFrom, valuePrecision, valueTo));
@@ -10771,7 +10771,7 @@ void THistPainter::ShowProjectionY(Int_t px, Int_t /*py*/)
          Double_t valueTo     = fH->GetXaxis()->GetBinUpEdge(binx1);
          // Limit precision to 1 digit more than the difference between upper and lower bound (to also catch 121.5-120.5).
          Int_t valuePrecision = -TMath::Nint(TMath::Log10(valueTo-valueFrom))+1;
-         if (fH->GetXaxis()->GetLabels() != NULL) {
+         if (fH->GetXaxis()->GetLabels() != nullptr) {
             hp->SetTitle(TString::Format("ProjectionY of binx=%d [x=%.*lf..%.*lf] [%s]", binx1, valuePrecision, valueFrom, valuePrecision, valueTo, fH->GetXaxis()->GetBinLabel(binx1)));
          } else {
             hp->SetTitle(TString::Format("ProjectionY of binx=%d [x=%.*lf..%.*lf]", binx1, valuePrecision, valueFrom, valuePrecision, valueTo));
@@ -10783,7 +10783,7 @@ void THistPainter::ShowProjectionY(Int_t px, Int_t /*py*/)
          // binx1 is used here to get equal precision no matter how large the binrange is,
          // otherwise precision may change when moving the mouse to the histogram boundaries (limiting effective binrange).
          Int_t valuePrecision = -TMath::Nint(TMath::Log10(fH->GetXaxis()->GetBinUpEdge(binx1)-valueFrom))+1;
-         if (fH->GetXaxis()->GetLabels() != NULL) {
+         if (fH->GetXaxis()->GetLabels() != nullptr) {
             hp->SetTitle(TString::Format("ProjectionY of binx=[%d,%d] [x=%.*lf..%.*lf] [%s..%s]", binx1, binx2, valuePrecision, valueFrom, valuePrecision, valueTo, fH->GetXaxis()->GetBinLabel(binx1), fH->GetXaxis()->GetBinLabel(binx2)));
          } else {
             hp->SetTitle(TString::Format("ProjectionY of binx=[%d,%d] [x=%.*lf..%.*lf]", binx1, binx2, valuePrecision, valueFrom, valuePrecision, valueTo));

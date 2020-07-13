@@ -44,8 +44,8 @@ RooEffProd::RooEffProd(const char *name, const char *title,
   _cacheMgr(this,10),
   _pdf("pdf","pre-efficiency pdf", this,inPdf),
   _eff("eff","efficiency function",this,inEff),
-  _nset(0),
-  _fixedNset(0)
+  _nset(nullptr),
+  _fixedNset(nullptr)
 {  
 }
 
@@ -60,8 +60,8 @@ RooEffProd::RooEffProd(const RooEffProd& other, const char* name) :
   _cacheMgr(other._cacheMgr,this),
   _pdf("pdf",this,other._pdf),
   _eff("acc",this,other._eff),
-  _nset(0),
-  _fixedNset(0) 
+  _nset(nullptr),
+  _fixedNset(nullptr) 
 {
 }
 

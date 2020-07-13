@@ -22,8 +22,8 @@ static Py_ssize_t AlwaysNullLength(PyObject*)
 //-----------------------------------------------------------------------------
 static PyMappingMethods CPyCppyy_NoneType_mapping = {
     AlwaysNullLength,
-    (binaryfunc)              0,
-    (objobjargproc)           0
+    (binaryfunc)              nullptr,
+    (objobjargproc)           nullptr
 };
 
 // silence warning about some cast operations
@@ -47,8 +47,8 @@ struct InitCPyCppyy_NoneType_t {
         CPyCppyy_NoneType.tp_name        = const_cast<char*>("CPyCppyy_NoneType");
         CPyCppyy_NoneType.tp_flags       = Py_TPFLAGS_HAVE_RICHCOMPARE | Py_TPFLAGS_HAVE_GC;
 
-        CPyCppyy_NoneType.tp_traverse    = (traverseproc)0;
-        CPyCppyy_NoneType.tp_clear       = (inquiry)0;
+        CPyCppyy_NoneType.tp_traverse    = (traverseproc)nullptr;
+        CPyCppyy_NoneType.tp_clear       = (inquiry)nullptr;
         CPyCppyy_NoneType.tp_dealloc     = (destructor)&InitCPyCppyy_NoneType_t::DeAlloc;
         CPyCppyy_NoneType.tp_repr        = Py_TYPE(Py_None)->tp_repr;
         CPyCppyy_NoneType.tp_richcompare = (richcmpfunc)&InitCPyCppyy_NoneType_t::RichCompare;

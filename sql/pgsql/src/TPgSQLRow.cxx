@@ -40,7 +40,7 @@ void TPgSQLRow::Close(Option_t *)
    if (!fRowNum)
       return;
 
-   fResult = 0;
+   fResult = nullptr;
    fRowNum = 0;
 }
 
@@ -80,7 +80,7 @@ ULong_t TPgSQLRow::GetFieldLength(Int_t field)
 const char *TPgSQLRow::GetField(Int_t field)
 {
    if (!IsValid(field))
-      return 0;
+      return nullptr;
 
    return PQgetvalue(fResult, fRowNum, field);
 }

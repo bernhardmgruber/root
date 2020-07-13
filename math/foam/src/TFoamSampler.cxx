@@ -84,9 +84,9 @@ TFoamSampler::TFoamSampler() : ROOT::Math::DistSampler(),
 //    fDiscrete(false),
 //    fHasMode(false), fHasArea(false),
 //    fMode(0), fArea(0),
-   fFunc1D(0),
+   fFunc1D(nullptr),
    fFoam(new TFoam("FOAM")  ),
-   fFoamDist(0)
+   fFoamDist(nullptr)
 {}
 
 TFoamSampler::~TFoamSampler() {

@@ -51,7 +51,7 @@ namespace
       XrdCl::DirectoryList::Iterator *fDirListIter; // Iterator for this listing
 
    public:
-      DirectoryInfo(const char *dir) : fUrl(new XrdCl::URL(dir)), fDirList(0), fDirListIter(0) {}
+      DirectoryInfo(const char *dir) : fUrl(new XrdCl::URL(dir)), fDirList(nullptr), fDirListIter(nullptr) {}
 
       ~DirectoryInfo() {
         delete fUrl;
@@ -66,7 +66,7 @@ namespace
 /// param owner: (unused)
 
 TNetXNGSystem::TNetXNGSystem(Bool_t /*owner*/) :
-   TSystem("-root", "Net file Helper System"), fUrl(0), fFileSystem(0)
+   TSystem("-root", "Net file Helper System"), fUrl(nullptr), fFileSystem(nullptr)
 {
    // Name must start with '-' to bypass the TSystem singleton check, then
    // be changed to "root"
@@ -163,7 +163,7 @@ const char* TNetXNGSystem::GetDirEntry(void *dirp)
                                              dirInfo->fDirList);
       if (!st.IsOK()) {
          Error("GetDirEntry", "%s", st.GetErrorMessage().c_str());
-         return 0;
+         return nullptr;
       }
       dirInfo->fDirListIter = new DirectoryList::Iterator(dirInfo->fDirList->Begin());
    }
@@ -174,7 +174,7 @@ const char* TNetXNGSystem::GetDirEntry(void *dirp)
       return filename;
 
    } else {
-      return 0;
+      return nullptr;
    }
 }
 
@@ -188,7 +188,7 @@ const char* TNetXNGSystem::GetDirEntry(void *dirp)
 Int_t TNetXNGSystem::GetPathInfo(const char *path, FileStat_t &buf)
 {
    using namespace XrdCl;
-   StatInfo *info = 0;
+   StatInfo *info = nullptr;
    URL target(path);
    XRootDStatus st = fFileSystem->Stat(target.GetPath(), info);
 
@@ -326,7 +326,7 @@ Bool_t TNetXNGSystem::IsPathLocal(const char *path)
 Int_t TNetXNGSystem::Locate(const char *path, TString &endurl)
 {
    using namespace XrdCl;
-   LocationInfo *info = 0;
+   LocationInfo *info = nullptr;
    URL pathUrl(path);
 
    // Locate the file
@@ -342,17 +342,17 @@ Int_t TNetXNGSystem::Locate(const char *path, TString &endurl)
    URL locUrl(info->Begin()->GetAddress());
    TString loc = locUrl.GetHostName();
    delete info;
-   info = 0;
+   info = nullptr;
 
    R__LOCKGUARD(&fgAddrMutex);
 
    // The location returned by the client library is the numeric host address
    // without path. Try to lookup a hostname and replace the path portion of
    // the url before returning the result.
-   TNamed *hn = 0;
+   TNamed *hn = nullptr;
    if (fgAddrFQDN.GetSize() <= 0 ||
        !(hn = dynamic_cast<TNamed *>(fgAddrFQDN.FindObject(loc)))) {
-      char *addr[1] = {0}, *name[1] = {0};
+      char *addr[1] = {nullptr}, *name[1] = {nullptr};
       int naddr = XrdSysDNS::getAddrName(loc.Data(), 1, addr, name);
       if (naddr == 1) {
          hn = new TNamed(loc.Data(), name[0]);
@@ -402,7 +402,7 @@ Int_t TNetXNGSystem::Stage(TCollection *files, UChar_t priority)
    using namespace XrdCl;
    std::vector<std::string> fileList;
    TIter it(files);
-   TObject *object = 0;
+   TObject *object = nullptr;
 
    while ((object = (TObject *) it.Next())) {
 

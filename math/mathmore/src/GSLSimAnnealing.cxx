@@ -225,7 +225,7 @@ int GSLSimAnnealing::Solve(GSLSimAnFunc & fx, bool debug) {
 
    else
       gsl_siman_solve(r, &fx, &GSLSimAn::E, &GSLSimAn::Step, &GSLSimAn::Dist,
-                   0, &GSLSimAn::Copy, &GSLSimAn::CopyCtor , &GSLSimAn::Destroy, 0, simanParams );
+                   nullptr, &GSLSimAn::Copy, &GSLSimAn::CopyCtor , &GSLSimAn::Destroy, 0, simanParams );
 
    return 0;
 

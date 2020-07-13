@@ -68,7 +68,7 @@ ClassImp(TXNetFile);
 
 Bool_t TXNetFile::fgInitDone = kFALSE;
 Bool_t TXNetFile::fgRootdBC = kTRUE;
-TFileStager *TXNetFile::fgFileStager = 0;
+TFileStager *TXNetFile::fgFileStager = nullptr;
 
 ////////////////////////////////////////////////////////////////////////////////
 /// Create a TXNetFile object. A TXNetFile object is the same as a TNetFile
@@ -156,12 +156,12 @@ TXNetFile::TXNetFile(const char *url, Option_t *option, const char* ftitle,
 TXNetFile::~TXNetFile()
 {
    if (IsOpen())
-      Close(0);
+      Close(nullptr);
 
    SafeDelete(fClient);
    XrdSysRecMutex *mtx = (XrdSysRecMutex *)fInitMtx;
    if (mtx) delete mtx;
-   fInitMtx = 0;
+   fInitMtx = nullptr;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -254,7 +254,7 @@ void TXNetFile::CreateXClient(const char *url, Option_t *option, Int_t netopt,
    Int_t cachesz = -1, readaheadsz = -1, rmpolicy = -1, mxredir = -1, np = 0;
    Int_t readaheadstrategy = -1, readtrimblksz = -1;
 
-   fClient = 0;
+   fClient = nullptr;
    fNetopt = netopt;
 
    // Set the timeout (default 999999999 secs, i.e. far, far in the future)
@@ -629,7 +629,7 @@ Bool_t TXNetFile::ReadBuffer(char *buffer, Int_t bufferLength)
    }
    else{ //using the old method to read
    if (GetCacheRead() && GetCacheRead()->IsAsyncReading()) {
-      st = ReadBufferViaCache(0, bufferLength);
+      st = ReadBufferViaCache(nullptr, bufferLength);
       if (st == 1)
          fOffset -= bufferLength;
    } else {
@@ -1294,7 +1294,7 @@ void TXNetFile::SetEnv()
       EnvPutInt(NAME_SOCKS4PORT, socks4Port);
    }
 
-   const char *cenv = 0;
+   const char *cenv = nullptr;
 
    // For password-based authentication
    TString autolog = gEnv->GetValue("XSec.Pwd.AutoLogin","1");
@@ -1383,7 +1383,7 @@ void TXNetFile::SetEnv()
 
 void TXNetFile::SynchronizeCacheSize()
 {
-   if (fClient == 0) return;
+   if (fClient == nullptr) return;
 
    fClient->UseCache(TRUE);
    Int_t size;

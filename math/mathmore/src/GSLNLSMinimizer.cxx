@@ -70,10 +70,10 @@ public:
    }
 
    // re-implement data element
-   virtual double DataElement(const double *  x, unsigned i, double * g = 0) const {
+   virtual double DataElement(const double *  x, unsigned i, double * g = nullptr) const {
       // transform from x internal to x external
       const double * xExt = fTransform->Transformation(x);
-      if ( g == 0) return fFunc.DataElement( xExt, i );
+      if ( g == nullptr) return fFunc.DataElement( xExt, i );
       // use gradient
       double val =  fFunc.DataElement( xExt, i, &fGrad[0]);
       // transform gradient
@@ -84,7 +84,7 @@ public:
 
    IMultiGenFunction * Clone() const {
       // not supported
-      return 0;
+      return nullptr;
    }
 
    // dimension (this is number of free dimensions)
@@ -136,10 +136,10 @@ private:
 GSLNLSMinimizer::GSLNLSMinimizer( int type ) :
    //fNFree(0),
    fSize(0),
-   fChi2Func(0)
+   fChi2Func(nullptr)
 {
    // Constructor implementation : create GSLMultiFit wrapper object
-   const gsl_multifit_fdfsolver_type * gsl_type = 0; // use default type defined in GSLMultiFit
+   const gsl_multifit_fdfsolver_type * gsl_type = nullptr; // use default type defined in GSLMultiFit
    if (type == 1) gsl_type =   gsl_multifit_fdfsolver_lmsder; // scaled lmder version
    if (type == 2) gsl_type =   gsl_multifit_fdfsolver_lmder; // unscaled version
 
@@ -174,7 +174,7 @@ void GSLNLSMinimizer::SetFunction(const ROOT::Math::IMultiGenFunction & func) {
    BasicMinimizer::SetFunction(func);
    //need to check if function can be used
    const ROOT::Math::FitMethodFunction * chi2Func = dynamic_cast<const ROOT::Math::FitMethodFunction *>(ObjFunction());
-   if (chi2Func == 0) {
+   if (chi2Func == nullptr) {
       if (PrintLevel() > 0) std::cout << "GSLNLSMinimizer: Invalid function set - only Chi2Func supported" << std::endl;
       return;
    }
@@ -203,7 +203,7 @@ bool GSLNLSMinimizer::Minimize() {
 
 
    assert (fGSLMultiFit != 0);
-   if (fResiduals.size() !=  fSize || fChi2Func == 0) {
+   if (fResiduals.size() !=  fSize || fChi2Func == nullptr) {
       MATH_ERROR_MSG("GSLNLSMinimizer::Minimize","Function has not been  set");
       return false;
    }
@@ -308,7 +308,7 @@ bool GSLNLSMinimizer::Minimize() {
 
    // save state with values and function value
    const double * x = fGSLMultiFit->X();
-   if (x == 0) return false;
+   if (x == nullptr) return false;
 
    SetFinalValues(x);
 

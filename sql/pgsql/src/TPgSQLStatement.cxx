@@ -48,17 +48,17 @@ TPgSQLStatement::TPgSQLStatement(PgSQL_Stmt_t* stmt, Bool_t errout):
    TSQLStatement(errout),
    fStmt(stmt),
    fNumBuffers(0),
-   fBind(0),
-   fFieldName(0),
+   fBind(nullptr),
+   fFieldName(nullptr),
    fWorkingMode(0),
    fIterationCount(0),
-   fParamLengths(0),
-   fParamFormats(0),
+   fParamLengths(nullptr),
+   fParamFormats(nullptr),
    fNumResultRows(0),
    fNumResultCols(0)
 {
    // Given fRes not used, we retrieve the statement using the connection.
-   if (fStmt->fRes != NULL) {
+   if (fStmt->fRes != nullptr) {
       PQclear(fStmt->fRes);
    }
 
@@ -166,18 +166,18 @@ Bool_t TPgSQLStatement::Process()
 
    // We create the prepared statement below, MUST delete the old one
    // from our constructor first!
-   if (fStmt->fRes != NULL) {
+   if (fStmt->fRes != nullptr) {
       PQclear(fStmt->fRes);
    }
 
    if (IsSetParsMode()) {
       fStmt->fRes= PQexecPrepared(fStmt->fConn,"preparedstmt",fNumBuffers,
                                  (const char* const*)fBind,
-                                 0,0,0);
+                                 nullptr,nullptr,0);
 
    } else { //result set mode
 
-      fStmt->fRes= PQexecPrepared(fStmt->fConn,"preparedstmt",0,(const char* const*) 0,0,0,0);
+      fStmt->fRes= PQexecPrepared(fStmt->fConn,"preparedstmt",0,(const char* const*) nullptr,nullptr,nullptr,0);
    }
    ExecStatusType stat = PQresultStatus(fStmt->fRes);
    if (!pgsql_success(stat))
@@ -247,7 +247,7 @@ Int_t TPgSQLStatement::GetNumFields()
 
 const char* TPgSQLStatement::GetFieldName(Int_t nfield)
 {
-   if (!IsResultSetMode() || (nfield<0) || (nfield>=fNumBuffers)) return 0;
+   if (!IsResultSetMode() || (nfield<0) || (nfield>=fNumBuffers)) return nullptr;
 
    return fFieldName[nfield];
 }
@@ -257,7 +257,7 @@ const char* TPgSQLStatement::GetFieldName(Int_t nfield)
 
 Bool_t TPgSQLStatement::NextResultRow()
 {
-   if ((fStmt==0) || !IsResultSetMode()) return kFALSE;
+   if ((fStmt==nullptr) || !IsResultSetMode()) return kFALSE;
 
    Bool_t res=kTRUE;
 
@@ -276,7 +276,7 @@ Bool_t TPgSQLStatement::NextIteration()
 {
    ClearError();
 
-   if (!IsSetParsMode() || (fBind==0)) {
+   if (!IsSetParsMode() || (fBind==nullptr)) {
       SetError(-1,"Cannot call for that statement","NextIteration");
       return kFALSE;
    }
@@ -287,8 +287,8 @@ Bool_t TPgSQLStatement::NextIteration()
 
    fStmt->fRes= PQexecPrepared(fStmt->fConn,"preparedstmt",fNumBuffers,
                                (const char* const*)fBind,
-                               0,//fParamLengths,
-                               0,//fParamFormats,
+                               nullptr,//fParamLengths,
+                               nullptr,//fParamFormats,
                                0);
    ExecStatusType stat = PQresultStatus(fStmt->fRes);
    if (!pgsql_success(stat) ){
@@ -703,7 +703,7 @@ Bool_t TPgSQLStatement::GetTimestamp(Int_t npar, TTimeStamp& tm)
 
 Bool_t TPgSQLStatement::SetNull(Int_t npar)
 {
-   fBind[npar] = 0;
+   fBind[npar] = nullptr;
 
    return kTRUE;
 }

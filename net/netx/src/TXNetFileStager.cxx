@@ -30,7 +30,7 @@
 
 TXNetFileStager::TXNetFileStager(const char *url) : TFileStager("xrd")
 {
-   fSystem = 0;
+   fSystem = nullptr;
    if (url && strlen(url) > 0) {
       GetPrefix(url, fPrefix);
 
@@ -45,7 +45,7 @@ TXNetFileStager::~TXNetFileStager()
 {
    if (fSystem)
       delete fSystem;
-   fSystem = 0;
+   fSystem = nullptr;
    fPrefix = "";
 }
 
@@ -244,7 +244,7 @@ Int_t TXNetFileStager::LocateCollection(TFileCollection *fc,
    Double_t timeTaken_s;
    TFileInfo *fi;
 
-   Int_t rv = fSystem->Prepare(fc->GetList(), 0, 0, NULL);
+   Int_t rv = fSystem->Prepare(fc->GetList(), 0, 0, nullptr);
    //                                         o  p
 
    TIter it(fc->GetList());
@@ -258,7 +258,7 @@ Int_t TXNetFileStager::LocateCollection(TFileCollection *fc,
    ts.Start();
    TString surl, endp;
 
-   while ((fi = dynamic_cast<TFileInfo *>(it.Next())) != NULL) {
+   while ((fi = dynamic_cast<TFileInfo *>(it.Next())) != nullptr) {
 
       surl = fi->GetCurrentUrl()->GetUrl();
 

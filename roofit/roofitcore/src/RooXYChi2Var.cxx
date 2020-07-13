@@ -55,7 +55,7 @@ ClassImp(RooXYChi2Var);
 
 RooXYChi2Var::RooXYChi2Var()
 {
-  _funcInt = 0 ;
+  _funcInt = nullptr ;
   _rrvIter = _rrvArgs.createIterator() ;
 }
 
@@ -76,14 +76,14 @@ RooXYChi2Var::RooXYChi2Var()
 ///
 
 RooXYChi2Var::RooXYChi2Var(const char *name, const char* title, RooAbsReal& func, RooDataSet& xydata, Bool_t integrate) :
-  RooAbsOptTestStatistic(name,title,func,xydata,RooArgSet(),0,0,1,RooFit::Interleave,0,0),
+  RooAbsOptTestStatistic(name,title,func,xydata,RooArgSet(),nullptr,nullptr,1,RooFit::Interleave,0,0),
   _extended(kFALSE),
   _integrate(integrate),
   _intConfig(*defaultIntegratorConfig()),
-  _funcInt(0)
+  _funcInt(nullptr)
 {
   _extended = kFALSE ;
-  _yvar = 0 ;
+  _yvar = nullptr ;
 
   initialize() ;
 }
@@ -104,11 +104,11 @@ RooXYChi2Var::RooXYChi2Var(const char *name, const char* title, RooAbsReal& func
 ///
 
 RooXYChi2Var::RooXYChi2Var(const char *name, const char* title, RooAbsReal& func, RooDataSet& xydata, RooRealVar& yvar, Bool_t integrate) :
-  RooAbsOptTestStatistic(name,title,func,xydata,RooArgSet(),0,0,1,RooFit::Interleave,0,0),
+  RooAbsOptTestStatistic(name,title,func,xydata,RooArgSet(),nullptr,nullptr,1,RooFit::Interleave,0,0),
   _extended(kFALSE),
   _integrate(integrate),
   _intConfig(*defaultIntegratorConfig()),
-  _funcInt(0)
+  _funcInt(nullptr)
 {
   _extended = kFALSE ;
   _yvar = (RooRealVar*) _dataClone->get()->find(yvar.GetName()) ;
@@ -135,16 +135,16 @@ RooXYChi2Var::RooXYChi2Var(const char *name, const char* title, RooAbsReal& func
 ///
 
 RooXYChi2Var::RooXYChi2Var(const char *name, const char* title, RooAbsPdf& extPdf, RooDataSet& xydata, Bool_t integrate) :
-  RooAbsOptTestStatistic(name,title,extPdf,xydata,RooArgSet(),0,0,1,RooFit::Interleave,0,0),
+  RooAbsOptTestStatistic(name,title,extPdf,xydata,RooArgSet(),nullptr,nullptr,1,RooFit::Interleave,0,0),
   _extended(kTRUE),
   _integrate(integrate),
   _intConfig(*defaultIntegratorConfig()),
-  _funcInt(0)
+  _funcInt(nullptr)
 {
   if (!extPdf.canBeExtended()) {
     throw(string(Form("RooXYChi2Var::ctor(%s) ERROR: Input p.d.f. must be an extendible",GetName()))) ;
   }
-  _yvar = 0 ;
+  _yvar = nullptr ;
   initialize() ;
 }
 
@@ -169,11 +169,11 @@ RooXYChi2Var::RooXYChi2Var(const char *name, const char* title, RooAbsPdf& extPd
 ///
 
 RooXYChi2Var::RooXYChi2Var(const char *name, const char* title, RooAbsPdf& extPdf, RooDataSet& xydata, RooRealVar& yvar, Bool_t integrate) :
-  RooAbsOptTestStatistic(name,title,extPdf,xydata,RooArgSet(),0,0,1,RooFit::Interleave,0,0),
+  RooAbsOptTestStatistic(name,title,extPdf,xydata,RooArgSet(),nullptr,nullptr,1,RooFit::Interleave,0,0),
   _extended(kTRUE),
   _integrate(integrate),
   _intConfig(*defaultIntegratorConfig()),
-  _funcInt(0)
+  _funcInt(nullptr)
 {
   if (!extPdf.canBeExtended()) {
     throw(string(Form("RooXYChi2Var::ctor(%s) ERROR: Input p.d.f. must be an extendible",GetName()))) ;
@@ -193,9 +193,9 @@ RooXYChi2Var::RooXYChi2Var(const RooXYChi2Var& other, const char* name) :
   _extended(other._extended),
   _integrate(other._integrate),
   _intConfig(other._intConfig),
-  _funcInt(0)
+  _funcInt(nullptr)
 {
-  _yvar = other._yvar ? (RooRealVar*) _dataClone->get()->find(other._yvar->GetName()) : 0 ;
+  _yvar = other._yvar ? (RooRealVar*) _dataClone->get()->find(other._yvar->GetName()) : nullptr ;
   initialize() ;
 
 }

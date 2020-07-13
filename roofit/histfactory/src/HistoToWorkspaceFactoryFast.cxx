@@ -119,7 +119,7 @@ namespace HistFactory{
 
     // Make a ModelConfig and configure it
     ModelConfig * proto_config = (ModelConfig *) ws_single->obj("ModelConfig");
-    if( proto_config == NULL ) {
+    if( proto_config == nullptr ) {
       std::cout << "Error: Did not find 'ModelConfig' object in file: " << ws_single->GetName() 
 		<< std::endl;
       throw hf_exc();
@@ -249,7 +249,7 @@ namespace HistFactory{
 
     // Create a workspace for a SingleChannel from the Measurement Object
     RooWorkspace* ws_single = this->MakeSingleChannelWorkspace(measurement, channel);
-    if( ws_single == NULL ) {
+    if( ws_single == nullptr ) {
       cxcoutF(HistFactory) << "Error: Failed to make Single-Channel workspace for channel: " << ch_name
 		<< " and measurement: " << measurement.GetName() << std::endl;
       throw hf_exc();
@@ -330,7 +330,7 @@ namespace HistFactory{
       cxcoutI(HistFactory) << "processing hist " << hist->GetName() << endl;
     } else {
       cxcoutF(HistFactory) << "hist is empty" << endl;
-      R__ASSERT(hist != 0); 
+      R__ASSERT(hist != nullptr); 
       return;                  
     }
 
@@ -351,7 +351,7 @@ namespace HistFactory{
     std::vector<std::string>::iterator itr = fObsNameVec.begin();
     for (int idx=0; itr!=fObsNameVec.end(); ++itr, ++idx ) {
       if ( !proto->var(itr->c_str()) ) {
-	const TAxis* axis(0);
+	const TAxis* axis(nullptr);
 	if (idx==0) { axis = hist->GetXaxis(); }
 	if (idx==1) { axis = hist->GetYaxis(); }
 	if (idx==2) { axis = hist->GetZaxis(); }
@@ -550,7 +550,7 @@ namespace HistFactory{
 	std::stringstream range;
 	range << "[" << norm.GetVal() << "," << norm.GetLow() << "," << norm.GetHigh() << "]";
 
-	if( proto->obj(varname.c_str()) == NULL) {
+	if( proto->obj(varname.c_str()) == nullptr) {
 	  cxcoutI(HistFactory) << "making normFactor: " << norm.GetName() << endl;
 	  // remove "doRatio" and name can be changed when ws gets imported to the combined model.
 	  proto->factory((varname + range.str()).c_str());
@@ -894,7 +894,7 @@ namespace HistFactory{
     string pdfName(pdfNameChar);
 
     ModelConfig * combined_config = (ModelConfig *) proto->obj("ModelConfig");
-    if( combined_config==NULL ) {
+    if( combined_config==nullptr ) {
       std::cout << "Error: Failed to find object 'ModelConfig' in workspace: " 
 		<< proto->GetName() << std::endl;
       throw hf_exc();
@@ -1207,7 +1207,7 @@ namespace HistFactory{
     if (channel.GetSamples().empty()) {
       Error("MakeSingleChannelWorkspace",
           "The input Channel does not contain any sample - return a nullptr");
-      return 0;
+      return nullptr;
     }
 
     const TH1* channel_hist_template = channel.GetSamples().front().GetHisto();
@@ -1221,7 +1221,7 @@ namespace HistFactory{
                << " in channel " << channel.GetName() << " does not contain a histogram. This is the channel:\n";
       channel.Print(stream);
       Error("MakeSingleChannelWorkspace", "%s", stream.str().c_str());
-      return 0;
+      return nullptr;
     }
 
     if( ! channel.CheckHistograms() ) {
@@ -1424,9 +1424,9 @@ namespace HistFactory{
 	  //   - Use the built-in Errors in the TH1 itself (they are aboslute)
 	  //   - Take the supplied *RELATIVE* error and multiply by the nominal  
 	  string UncertName  = syst_x_expectedPrefix + "_StatAbsolUncert";
-	  TH1* statErrorHist = NULL;
+	  TH1* statErrorHist = nullptr;
 
-	  if( sample.GetStatError().GetErrorHist() == NULL ) {
+	  if( sample.GetStatError().GetErrorHist() == nullptr ) {
 	    // Make the absolute stat error
 	    cxcoutI(HistFactory) << "Making Statistical Uncertainty Hist for "
 		      << " Channel: " << channel_name
@@ -1472,7 +1472,7 @@ namespace HistFactory{
 	  // or create it if it doesn't yet exist:
 	  statFuncName = "mc_stat_" + channel_name;
 	  ParamHistFunc* paramHist = (ParamHistFunc*) proto->function( statFuncName.c_str() );
-	  if( paramHist == NULL ) {
+	  if( paramHist == nullptr ) {
 
 	    // Get a RooArgSet of the observables:
 	    // Names in the list fObsNameVec:
@@ -1546,7 +1546,7 @@ namespace HistFactory{
 
 	    std::string funcName = channel_name + "_" + shapeFactor.GetName() + "_shapeFactor";
 	    ParamHistFunc* paramHist = (ParamHistFunc*) proto->function( funcName.c_str() );
-	    if( paramHist == NULL ) {
+	    if( paramHist == nullptr ) {
 	      
 	      RooArgList observables;
 	      std::vector<std::string>::iterator itr = fObsNameVec.begin();
@@ -1568,7 +1568,7 @@ namespace HistFactory{
 					   observables, shapeFactorParams );
 	      
 	      // Set an initial shape, if requested
-	      if( shapeFactor.GetInitialShape() != NULL ) {
+	      if( shapeFactor.GetInitialShape() != nullptr ) {
 	        TH1* initialShape = static_cast<TH1*>(shapeFactor.GetInitialShape()->Clone());
 	        cxcoutI(HistFactory) << "Setting Shape Factor: " << shapeFactor.GetName()
 			      << " to have initial shape from hist: "
@@ -1661,7 +1661,7 @@ namespace HistFactory{
 	    std::string funcName = channel_name + "_" + shapeSys.GetName() + "_ShapeSys";
 	    ShapeSysNames.push_back( funcName );
 	    ParamHistFunc* paramHist = (ParamHistFunc*) proto->function( funcName.c_str() );
-	    if( paramHist == NULL ) {
+	    if( paramHist == nullptr ) {
 
 	      //std::string funcParams = "gamma_" + it->shapeFactorName;
 	      //paramHist = CreateParamHistFunc( proto, fObsNameVec, funcParams, funcName );
@@ -1766,7 +1766,7 @@ namespace HistFactory{
       // Create the histogram of (binwise)
       // stat uncertainties:
       unique_ptr<TH1> fracStatError( MakeScaledUncertaintyHist( statNodeName + "_RelErr", statHistPairs) );
-      if( fracStatError == NULL ) {
+      if( fracStatError == nullptr ) {
         cxcoutE(HistFactory) << "Error: Failed to make ScaledUncertaintyHist for: "
 		  << statNodeName << std::endl;
         throw hf_exc();
@@ -1827,7 +1827,7 @@ namespace HistFactory{
 	temp->setConstant();
 	
 	// remove the corresponding auxiliary observable from the global observables
-	RooRealVar* auxMeas = NULL;
+	RooRealVar* auxMeas = nullptr;
 	if(systToFix.at(i)=="Lumi"){
 	  auxMeas = proto->var("nominalLumi");
 	} else {
@@ -1850,7 +1850,7 @@ namespace HistFactory{
     // final proto model
     for(unsigned int i=0; i<constraintTermNames.size(); ++i){
       RooAbsArg* proto_arg = (proto->arg(constraintTermNames[i].c_str()));
-      if( proto_arg==NULL ) {
+      if( proto_arg==nullptr ) {
         cxcoutF(HistFactory) << "Error: Cannot find arg set: " << constraintTermNames.at(i)
 		  << " in workspace: " << proto->GetName() << std::endl;
 	throw hf_exc();
@@ -1860,7 +1860,7 @@ namespace HistFactory{
     }
     for(unsigned int i=0; i<likelihoodTermNames.size(); ++i){
       RooAbsArg* proto_arg = (proto->arg(likelihoodTermNames[i].c_str())); 
-      if( proto_arg==NULL ) {
+      if( proto_arg==nullptr ) {
         cxcoutF(HistFactory) << "Error: Cannot find arg set: " << likelihoodTermNames.at(i)
 		  << " in workspace: " << proto->GetName() << std::endl;
 	throw hf_exc();
@@ -1926,7 +1926,7 @@ namespace HistFactory{
     proto->import(dynamic_cast<RooDataSet&>(*asimov_dataset), Rename("asimovData"));
 
     // GHL: Determine to use data if the hist isn't 'NULL'
-    if(channel.GetData().GetHisto() != NULL) { 
+    if(channel.GetData().GetHisto() != nullptr) { 
 
       Data& data = channel.GetData();
       TH1* mnominal = data.GetHisto(); 
@@ -2119,11 +2119,11 @@ namespace HistFactory{
      // check first the inputs (see JIRA-6890)
      if (ch_names.empty() || chs.empty() ) {
         Error("MakeCombinedModel","Input vectors are empty - return a nullptr");
-        return 0;
+        return nullptr;
      }
      if (chs.size()  <  ch_names.size() ) {
         Error("MakeCombinedModel","Input vector of workspace has an invalid size - return a nullptr");
-        return 0;
+        return nullptr;
      }
 
     //
@@ -2230,7 +2230,7 @@ namespace HistFactory{
     delete asimov_combined; 
 
     // Now merge the observable datasets across the channels
-    if(chs[0]->data("obsData") != NULL) { 
+    if(chs[0]->data("obsData") != nullptr) { 
       MergeDataSets(combined, chs, ch_names, "obsData", obsList, channelCat);
     }
 
@@ -2347,7 +2347,7 @@ namespace HistFactory{
 							 RooCategory* channelCat) {
 
     // Create the total dataset
-    RooDataSet* simData=NULL;
+    RooDataSet* simData=nullptr;
 
     // Loop through channels, get their individual datasets,
     // and add them to the combined dataset
@@ -2461,7 +2461,7 @@ namespace HistFactory{
     
     if( numHists == 0 ) {
       cxcoutE(HistFactory) << "Warning: Empty Hist Vector, cannot create total uncertainty" << std::endl;
-      return NULL;
+      return nullptr;
     }
     
     const TH1* HistTemplate = HistVec.at(0).first;
@@ -2476,11 +2476,11 @@ namespace HistFactory{
     
     if( nominal->GetNbinsX()*nominal->GetNbinsY()*nominal->GetNbinsZ() != numBins ) {
       cxcoutE(HistFactory) << "Error: Provided hists have unequal bins" << std::endl;
-      return NULL;
+      return nullptr;
     }
     if( error->GetNbinsX()*error->GetNbinsY()*error->GetNbinsZ() != numBins ) {
       cxcoutE(HistFactory) << "Error: Provided hists have unequal bins" << std::endl;
-      return NULL;
+      return nullptr;
     }
   }
 

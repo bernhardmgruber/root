@@ -93,7 +93,7 @@ ROOT::Math::Minimizer * ROOT::Math::Factory::CreateMinimizer(const std::string &
 #ifdef DEBUG
       std::cout << "Error Loading ROOT::Math::Minimizer " << minim << std::endl;
 #endif
-         return 0;
+         return nullptr;
       }
 
       // create plug-in with required algorithm
@@ -107,7 +107,7 @@ ROOT::Math::Minimizer * ROOT::Math::Factory::CreateMinimizer(const std::string &
 
       return min;
    }
-   return 0;
+   return nullptr;
 
 }
 
@@ -178,10 +178,10 @@ ROOT::Math::DistSampler * ROOT::Math::Factory::CreateDistSampler(const std::stri
    TPluginManager *pm = gROOT->GetPluginManager();
    assert(pm != 0);
    TPluginHandler *h = pm->FindHandler("ROOT::Math::DistSampler", typeName );
-   if (h != 0) {
+   if (h != nullptr) {
       if (h->LoadPlugin() == -1) {
          MATH_ERROR_MSG("Factory::CreateDistSampler","Error loading DistSampler plug-in");
-         return 0;
+         return nullptr;
       }
 
       ROOT::Math::DistSampler * smp = reinterpret_cast<ROOT::Math::DistSampler *>( h->ExecPlugin(0) );
@@ -189,7 +189,7 @@ ROOT::Math::DistSampler * ROOT::Math::Factory::CreateDistSampler(const std::stri
       return smp;
    }
    MATH_ERROR_MSGVAL("Factory::CreateDistSampler","Error finding DistSampler plug-in",typeName);
-   return 0;
+   return nullptr;
 #endif
 }
 

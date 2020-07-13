@@ -36,7 +36,7 @@
 using namespace CPyCppyy;
 
 namespace PyROOT {
-PyObject *gRootModule = 0;
+PyObject *gRootModule = nullptr;
 }
 
 // Methods offered by the interface
@@ -87,7 +87,7 @@ static PyMethodDef gPyROOTMethods[] = {
     (char *)"Clear proxied objects regulated by PyROOT"},
    {(char *)"CreateBufferFromAddress", (PyCFunction)PyROOT::CreateBufferFromAddress, METH_O,
     (char *)"Create a LowLevelView object on the received address"},
-   {NULL, NULL, 0, NULL}};
+   {nullptr, nullptr, 0, nullptr}};
 
 #define QuoteIdent(ident) #ident
 #define QuoteMacro(macro) QuoteIdent(macro)
@@ -115,9 +115,9 @@ static int rootmodule_clear(PyObject *m)
    return 0;
 }
 
-static struct PyModuleDef moduledef = {PyModuleDef_HEAD_INIT,       LIBROOTPYZ_NAME,  NULL,
-                                       sizeof(struct module_state), gPyROOTMethods,   NULL,
-                                       rootmodule_traverse,         rootmodule_clear, NULL};
+static struct PyModuleDef moduledef = {PyModuleDef_HEAD_INIT,       LIBROOTPYZ_NAME,  nullptr,
+                                       sizeof(struct module_state), gPyROOTMethods,   nullptr,
+                                       rootmodule_traverse,         rootmodule_clear, nullptr};
 
 /// Initialization of extension module libROOTPythonizations
 

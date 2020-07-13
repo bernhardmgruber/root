@@ -25,13 +25,13 @@ namespace RooStats {
   namespace HistFactory {
 
     EstimateSummary::EstimateSummary(){
-      nominal=0; 
+      nominal=nullptr; 
 
       normName="Lumi";
       IncludeStatError = false;
       StatConstraintType=Gaussian;
       RelErrorThreshold=0.0;
-      relStatError=NULL; 
+      relStatError=nullptr; 
       shapeFactorName="";
     }
     EstimateSummary::~EstimateSummary(){}

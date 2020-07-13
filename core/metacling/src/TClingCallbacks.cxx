@@ -81,7 +81,7 @@ extern "C" {
 TClingCallbacks::TClingCallbacks(cling::Interpreter *interp, bool hasCodeGen) : InterpreterCallbacks(interp)
 {
    if (hasCodeGen) {
-      Transaction* T = 0;
+      Transaction* T = nullptr;
       m_Interpreter->declare("namespace __ROOT_SpecialObjects{}", &T);
       fROOTSpecialNamespace = dyn_cast<NamespaceDecl>(T->getFirstDecl().getSingleDecl());
    }
@@ -428,7 +428,7 @@ bool TClingCallbacks::LookupObject(clang::TagDecl* Tag) {
 
       // Use the Normalized name for the autoload
       std::string Name;
-      const ROOT::TMetaUtils::TNormalizedCtxt* tNormCtxt = NULL;
+      const ROOT::TMetaUtils::TNormalizedCtxt* tNormCtxt = nullptr;
       TCling__GetNormalizedContext(tNormCtxt);
       ROOT::TMetaUtils::GetNormalizedName(Name,
                                           C.getTypeDeclType(RD),
@@ -816,7 +816,7 @@ bool TClingCallbacks::tryInjectImplicitAutoKeyword(LookupResult &R, Scope *S) {
                                      C.getAutoType(QualType(),
                                                    clang::AutoTypeKeyword::Auto,
                                                    /*IsDependent*/false),
-                                     /*TypeSourceInfo*/0, SC_None);
+                                     /*TypeSourceInfo*/nullptr, SC_None);
 
    if (!Result) {
       ROOT::TMetaUtils::Error("TClingCallbacks::tryInjectImplicitAutoKeyword",

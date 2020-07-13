@@ -92,7 +92,7 @@ static PyObject *WrapLeaf(TLeaf *leaf)
       std::string typeName = leaf->GetTypeName();
       Converter *pcnv = CreateConverter(typeName + '*', dims);
 
-      void *address = 0;
+      void *address = nullptr;
       if (leaf->GetBranch())
          address = (void *)leaf->GetBranch()->GetAddress();
       if (!address)
@@ -105,7 +105,7 @@ static PyObject *WrapLeaf(TLeaf *leaf)
    } else if (leaf->GetValuePointer()) {
       // value types
       Converter *pcnv = CreateConverter(leaf->GetTypeName());
-      PyObject *value = 0;
+      PyObject *value = nullptr;
       if (leaf->IsA() == TLeafElement::Class() || leaf->IsA() == TLeafObject::Class())
          value = pcnv->FromMemory((void *)*(void **)leaf->GetValuePointer());
       else
@@ -123,14 +123,14 @@ PyObject *GetAttr(CPPInstance *self, PyObject *pyname)
 {
    const char *name_possibly_alias = CPyCppyy_PyText_AsString(pyname);
    if (!name_possibly_alias)
-      return 0;
+      return nullptr;
 
    // get hold of actual tree
    auto tree = (TTree *)GetTClass(self)->DynamicCast(TTree::Class(), self->GetObject());
 
    if (!tree) {
       PyErr_SetString(PyExc_ReferenceError, "attempt to access a null-pointer");
-      return 0;
+      return nullptr;
    }
 
    // deal with possible aliasing
@@ -160,7 +160,7 @@ PyObject *GetAttr(CPPInstance *self, PyObject *pyname)
 
    // confused
    PyErr_Format(PyExc_AttributeError, "\'%s\' object has no attribute \'%s\'", tree->IsA()->GetName(), name);
-   return 0;
+   return nullptr;
 }
 
 ////////////////////////////////////////////////////////////////////////////
@@ -225,7 +225,7 @@ PyObject *PyROOT::SetBranchAddressPyz(PyObject * /* self */, PyObject *args)
 
       bool isLeafList = branch->IsA() == TBranch::Class();
 
-      void *buf = 0;
+      void *buf = nullptr;
       if (CPPInstance_Check(address)) {
          if (((CPPInstance *)address)->fFlags & CPPInstance::kIsReference || isLeafList)
             buf = (void *)((CPPInstance *)address)->fObject;

@@ -74,15 +74,15 @@ RooAbsOptTestStatistic:: RooAbsOptTestStatistic()
 {
   // Initialize all non-persisted data members
 
-  _funcObsSet = 0 ;
-  _funcCloneSet = 0 ;
-  _funcClone = 0 ;
+  _funcObsSet = nullptr ;
+  _funcCloneSet = nullptr ;
+  _funcClone = nullptr ;
 
-  _normSet = 0 ;
-  _projDeps = 0 ;
+  _normSet = nullptr ;
+  _projDeps = nullptr ;
 
-  _origFunc = 0 ;
-  _origData = 0 ;
+  _origFunc = nullptr ;
+  _origData = nullptr ;
 
   _ownData = kTRUE ;
   _sealed = kFALSE ;
@@ -109,27 +109,27 @@ RooAbsOptTestStatistic::RooAbsOptTestStatistic(const char *name, const char *tit
 					       const RooArgSet& projDeps, const char* rangeName, const char* addCoefRangeName,
 					       Int_t nCPU, RooFit::MPSplit interleave, Bool_t verbose, Bool_t splitCutRange, Bool_t /*cloneInputData*/) : 
   RooAbsTestStatistic(name,title,real,indata,projDeps,rangeName, addCoefRangeName, nCPU, interleave, verbose, splitCutRange),
-  _projDeps(0),
+  _projDeps(nullptr),
   _sealed(kFALSE), 
   _optimized(kFALSE)
 {
   // Don't do a thing in master mode
 
   if (operMode()!=Slave) {
-    _funcObsSet = 0 ;
-    _funcCloneSet = 0 ;
-    _funcClone = 0 ;
-    _normSet = 0 ;
-    _projDeps = 0 ;    
-    _origFunc = 0 ;
-    _origData = 0 ;
+    _funcObsSet = nullptr ;
+    _funcCloneSet = nullptr ;
+    _funcClone = nullptr ;
+    _normSet = nullptr ;
+    _projDeps = nullptr ;    
+    _origFunc = nullptr ;
+    _origData = nullptr ;
     _ownData = kFALSE ;
     _sealed = kFALSE ;
     return ;
   }
 
-  _origFunc = 0 ; //other._origFunc ;
-  _origData = 0 ; // other._origData ;
+  _origFunc = nullptr ; //other._origFunc ;
+  _origData = nullptr ; // other._origData ;
 
   initSlave(real,indata,projDeps,rangeName,addCoefRangeName) ;
 }
@@ -143,20 +143,20 @@ RooAbsOptTestStatistic::RooAbsOptTestStatistic(const RooAbsOptTestStatistic& oth
   // Don't do a thing in master mode
   if (operMode()!=Slave) {    
 
-    _funcObsSet = 0 ;
-    _funcCloneSet = 0 ;
-    _funcClone = 0 ;
-    _normSet = other._normSet ? ((RooArgSet*) other._normSet->snapshot()) : 0 ;   
-    _projDeps = 0 ;    
-    _origFunc = 0 ;
-    _origData = 0 ;
+    _funcObsSet = nullptr ;
+    _funcCloneSet = nullptr ;
+    _funcClone = nullptr ;
+    _normSet = other._normSet ? ((RooArgSet*) other._normSet->snapshot()) : nullptr ;   
+    _projDeps = nullptr ;    
+    _origFunc = nullptr ;
+    _origData = nullptr ;
     _ownData = kFALSE ;
     return ;
   }
   
-  _origFunc = 0 ; //other._origFunc ;
-  _origData = 0 ; // other._origData ;
-  _projDeps = 0 ;
+  _origFunc = nullptr ; //other._origFunc ;
+  _origData = nullptr ; // other._origData ;
+  _projDeps = nullptr ;
   
   initSlave(*other._funcClone,*other._dataClone,other._projDeps?*other._projDeps:RooArgSet(),other._rangeName.c_str(),other._addCoefRangeName.c_str()) ;
 }
@@ -178,7 +178,7 @@ void RooAbsOptTestStatistic::initSlave(RooAbsReal& real, RooAbsData& indata, con
 
   // Clone FUNC
   _funcClone = (RooAbsReal*) real.cloneTree() ;
-  _funcCloneSet = 0 ;
+  _funcCloneSet = nullptr ;
 
   // Attach FUNC to data set  
   _funcObsSet = _funcClone->getObservables(indata) ;
@@ -228,7 +228,7 @@ void RooAbsOptTestStatistic::initSlave(RooAbsReal& real, RooAbsData& indata, con
     auto realDepRLV = dynamic_cast<const RooAbsRealLValue*>((*_funcObsSet)[i]);
     if (realDepRLV && realDepRLV->isDerived()) {
       RooArgSet tmp2;
-      realDepRLV->leafNodeServerList(&tmp2, 0, kTRUE);
+      realDepRLV->leafNodeServerList(&tmp2, nullptr, kTRUE);
       _funcObsSet->add(tmp2,kTRUE);
     }
   }
@@ -738,7 +738,7 @@ Bool_t RooAbsOptTestStatistic::setDataSlave(RooAbsData& indata, Bool_t cloneData
   // Delete previous dataset now, if it was owned
   if (_ownData) {
     delete _dataClone ;
-    _dataClone = 0 ;
+    _dataClone = nullptr ;
   }
 
   if (!cloneData && _rangeName.size()>0) {

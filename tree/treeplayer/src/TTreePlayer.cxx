@@ -96,18 +96,18 @@ ClassImp(TTreePlayer);
 
 TTreePlayer::TTreePlayer()
 {
-   fTree           = 0;
-   fScanFileName   = 0;
+   fTree           = nullptr;
+   fScanFileName   = nullptr;
    fScanRedirect   = kFALSE;
    fSelectedRows   = 0;
    fDimension      = 0;
-   fHistogram      = 0;
+   fHistogram      = nullptr;
    fFormulaList    = new TList();
    fFormulaList->SetOwner(kTRUE);
    fSelector         = new TSelectorDraw();
-   fSelectorFromFile = 0;
-   fSelectorClass    = 0;
-   fSelectorUpdate   = 0;
+   fSelectorFromFile = nullptr;
+   fSelectorClass    = nullptr;
+   fSelectorUpdate   = nullptr;
    fInput            = new TList();
    fInput->Add(new TNamed("varexp",""));
    fInput->Add(new TNamed("selection",""));
@@ -188,7 +188,7 @@ TTree *TTreePlayer::CopyTree(const char *selection, Option_t *, Long64_t nentrie
 
    // we make a copy of the tree header
    TTree *tree = fTree->CloneTree(0);
-   if (tree == 0) return 0;
+   if (tree == nullptr) return nullptr;
 
    // The clone should not delete any shared i/o buffers.
    TObjArray* branches = tree->GetListOfBranches();
@@ -204,7 +204,7 @@ TTree *TTreePlayer::CopyTree(const char *selection, Option_t *, Long64_t nentrie
    nentries = GetEntriesToProcess(firstentry, nentries);
 
    // Compile selection expression if there is one
-   TTreeFormula *select = 0; // no need to interfere with fSelect since we
+   TTreeFormula *select = nullptr; // no need to interfere with fSelect since we
                              // handle the loop explicitly below and can call
                              // UpdateFormulaLeaves ourselves.
    if (strlen(selection)) {
@@ -212,7 +212,7 @@ TTree *TTreePlayer::CopyTree(const char *selection, Option_t *, Long64_t nentrie
       if (!select || !select->GetNdim()) {
          delete select;
          delete tree;
-         return 0;
+         return nullptr;
       }
       fFormulaList->Add(select);
    }
@@ -254,8 +254,8 @@ void TTreePlayer::DeleteSelectorFromFile()
          delete fSelectorFromFile;
       }
    }
-   fSelectorFromFile = 0;
-   fSelectorClass = 0;
+   fSelectorFromFile = nullptr;
+   fSelectorClass = nullptr;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -319,7 +319,7 @@ Long64_t TTreePlayer::DrawScript(const char* wrapperPrefix,
 
    Info("DrawScript","%s",Form("Will process tree/chain using %s",selname.Data()));
    Long64_t result = fTree->Process(selname,option,nentries,firstentry);
-   fTree->SetNotify(0);
+   fTree->SetNotify(nullptr);
 
    // could delete the file selname+".h"
    // However this would remove the optimization of avoiding a useless
@@ -590,7 +590,7 @@ Long64_t TTreePlayer::GetEntries(const char *selection)
 {
    TSelectorEntries s(selection);
    fTree->Process(&s);
-   fTree->SetNotify(0);
+   fTree->SetNotify(nullptr);
    return s.GetSelectedRows();
 }
 
@@ -799,7 +799,7 @@ Int_t TTreePlayer::MakeClass(const char *classname, const char *option)
             } else if (strncmp(declfile,"/usr/include/",13) == 0) {
                fprintf(fp,"#include <%s>\n",declfile+strlen("/include/c++/"));
                listOfHeaders.Add(new TNamed(cl->GetName(),declfile+strlen("/include/c++/")));
-            } else if (strstr(declfile,"/include/c++/") != 0) {
+            } else if (strstr(declfile,"/include/c++/") != nullptr) {
                fprintf(fp,"#include <%s>\n",declfile+strlen("/include/c++/"));
                listOfHeaders.Add(new TNamed(cl->GetName(),declfile+strlen("/include/c++/")));
             } else if (strncmp(declfile,rootinclude,rootinclude_len) == 0) {
@@ -886,7 +886,7 @@ Int_t TTreePlayer::MakeClass(const char *classname, const char *option)
    fprintf(fp,"\n   // Declaration of leaf types\n");
    TLeaf *leafcount;
    TLeafObject *leafobj;
-   TBranchElement *bre=0;
+   TBranchElement *bre=nullptr;
    const char *headOK  = "   ";
    const char *headcom = " //";
    const char *head;
@@ -1914,7 +1914,7 @@ Int_t TTreePlayer::MakeProxy(const char *proxyClassname,
                              const char *macrofilename, const char *cutfilename,
                              const char *option, Int_t maxUnrolling)
 {
-   if (macrofilename==0 || strlen(macrofilename)==0 ) {
+   if (macrofilename==nullptr || strlen(macrofilename)==0 ) {
       // We currently require a file name for the script
       Error("MakeProxy","A file name for the user script is required");
       return 0;
@@ -2006,7 +2006,7 @@ TPrincipal *TTreePlayer::Principal(const char *varexp, const char *selection, Op
    std::vector<TString> cnames;
    TString opt = option;
    opt.ToLower();
-   TPrincipal *principal = 0;
+   TPrincipal *principal = nullptr;
    Long64_t entry,entryNumber;
    Int_t i,nch;
    Int_t ncols = 8;   // by default first 8 columns are printed only
@@ -2018,7 +2018,7 @@ TPrincipal *TTreePlayer::Principal(const char *varexp, const char *selection, Op
    nentries = GetEntriesToProcess(firstentry, nentries);
 
 //*-*- Compile selection expression if there is one
-   TTreeFormula *select = 0;
+   TTreeFormula *select = nullptr;
    if (strlen(selection)) {
       select = new TTreeFormula("Selection",selection,fTree);
       if (!select) return principal;
@@ -2046,7 +2046,7 @@ TPrincipal *TTreePlayer::Principal(const char *varexp, const char *selection, Op
    }
 
 //*-*- Create a TreeFormulaManager to coordinate the formulas
-   TTreeFormulaManager *manager=0;
+   TTreeFormulaManager *manager=nullptr;
    if (fFormulaList->LastIndex()>=0) {
       manager = new TTreeFormulaManager;
       for(i=0;i<=fFormulaList->LastIndex();i++) {
@@ -2249,7 +2249,7 @@ Long64_t TTreePlayer::Process(TSelector *selector,Option_t *option, Long64_t nen
       readbytesatstart = TFile::GetFileBytesRead();
 
       //set the file cache
-      TTreeCache *tpf = 0;
+      TTreeCache *tpf = nullptr;
       TFile *curfile = fTree->GetCurrentFile();
       if (curfile && fTree->GetCacheSize() > 0) {
          tpf = (TTreeCache*)curfile->GetCacheRead(fTree);
@@ -2263,7 +2263,7 @@ Long64_t TTreePlayer::Process(TSelector *selector,Option_t *option, Long64_t nen
       }
 
       //Create a timer to get control in the entry loop(s)
-      TProcessEventTimer *timer = 0;
+      TProcessEventTimer *timer = nullptr;
       Int_t interval = fTree->GetTimerInterval();
       if (!gROOT->IsBatch() && interval)
          timer = new TProcessEventTimer(interval);
@@ -2325,8 +2325,8 @@ Long64_t TTreePlayer::Process(TSelector *selector,Option_t *option, Long64_t nen
       selector->Terminate();        //<==call user termination function
       res = selector->GetStatus();
    }
-   fTree->SetNotify(0); // Detach the selector from the tree.
-   fSelectorUpdate = 0;
+   fTree->SetNotify(nullptr); // Detach the selector from the tree.
+   fSelectorUpdate = nullptr;
    if (gMonitoringWriter)
       gMonitoringWriter->SendProcessingStatus("DONE");
 
@@ -2338,7 +2338,7 @@ Long64_t TTreePlayer::Process(TSelector *selector,Option_t *option, Long64_t nen
 
 void TTreePlayer::RecursiveRemove(TObject *obj)
 {
-   if (fHistogram == obj) fHistogram = 0;
+   if (fHistogram == obj) fHistogram = nullptr;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -2549,7 +2549,7 @@ Long64_t TTreePlayer::Scan(const char *varexp, const char *selection,
       }
    }
    TObjArray *leaves = fTree->GetListOfLeaves();
-   if (leaves==0) return 0;
+   if (leaves==nullptr) return 0;
    UInt_t nleaves = leaves->GetEntriesFast();
    if (nleaves < ncols) ncols = nleaves;
    nch = varexp ? strlen(varexp) : 0;
@@ -2557,7 +2557,7 @@ Long64_t TTreePlayer::Scan(const char *varexp, const char *selection,
    nentries = GetEntriesToProcess(firstentry, nentries);
 
 //*-*- Compile selection expression if there is one
-   TTreeFormula        *select  = 0;
+   TTreeFormula        *select  = nullptr;
    if (selection && strlen(selection)) {
       select = new TTreeFormula("Selection",selection,fTree);
       if (!select) return -1;
@@ -2620,7 +2620,7 @@ Long64_t TTreePlayer::Scan(const char *varexp, const char *selection,
    }
 
 //*-*- Create a TreeFormulaManager to coordinate the formulas
-   TTreeFormulaManager *manager=0;
+   TTreeFormulaManager *manager=nullptr;
    Bool_t hasArray = kFALSE;
    Bool_t forceDim = kFALSE;
    if (fFormulaList->LastIndex()>=0) {
@@ -2818,11 +2818,11 @@ TSQLResult *TTreePlayer::Query(const char *varexp, const char *selection,
    nentries = GetEntriesToProcess(firstentry, nentries);
 
    // compile selection expression if there is one
-   TTreeFormula *select = 0;
+   TTreeFormula *select = nullptr;
    if (strlen(selection)) {
       select = new TTreeFormula("Selection",selection,fTree);
-      if (!select) return 0;
-      if (!select->GetNdim()) { delete select; return 0; }
+      if (!select) return nullptr;
+      if (!select->GetNdim()) { delete select; return nullptr; }
       fFormulaList->Add(select);
    }
 
@@ -2852,7 +2852,7 @@ TSQLResult *TTreePlayer::Query(const char *varexp, const char *selection,
    }
 
    //*-*- Create a TreeFormulaManager to coordinate the formulas
-   TTreeFormulaManager *manager=0;
+   TTreeFormulaManager *manager=nullptr;
    if (fFormulaList->LastIndex()>=0) {
       manager = new TTreeFormulaManager;
       for(i=0;i<=fFormulaList->LastIndex();i++) {
@@ -3146,7 +3146,7 @@ void TTreePlayer::UpdateFormulaLeaves()
       }
       if (fSelectorFromFile==fSelectorUpdate) {
          TIter next(fSelectorFromFile->GetOutputList());
-         TEntryList *elist=0;
+         TEntryList *elist=nullptr;
          while ((elist=(TEntryList*)next())){
             if (elist->InheritsFrom(TEntryList::Class())){
                elist->SetTree(fTree->GetTree());

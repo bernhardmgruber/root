@@ -23,7 +23,7 @@
 
 
 //- data _____________________________________________________________________
-dict_lookup_func CPyCppyy::gDictLookupOrg = 0;
+dict_lookup_func CPyCppyy::gDictLookupOrg = nullptr;
 bool CPyCppyy::gDictLookupActive = false;
 
 typedef std::map<std::string, std::string> TC2POperatorMapping_t;
@@ -309,7 +309,7 @@ CPyCppyy::PyCallable* CPyCppyy::Utility::FindBinaryOperator(
     if (rcname == "<unknown>" || lcname == "<unknown>")
         return nullptr;
 
-    PyCallable* pyfunc = 0;
+    PyCallable* pyfunc = nullptr;
 
     const std::string& lnsname = TypeManip::extract_namespace(lcname);
     if (!scope) scope = Cppyy::GetScope(lnsname);
@@ -661,12 +661,12 @@ Py_ssize_t CPyCppyy::Utility::GetBuffer(PyObject* pyobject, char tc, int size, v
     PyBufferProcs* bufprocs = Py_TYPE(pyobject)->tp_as_buffer;
 
     PySequenceMethods* seqmeths = Py_TYPE(pyobject)->tp_as_sequence;
-    if (seqmeths != 0 && bufprocs != 0
+    if (seqmeths != nullptr && bufprocs != nullptr
 #if  PY_VERSION_HEX < 0x03000000
-         && bufprocs->bf_getwritebuffer != 0
-         && (*(bufprocs->bf_getsegcount))(pyobject, 0) == 1
+         && bufprocs->bf_getwritebuffer != nullptr
+         && (*(bufprocs->bf_getsegcount))(pyobject, nullptr) == 1
 #else
-         && bufprocs->bf_getbuffer != 0
+         && bufprocs->bf_getbuffer != nullptr
 #endif
         ) {
 
@@ -688,10 +688,10 @@ Py_ssize_t CPyCppyy::Utility::GetBuffer(PyObject* pyobject, char tc, int size, v
         if (buf && check == true) {
         // determine buffer compatibility (use "buf" as a status flag)
             PyObject* pytc = PyObject_GetAttr(pyobject, PyStrings::gTypeCode);
-            if (pytc != 0) {      // for array objects
+            if (pytc != nullptr) {      // for array objects
                 char cpytc = CPyCppyy_PyText_AsString(pytc)[0];
                 if (!(cpytc == tc || (tc == '?' && cpytc == 'b')))
-                    buf = 0;      // no match
+                    buf = nullptr;      // no match
                 Py_DECREF(pytc);
             } else if (seqmeths->sq_length &&
                        (int)(buflen/(*(seqmeths->sq_length))(pyobject)) == size) {
@@ -701,10 +701,10 @@ Py_ssize_t CPyCppyy::Utility::GetBuffer(PyObject* pyobject, char tc, int size, v
             // also a gamble, but at least 1 item will fit into the buffer, so very likely ok ...
                 PyErr_Clear();
             } else {
-                buf = 0;                      // not compatible
+                buf = nullptr;                      // not compatible
 
             // clarify error message
-                PyObject* pytype = 0, *pyvalue = 0, *pytrace = 0;
+                PyObject* pytype = nullptr, *pyvalue = nullptr, *pytrace = nullptr;
                 PyErr_Fetch(&pytype, &pyvalue, &pytrace);
                 PyObject* pyvalue2 = CPyCppyy_PyText_FromFormat(
                     (char*)"%s and given element size (%ld) do not match needed (%d)",

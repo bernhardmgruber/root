@@ -181,7 +181,7 @@ PyObject *JupyROOTExecutor(PyObject * /*self*/, PyObject * args)
 {
    const char *code;
    if (!PyArg_ParseTuple(args, "s", &code))
-      return NULL;
+      return nullptr;
 
    auto res = JupyROOTExecutorImpl(code);
 
@@ -192,7 +192,7 @@ PyObject *JupyROOTDeclarer(PyObject * /*self*/, PyObject *args)
 {
    const char *code;
    if (!PyArg_ParseTuple(args, "s", &code))
-      return NULL;
+      return nullptr;
 
    auto res = JupyROOTDeclarerImpl(code);
 
@@ -262,7 +262,7 @@ PyObject *JupyROOTExecutorHandler_Dtor(PyObject * /*self*/, PyObject * /*args*/)
 // MODULE INTERFACE //
 //////////////////////
 
-PyObject *gJupyRootModule = 0;
+PyObject *gJupyRootModule = nullptr;
 
 // Methods offered by the interface
 static PyMethodDef gJupyROOTMethods[] = {
@@ -286,7 +286,7 @@ static PyMethodDef gJupyROOTMethods[] = {
     (char *)"Get stderr JupyROOTExecutorHandler"},
    {(char *)"JupyROOTExecutorHandler_Dtor", (PyCFunction)JupyROOTExecutorHandler_Dtor, METH_NOARGS,
     (char *)"Destruct JupyROOTExecutorHandler"},
-   {NULL, NULL, 0, NULL}};
+   {nullptr, nullptr, 0, nullptr}};
 
 #define QuoteIdent(ident) #ident
 #define QuoteMacro(macro) QuoteIdent(macro)
@@ -314,9 +314,9 @@ static int jupyrootmodule_clear(PyObject *m)
    return 0;
 }
 
-static struct PyModuleDef moduledef = {PyModuleDef_HEAD_INIT,       LIBJUPYROOT_NAME,     NULL,
-                                       sizeof(struct module_state), gJupyROOTMethods,     NULL,
-                                       jupyrootmodule_traverse,     jupyrootmodule_clear, NULL};
+static struct PyModuleDef moduledef = {PyModuleDef_HEAD_INIT,       LIBJUPYROOT_NAME,     nullptr,
+                                       sizeof(struct module_state), gJupyROOTMethods,     nullptr,
+                                       jupyrootmodule_traverse,     jupyrootmodule_clear, nullptr};
 
 /// Initialization of extension module libJupyROOT
 

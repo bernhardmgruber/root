@@ -797,7 +797,7 @@ CPyCppyy::Executor* CPyCppyy::CreateExecutor(const std::string& fullType)
     }
 
 // C++ classes and special cases
-    Executor* result = 0;
+    Executor* result = nullptr;
     if (Cppyy::TCppType_t klass = Cppyy::GetScope(realType)) {
         if (resolvedType.find("iterator") != std::string::npos || gIteratorTypes.find(fullType) != gIteratorTypes.end()) {
             if (cpd == "")

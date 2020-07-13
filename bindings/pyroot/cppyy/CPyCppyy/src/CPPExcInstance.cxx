@@ -158,20 +158,20 @@ PyTypeObject CPPExcInstance_Type = {
     sizeof(CPPExcInstance),        // tp_basicsize
     0,                             // tp_itemsize
     (destructor)ep_dealloc,        // tp_dealloc
-    0,                             // tp_print
-    0,                             // tp_getattr
-    0,                             // tp_setattr
-    0,                             // tp_compare
+    nullptr,                             // tp_print
+    nullptr,                             // tp_getattr
+    nullptr,                             // tp_setattr
+    nullptr,                             // tp_compare
     (reprfunc)ep_repr,             // tp_repr
-    0,                             // tp_as_number
-    0,                             // tp_as_sequence
-    0,                             // tp_as_mapping
-    0,                             // tp_hash
-    0,                             // tp_call
+    nullptr,                             // tp_as_number
+    nullptr,                             // tp_as_sequence
+    nullptr,                             // tp_as_mapping
+    nullptr,                             // tp_hash
+    nullptr,                             // tp_call
     (reprfunc)ep_str,              // tp_str
     (getattrofunc)ep_getattro,     // tp_getattro
     (setattrofunc)ep_setattro,     // tp_setattro
-    0,                             // tp_as_buffer
+    nullptr,                             // tp_as_buffer
     Py_TPFLAGS_DEFAULT |
         Py_TPFLAGS_BASETYPE |
         Py_TPFLAGS_BASE_EXC_SUBCLASS |
@@ -182,34 +182,34 @@ PyTypeObject CPPExcInstance_Type = {
     (inquiry)ep_clear,             // tp_clear
     (richcmpfunc)ep_richcompare,   // tp_richcompare
     0,                             // tp_weaklistoffset
-    0,                             // tp_iter
-    0,                             // tp_iternext
-    0,                             // tp_methods
-    0,                             // tp_members
-    0,                             // tp_getset
+    nullptr,                             // tp_iter
+    nullptr,                             // tp_iternext
+    nullptr,                             // tp_methods
+    nullptr,                             // tp_members
+    nullptr,                             // tp_getset
     (PyTypeObject*)PyExc_Exception,    // tp_base
-    0,                             // tp_dict
-    0,                             // tp_descr_get
-    0,                             // tp_descr_set
+    nullptr,                             // tp_dict
+    nullptr,                             // tp_descr_get
+    nullptr,                             // tp_descr_set
     0,                             // tp_dictoffset
-    0,                             // tp_init
-    0,                             // tp_alloc
+    nullptr,                             // tp_init
+    nullptr,                             // tp_alloc
     (newfunc)ep_new,               // tp_new
-    0,                             // tp_free
-    0,                             // tp_is_gc
-    0,                             // tp_bases
-    0,                             // tp_mro
-    0,                             // tp_cache
-    0,                             // tp_subclasses
-    0                              // tp_weaklist
+    nullptr,                             // tp_free
+    nullptr,                             // tp_is_gc
+    nullptr,                             // tp_bases
+    nullptr,                             // tp_mro
+    nullptr,                             // tp_cache
+    nullptr,                             // tp_subclasses
+    nullptr                              // tp_weaklist
 #if PY_VERSION_HEX >= 0x02030000
-    , 0                            // tp_del
+    , nullptr                            // tp_del
 #endif
 #if PY_VERSION_HEX >= 0x02060000
     , 0                            // tp_version_tag
 #endif
 #if PY_VERSION_HEX >= 0x03040000
-    , 0                            // tp_finalize
+    , nullptr                            // tp_finalize
 #endif
 };
 

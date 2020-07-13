@@ -20,7 +20,7 @@
 //#include "TClass.h"
 
 RooStats::HistFactory::Sample::Sample() : 
-  fNormalizeByTheory(false), fStatErrorActivate(false), fhNominal(), fhCountingHist(0) { ; }
+  fNormalizeByTheory(false), fStatErrorActivate(false), fhNominal(), fhCountingHist(nullptr) { ; }
 
 // copy constructor (important for python)
 RooStats::HistFactory::Sample::Sample(const Sample& other) :
@@ -39,12 +39,12 @@ RooStats::HistFactory::Sample::Sample(const Sample& other) :
   fNormalizeByTheory(other.fNormalizeByTheory),
   fStatErrorActivate(other.fStatErrorActivate),
   fhNominal(other.fhNominal),
-  fhCountingHist(0)
+  fhCountingHist(nullptr)
   { 
     if( other.fhCountingHist ) {
       SetValue( other.fhCountingHist->GetBinContent(1) );
     }else{
-      fhCountingHist = NULL;
+      fhCountingHist = nullptr;
     }
   }
 
@@ -72,7 +72,7 @@ RooStats::HistFactory::Sample& RooStats::HistFactory::Sample::operator=(const Sa
   if( other.fhCountingHist ) {
     SetValue( other.fhCountingHist->GetBinContent(1) );
   } else {
-    fhCountingHist = NULL;
+    fhCountingHist = nullptr;
   }
 
   return *this;
@@ -83,13 +83,13 @@ RooStats::HistFactory::Sample::Sample(std::string SampName, std::string SampHist
   fName( SampName ),   fInputFile( SampInputFile), 
   fHistoName( SampHistoName ), fHistoPath( SampHistoPath ),
   fNormalizeByTheory(true), fStatErrorActivate(false), fhNominal(),
-  fhCountingHist(0) { ; }
+  fhCountingHist(nullptr) { ; }
 
 RooStats::HistFactory::Sample::Sample(std::string SampName) : 
   fName( SampName ),   fInputFile( "" ), 
   fHistoName( "" ), fHistoPath( "" ),
   fNormalizeByTheory(true), fStatErrorActivate(false),fhNominal(),
-  fhCountingHist(0) { ; }
+  fhCountingHist(nullptr) { ; }
 
 RooStats::HistFactory::Sample::~Sample() {
   if(fhCountingHist)

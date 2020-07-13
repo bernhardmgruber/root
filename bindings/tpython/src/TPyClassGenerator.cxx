@@ -58,10 +58,10 @@ TClass *TPyClassGenerator::GetClass(const char *name, Bool_t load, Bool_t silent
 
    // called if all other class generators failed, attempt to build from python class
    if (CPyCppyy::gDictLookupActive == kTRUE)
-      return 0; // call originated from python
+      return nullptr; // call originated from python
 
    if (!load || !name)
-      return 0;
+      return nullptr;
 
    PyGILRAII thePyGILRAII;
 
@@ -101,7 +101,7 @@ TClass *TPyClassGenerator::GetClass(const char *name, Bool_t load, Bool_t silent
 
             // figure out number of variables required
             PyObject *func_code = PyObject_GetAttrString(attr, (char *)"func_code");
-            PyObject *var_names = func_code ? PyObject_GetAttrString(func_code, (char *)"co_varnames") : NULL;
+            PyObject *var_names = func_code ? PyObject_GetAttrString(func_code, (char *)"co_varnames") : nullptr;
             int nVars = var_names ? PyTuple_GET_SIZE(var_names) : 0 /* TODO: probably large number, all default? */;
             if (nVars < 0)
                nVars = 0;
@@ -147,13 +147,13 @@ TClass *TPyClassGenerator::GetClass(const char *name, Bool_t load, Bool_t silent
    std::string::size_type pos = clName.rfind('.');
 
    if (pos == std::string::npos)
-      return 0; // this isn't a python style class
+      return nullptr; // this isn't a python style class
 
    std::string mdName = clName.substr(0, pos);
    clName = clName.substr(pos + 1, std::string::npos);
 
    // create class in namespace, if it exists (no load, silent)
-   Bool_t useNS = gROOT->GetListOfClasses()->FindObject(mdName.c_str()) != 0;
+   Bool_t useNS = gROOT->GetListOfClasses()->FindObject(mdName.c_str()) != nullptr;
    if (!useNS) {
       // the class itself may exist if we're using the global scope
       TClass *cl = (TClass *)gROOT->GetListOfClasses()->FindObject(clName.c_str());
@@ -165,7 +165,7 @@ TClass *TPyClassGenerator::GetClass(const char *name, Bool_t load, Bool_t silent
    PyObject *mod = PyImport_AddModule(const_cast<char *>(mdName.c_str()));
    if (!mod) {
       PyErr_Clear();
-      return 0; // module apparently disappeared
+      return nullptr; // module apparently disappeared
    }
 
    Py_INCREF(mod);
@@ -175,7 +175,7 @@ TClass *TPyClassGenerator::GetClass(const char *name, Bool_t load, Bool_t silent
 
    if (!pyclass) {
       PyErr_Clear(); // the class is no longer available?!
-      return 0;
+      return nullptr;
    }
 
    // get a listing of all python-side members
@@ -183,7 +183,7 @@ TClass *TPyClassGenerator::GetClass(const char *name, Bool_t load, Bool_t silent
    if (!attrs) {
       PyErr_Clear();
       Py_DECREF(pyclass);
-      return 0;
+      return nullptr;
    }
 
    // pre-amble Cling proxy class
@@ -220,7 +220,7 @@ TClass *TPyClassGenerator::GetClass(const char *name, Bool_t load, Bool_t silent
 #else
          PyObject *func_code = PyObject_GetAttrString(attr, "__code__");
 #endif
-         PyObject *var_names = func_code ? PyObject_GetAttrString(func_code, (char *)"co_varnames") : NULL;
+         PyObject *var_names = func_code ? PyObject_GetAttrString(func_code, (char *)"co_varnames") : nullptr;
          if (PyErr_Occurred())
             PyErr_Clear(); // happens for slots; default to 0 arguments
 

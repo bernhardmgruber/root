@@ -209,19 +209,19 @@ bool XMLReader::GetNextTag(std::ifstream& file, std::string& out, int& lineCount
 bool XMLReader::CheckIsTagOK(const std::string& tag)
 {
    if (tag.length()<3){
-      ROOT::TMetaUtils::Error(0,"This is not a tag!\n");
+      ROOT::TMetaUtils::Error(nullptr,"This is not a tag!\n");
       return false;
    }
 
    // if tag doesn't begin with <, this is not a tag
    if (tag.at(0) != '<'){
-      ROOT::TMetaUtils::Error(0,"Malformed tag %s (tag doesn't begin with <)!\n", tag.c_str());
+      ROOT::TMetaUtils::Error(nullptr,"Malformed tag %s (tag doesn't begin with <)!\n", tag.c_str());
       return false;
    }
 
    // if the second symbol is space - this is malformed tag - name of the tag should go directly after the <
    if (isspace(tag.at(1))){
-      ROOT::TMetaUtils::Error(0,"Malformed tag %s (there should be no white-spaces between < and name-of-tag)!\n", tag.c_str());
+      ROOT::TMetaUtils::Error(nullptr,"Malformed tag %s (there should be no white-spaces between < and name-of-tag)!\n", tag.c_str());
       return false;
    }
 
@@ -235,7 +235,7 @@ bool XMLReader::CheckIsTagOK(const std::string& tag)
       }
       else {
          if (c == '/' && countWSp>0) {
-            ROOT::TMetaUtils::Error(0,"Malformed tag %s (there should be no white-spaces between / and >)!\n", tag.c_str());
+            ROOT::TMetaUtils::Error(nullptr,"Malformed tag %s (there should be no white-spaces between / and >)!\n", tag.c_str());
             return false;
          }
          break;
@@ -358,7 +358,7 @@ bool XMLReader::GetAttributes(const std::string& tag, std::vector<Attributes>& o
 
          if (c == '=') {
             if (!namefound){ // if no name was read, report error (i.e. <class ="x">)
-               ROOT::TMetaUtils::Error(0,"At line %s. No name of attribute\n", lineNum);
+               ROOT::TMetaUtils::Error(nullptr,"At line %s. No name of attribute\n", lineNum);
                return false;
             }
             else {
@@ -381,7 +381,7 @@ bool XMLReader::GetAttributes(const std::string& tag, std::vector<Attributes>& o
                else { // if !value is false, then value is true which means that these are the closing quotes for the
                   // attribute value
                   if (attr_name.length() == 0) { // checks if attribute name is empty
-                     ROOT::TMetaUtils::Error(0,"At line %s. Attribute - missing attribute name!\n", lineNum);
+                     ROOT::TMetaUtils::Error(nullptr,"At line %s. Attribute - missing attribute name!\n", lineNum);
                      return false;
                   }
                   // Lift this: one may had an empty attribute value
@@ -399,9 +399,9 @@ bool XMLReader::GetAttributes(const std::string& tag, std::vector<Attributes>& o
 //                   if (attr_name == "proto_pattern") {
 //                      printf("XMLReader::GetAttributes(): proto_pattern selection not implemented yet!\n");
 //                   }
-                  ROOT::TMetaUtils::Info(0, "*** Attribute: %s = \"%s\"\n", attr_name.c_str(), attr_value.c_str());
+                  ROOT::TMetaUtils::Info(nullptr, "*** Attribute: %s = \"%s\"\n", attr_name.c_str(), attr_value.c_str());
                   if (attr_name=="pattern" && attr_value.find("*") == std::string::npos){
-                     ROOT::TMetaUtils::Warning(0,"At line %s. A pattern, \"%s\", without wildcards is being used. This selection rule would not have any effect. Transforming it to a rule based on name.\n", lineNum, attr_value.c_str());
+                     ROOT::TMetaUtils::Warning(nullptr,"At line %s. A pattern, \"%s\", without wildcards is being used. This selection rule would not have any effect. Transforming it to a rule based on name.\n", lineNum, attr_value.c_str());
                      attr_name="name";
                   }
                   out.emplace_back(attr_name, attr_value);
@@ -415,14 +415,14 @@ bool XMLReader::GetAttributes(const std::string& tag, std::vector<Attributes>& o
             }
             else { // this is the case in which (name && equalfound) is false i.e. we miss either the attribute name or the
                // = symbol
-               ROOT::TMetaUtils::Error(0,"At line %s. Attribute - missing attribute name or =\n", lineNum);
+               ROOT::TMetaUtils::Error(nullptr,"At line %s. Attribute - missing attribute name or =\n", lineNum);
                return false;
             }
          }
          else if (lastsymbol == '=') { // this is the case in which the symbol is not ", space or = and the last symbol read
             // (diferent than space) is =. This is a situation which is represented by for example <class name = x"value">
             // this is an error
-            ROOT::TMetaUtils::Error(0,"At line %s. Wrong quotes placement or lack of quotes\n", lineNum);
+            ROOT::TMetaUtils::Error(nullptr,"At line %s. Wrong quotes placement or lack of quotes\n", lineNum);
             return false;
          }
          else if ((newattr || namefound) && !value){ // else - if name or newattr is Set, we should write in the attr_name variable
@@ -437,7 +437,7 @@ bool XMLReader::GetAttributes(const std::string& tag, std::vector<Attributes>& o
       }
 
       if (namefound && (!equalfound || !value)) { // this catches the situation <class name = "value" something >
-         ROOT::TMetaUtils::Error(0,"At line %s. Attribute - missing attribute value\n", lineNum);
+         ROOT::TMetaUtils::Error(nullptr,"At line %s. Attribute - missing attribute value\n", lineNum);
          return false;
       }
    }
@@ -469,8 +469,8 @@ bool XMLReader::Parse(const std::string &fileName, SelectionRules& out)
    bool inMethod = false;
    bool inField = false;
 
-   BaseSelectionRule *bsr = 0; // Pointer to the base class, in it is written information about the current sel. rule
-   BaseSelectionRule *bsrChild = 0; // The same but keeps information for method or field children of a class
+   BaseSelectionRule *bsr = nullptr; // Pointer to the base class, in it is written information about the current sel. rule
+   BaseSelectionRule *bsrChild = nullptr; // The same but keeps information for method or field children of a class
    std::unique_ptr<ClassSelectionRule> csr;
    std::unique_ptr<FunctionSelectionRule> fsr;
    std::unique_ptr<VariableSelectionRule> vsr;
@@ -1029,13 +1029,13 @@ bool XMLReader::Parse(const std::string &fileName, SelectionRules& out)
    // we are outside of the while cycle which means that we have read the whole XML document
 
    if (sel && !selEnd) { // if selEnd is true, it menas that we never had a closing </selection> tag
-      ROOT::TMetaUtils::Error(0,"Error - missing </selection> tag\n");
+      ROOT::TMetaUtils::Error(nullptr,"Error - missing </selection> tag\n");
       out.ClearSelectionRules();
       return false;
    }
    if (excl && !exclEnd ) { // if excl is true and exclEnd is false, it means that we had an opening <exclusion> tag but we
       // never had the closing </exclusion> tag
-      ROOT::TMetaUtils::Error(0,"Error - missing </selection> tag\n");
+      ROOT::TMetaUtils::Error(nullptr,"Error - missing </selection> tag\n");
       out.ClearSelectionRules();
       return false;
    }

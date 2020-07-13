@@ -267,7 +267,7 @@ static PyObject* mp_meth_self(CPPOverload* pymeth, void*)
         PyErr_Format(PyExc_AttributeError,
             "function %s has no attribute \'im_self\'", pymeth->fMethodInfo->fName.c_str());
         return nullptr;
-    } else if (pymeth->fSelf != 0) {
+    } else if (pymeth->fSelf != nullptr) {
         Py_INCREF((PyObject*)pymeth->fSelf);
         return (PyObject*)pymeth->fSelf;
     }
@@ -366,7 +366,7 @@ static PyObject* mp_func_code(CPPOverload* pymeth, void*)
     return code;
 #else
 // not important for functioning of most code, so not implemented for p3 for now (TODO)
-    pymeth = 0;
+    pymeth = nullptr;
     Py_RETURN_NONE;
 #endif
 }
@@ -604,7 +604,7 @@ static PyObject* mp_call(CPPOverload* pymeth, PyObject* args, PyObject* kwds)
                 continue;    // did not set implicit conversion, so don't try again
 
             PyObject* result = methods[i]->Call(pymeth->fSelf, args, kwds, &ctxt);
-            if (result != 0) {
+            if (result != nullptr) {
             // success: update the dispatch map for subsequent calls
                 if (!memoized_pc)
                     dispatchMap.push_back(std::make_pair(sighash, methods[i]));
@@ -686,7 +686,7 @@ static CPPOverload* mp_descrget(CPPOverload* pymeth, CPPInstance* pyobj, PyObjec
 
 // else: bound
     CPPOverload* newPyMeth = free_list;
-    if (newPyMeth != NULL) {
+    if (newPyMeth != nullptr) {
         free_list = (CPPOverload*)(newPyMeth->fSelf);
         (void)PyObject_INIT(newPyMeth, &CPPOverload_Type);
         numfree--;
@@ -866,54 +866,54 @@ PyTypeObject CPPOverload_Type = {
     sizeof(CPPOverload),           // tp_basicsize
     0,                             // tp_itemsize
     (destructor)mp_dealloc,        // tp_dealloc
-    0,                             // tp_print
-    0,                             // tp_getattr
-    0,                             // tp_setattr
-    0,                             // tp_compare
-    0,                             // tp_repr
-    0,                             // tp_as_number
-    0,                             // tp_as_sequence
-    0,                             // tp_as_mapping
+    nullptr,                             // tp_print
+    nullptr,                             // tp_getattr
+    nullptr,                             // tp_setattr
+    nullptr,                             // tp_compare
+    nullptr,                             // tp_repr
+    nullptr,                             // tp_as_number
+    nullptr,                             // tp_as_sequence
+    nullptr,                             // tp_as_mapping
     (hashfunc)mp_hash,             // tp_hash
     (ternaryfunc)mp_call,          // tp_call
     (reprfunc)mp_str,              // tp_str
-    0,                             // tp_getattro
-    0,                             // tp_setattro
-    0,                             // tp_as_buffer
+    nullptr,                             // tp_getattro
+    nullptr,                             // tp_setattro
+    nullptr,                             // tp_as_buffer
     Py_TPFLAGS_DEFAULT | Py_TPFLAGS_HAVE_GC,      // tp_flags
     (char*)"cppyy method proxy (internal)",       // tp_doc
     (traverseproc)mp_traverse,     // tp_traverse
     (inquiry)mp_clear,             // tp_clear
     (richcmpfunc)mp_richcompare,   // tp_richcompare
     0,                             // tp_weaklistoffset
-    0,                             // tp_iter
-    0,                             // tp_iternext
+    nullptr,                             // tp_iter
+    nullptr,                             // tp_iternext
     mp_methods,                    // tp_methods
-    0,                             // tp_members
+    nullptr,                             // tp_members
     mp_getset,                     // tp_getset
-    0,                             // tp_base
-    0,                             // tp_dict
+    nullptr,                             // tp_base
+    nullptr,                             // tp_dict
     (descrgetfunc)mp_descrget,     // tp_descr_get
-    0,                             // tp_descr_set
+    nullptr,                             // tp_descr_set
     0,                             // tp_dictoffset
-    0,                             // tp_init
-    0,                             // tp_alloc
+    nullptr,                             // tp_init
+    nullptr,                             // tp_alloc
     (newfunc)mp_new,               // tp_new
-    0,                             // tp_free
-    0,                             // tp_is_gc
-    0,                             // tp_bases
-    0,                             // tp_mro
-    0,                             // tp_cache
-    0,                             // tp_subclasses
-    0                              // tp_weaklist
+    nullptr,                             // tp_free
+    nullptr,                             // tp_is_gc
+    nullptr,                             // tp_bases
+    nullptr,                             // tp_mro
+    nullptr,                             // tp_cache
+    nullptr,                             // tp_subclasses
+    nullptr                              // tp_weaklist
 #if PY_VERSION_HEX >= 0x02030000
-    , 0                            // tp_del
+    , nullptr                            // tp_del
 #endif
 #if PY_VERSION_HEX >= 0x02060000
     , 0                            // tp_version_tag
 #endif
 #if PY_VERSION_HEX >= 0x03040000
-    , 0                            // tp_finalize
+    , nullptr                            // tp_finalize
 #endif
 };
 

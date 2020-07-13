@@ -108,12 +108,12 @@ TPyReturn::operator char *() const
 TPyReturn::operator const char *() const
 {
    if (fPyObject == Py_None) // for void returns
-      return 0;
+      return nullptr;
 
    const char *s = CPyCppyy_PyText_AsString(fPyObject);
    if (PyErr_Occurred()) {
       PyErr_Print();
-      return 0;
+      return nullptr;
    }
 
    return s;
@@ -177,7 +177,7 @@ TPyReturn::operator Double_t() const
 TPyReturn::operator void *() const
 {
    if (fPyObject == Py_None)
-      return 0;
+      return nullptr;
 
    if (CPyCppyy::CPPInstance_Check(fPyObject)) {
       ((CPyCppyy::CPPInstance *)fPyObject)->CppOwns();
@@ -192,7 +192,7 @@ TPyReturn::operator void *() const
 TPyReturn::operator PyObject *() const
 {
    if (fPyObject == Py_None)
-      return 0;
+      return nullptr;
 
    Py_INCREF(fPyObject);
    return fPyObject;

@@ -80,7 +80,7 @@ long TClingMethodArgInfo::Property() const
 const char *TClingMethodArgInfo::DefaultValue() const
 {
    if (!IsValid()) {
-      return 0;
+      return nullptr;
    }
    const clang::ParmVarDecl *pvd = GetDecl();
    // Instantiate default arg if needed
@@ -92,7 +92,7 @@ const char *TClingMethodArgInfo::DefaultValue() const
                                                 const_cast<clang::FunctionDecl*>(fd),
                                                 const_cast<clang::ParmVarDecl*>(pvd));
    }
-   const clang::Expr *expr = 0;
+   const clang::Expr *expr = nullptr;
    if (pvd->hasUninstantiatedDefaultArg()) {
       // We tried to instantiate it above; if we fail, use the uninstantiated one.
       expr = pvd->getUninstantiatedDefaultArg();
@@ -106,7 +106,7 @@ const char *TClingMethodArgInfo::DefaultValue() const
    llvm::raw_string_ostream out(buf);
    if (!expr) {
       // CINT returned NULL for non-defaulted args.
-      return 0;
+      return nullptr;
    }
    bool implicitInit = false;
    if (const clang::CXXConstructExpr *construct =
@@ -146,7 +146,7 @@ const TClingTypeInfo *TClingMethodArgInfo::Type() const
 const char *TClingMethodArgInfo::TypeName() const
 {
    if (!IsValid()) {
-      return 0;
+      return nullptr;
    }
    return Type()->Name();
 }

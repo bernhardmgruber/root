@@ -93,7 +93,7 @@
 
 //- data ---------------------------------------------------------------------
 ClassImp(TPython);
-static PyObject *gMainDict = 0;
+static PyObject *gMainDict = nullptr;
 
 // needed to properly resolve (dllimport) symbols on Windows
 namespace CPyCppyy {
@@ -414,7 +414,7 @@ const TPyReturn TPython::Eval(const char *expr)
 
    // explicit conversion for python type required
    PyObject *pyclass = PyObject_GetAttrString(result, const_cast<char*>("__class__"));
-   if (pyclass != 0) {
+   if (pyclass != nullptr) {
       // retrieve class name and the module in which it resides
       PyObject *name = PyObject_GetAttr(pyclass, CPyCppyy::PyStrings::gName);
       PyObject *module = PyObject_GetAttr(pyclass, CPyCppyy::PyStrings::gModule);
@@ -429,7 +429,7 @@ const TPyReturn TPython::Eval(const char *expr)
       TClass *klass = TClass::GetClass(qname.c_str());
 
       // construct general ROOT python object that pretends to be of class 'klass'
-      if (klass != 0)
+      if (klass != nullptr)
          return TPyReturn(result);
    } else
       PyErr_Clear();
@@ -450,7 +450,7 @@ Bool_t TPython::Bind(TObject *object, const char *label)
 
    // bind object in the main namespace
    TClass *klass = object->IsA();
-   if (klass != 0) {
+   if (klass != nullptr) {
       PyObject *bound = CPyCppyy::BindCppObject((void *)object, Cppyy::GetScope(klass->GetName()));
 
       if (bound) {
@@ -540,11 +540,11 @@ void *TPython::CPPInstance_AsVoidPtr(PyObject *pyobject)
 {
    // setup
    if (!Initialize())
-      return 0;
+      return nullptr;
 
    // check validity of cast
    if (!CPyCppyy::CPPInstance_Check(pyobject))
-      return 0;
+      return nullptr;
 
    // get held object (may be null)
    return ((CPyCppyy::CPPInstance *)pyobject)->GetObject();
@@ -557,7 +557,7 @@ PyObject *TPython::CPPInstance_FromVoidPtr(void *addr, const char *classname, Bo
 {
    // setup
    if (!Initialize())
-      return 0;
+      return nullptr;
 
    // perform cast (the call will check TClass and addr, and set python errors)
    PyObject *pyobject = CPyCppyy::BindCppObjectNoCast(addr, Cppyy::GetScope(classname), false);

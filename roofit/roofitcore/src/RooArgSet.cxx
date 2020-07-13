@@ -421,7 +421,7 @@ Bool_t RooArgSet::addOwned(RooAbsArg& var, Bool_t silent)
 
 RooAbsArg* RooArgSet::addClone(const RooAbsArg& var, Bool_t silent) 
 {
-  return checkForDup(var,silent)? 0 : RooAbsCollection::addClone(var,silent) ;
+  return checkForDup(var,silent)? nullptr : RooAbsCollection::addClone(var,silent) ;
 }
 
 
@@ -810,7 +810,7 @@ Bool_t RooArgSet::readFromStream(istream& is, Bool_t compact, const char* flagRe
       }
       coutI(InputArguments) << "RooArgSet::readFromStream(" << GetName() << "): processing include file " 
 			    << filename << endl ;
-      if (readFromStream(incfs,compact,flagReadAtt,inSection?0:section,verbose)) return kTRUE ;
+      if (readFromStream(incfs,compact,flagReadAtt,inSection?nullptr:section,verbose)) return kTRUE ;
       continue ;
     }
 
@@ -987,7 +987,7 @@ Bool_t RooArgSet::isInRange(const char* rangeSpec)
       return kTRUE ;
     }
 
-    token = strtok(0,",") ;
+    token = strtok(nullptr,",") ;
   }
 
   delete iter ;

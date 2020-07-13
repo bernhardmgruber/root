@@ -138,7 +138,7 @@ inline PyObject* CPyCppyy::CPPMethod::ExecuteProtected(
 // helper code to prevent some code duplication; this code embeds a "try/catch"
 // block that saves the call environment for restoration in case of an otherwise
 // fatal signal
-    PyObject* result = 0;
+    PyObject* result = nullptr;
 
     TRY {     // copy call environment to be able to jump back on signal
         result = ExecuteFast(self, offset, ctxt);
@@ -156,7 +156,7 @@ inline PyObject* CPyCppyy::CPPMethod::ExecuteProtected(
             PyErr_SetString(PyExc_FloatingPointError, "floating point exception in C++; program state was reset");
         else
             PyErr_SetString(PyExc_SystemError, "problem in C++; program state was reset");
-        result = 0;
+        result = nullptr;
     } ENDTRY;
 
     return result;
@@ -712,7 +712,7 @@ bool CPyCppyy::CPPMethod::ConvertAndSetArgs(PyObject* args, CallContext* ctxt)
 PyObject* CPyCppyy::CPPMethod::Execute(void* self, ptrdiff_t offset, CallContext* ctxt)
 {
 // call the interface method
-    PyObject* result = 0;
+    PyObject* result = nullptr;
 
     if (CallContext::sSignalPolicy != CallContext::kProtected && \
         !(ctxt->fFlags & CallContext::kProtected)) {
@@ -731,7 +731,7 @@ PyObject* CPyCppyy::CPPMethod::Execute(void* self, ptrdiff_t offset, CallContext
 //        result = 0;
 //    } else if (!result && PyErr_Occurred())
     if (!result && PyErr_Occurred())
-        SetPyError_(0);
+        SetPyError_(nullptr);
 
     return result;
 }

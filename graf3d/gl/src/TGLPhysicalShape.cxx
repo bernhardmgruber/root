@@ -67,8 +67,8 @@ TGLPhysicalShape::TGLPhysicalShape(UInt_t id, const TGLLogicalShape & logicalSha
                                    const TGLMatrix & transform, Bool_t invertedWind,
                                    const Float_t rgba[4]) :
    fLogicalShape (&logicalShape),
-   fNextPhysical (0),
-   fFirstPSRef   (0),
+   fNextPhysical (nullptr),
+   fFirstPSRef   (nullptr),
    fID           (id),
    fTransform    (transform),
    fManip        (kManipAll),
@@ -96,8 +96,8 @@ TGLPhysicalShape::TGLPhysicalShape(UInt_t id, const TGLLogicalShape & logicalSha
                                    const Double_t * transform, Bool_t invertedWind,
                                    const Float_t rgba[4]) :
    fLogicalShape (&logicalShape),
-   fNextPhysical (0),
-   fFirstPSRef   (0),
+   fNextPhysical (nullptr),
+   fFirstPSRef   (nullptr),
    fID           (id),
    fTransform    (transform),
    fManip        (kManipAll),
@@ -129,7 +129,7 @@ TGLPhysicalShape::~TGLPhysicalShape()
 
    // Remove all references.
    while (fFirstPSRef) {
-      fFirstPSRef->SetPShape(0);
+      fFirstPSRef->SetPShape(nullptr);
    }
 }
 
@@ -157,7 +157,7 @@ void TGLPhysicalShape::RemoveReference(TGLPShapeRef* ref)
       found = kTRUE;
    } else {
       TGLPShapeRef *shp1 = fFirstPSRef, *shp2;
-      while ((shp2 = shp1->fNextPSRef) != 0) {
+      while ((shp2 = shp1->fNextPSRef) != nullptr) {
          if (shp2 == ref) {
             shp1->fNextPSRef = shp2->fNextPSRef;
             found = kTRUE;
@@ -167,7 +167,7 @@ void TGLPhysicalShape::RemoveReference(TGLPShapeRef* ref)
       }
    }
    if (found) {
-      ref->fNextPSRef = 0;
+      ref->fNextPSRef = nullptr;
    } else {
       Error("TGLPhysicalShape::RemoveReference", "Attempt to un-ref an unregistered shape-ref.");
    }
@@ -291,7 +291,7 @@ void TGLPhysicalShape::SetDiffuseColor(Color_t ci, UChar_t transparency)
 
 void TGLPhysicalShape::SetupGLColors(TGLRnrCtx & rnrCtx, const Float_t* color) const
 {
-   if (color == 0) color = fColor;
+   if (color == nullptr) color = fColor;
 
    switch (rnrCtx.DrawPass()) {
       case TGLRnrCtx::kPassWireFrame:

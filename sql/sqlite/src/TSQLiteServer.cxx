@@ -50,7 +50,7 @@ TSQLiteServer::TSQLiteServer(const char *db, const char* /*uid*/, const char* /*
 #define SQLITE_OPEN_URI 0x00000000
 #endif
 #if SQLITE_VERSION_NUMBER >= 3005000
-   Int_t error = sqlite3_open_v2(dbase, &fSQLite, SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE | SQLITE_OPEN_URI, NULL);
+   Int_t error = sqlite3_open_v2(dbase, &fSQLite, SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE | SQLITE_OPEN_URI, nullptr);
 #else
    Int_t error = sqlite3_open(dbase, &fSQLite);
 #endif
@@ -115,7 +115,7 @@ TSQLResult *TSQLiteServer::Query(const char *sql)
 {
    if (!IsConnected()) {
       Error("Query", "not connected");
-      return 0;
+      return nullptr;
    }
 
    sqlite3_stmt *preparedStmt = nullptr;
@@ -123,13 +123,13 @@ TSQLResult *TSQLiteServer::Query(const char *sql)
    // -1 as we read until we encounter a \0.
    // NULL because we do not check which char was read last.
 #if SQLITE_VERSION_NUMBER >= 3005000
-   int retVal = sqlite3_prepare_v2(fSQLite, sql, -1, &preparedStmt, NULL);
+   int retVal = sqlite3_prepare_v2(fSQLite, sql, -1, &preparedStmt, nullptr);
 #else
    int retVal = sqlite3_prepare(fSQLite, sql, -1, &preparedStmt, NULL);
 #endif
    if (retVal != SQLITE_OK) {
       Error("Query", "SQL Error: %d %s", retVal, sqlite3_errmsg(fSQLite));
-      return 0;
+      return nullptr;
    }
 
    return new TSQLiteResult(preparedStmt);
@@ -147,7 +147,7 @@ Bool_t TSQLiteServer::Exec(const char *sql)
    }
 
    char *sqlite_err_msg;
-   int ret = sqlite3_exec(fSQLite, sql, NULL, NULL, &sqlite_err_msg);
+   int ret = sqlite3_exec(fSQLite, sql, nullptr, nullptr, &sqlite_err_msg);
    if (ret != SQLITE_OK) {
       Error("Exec", "SQL Error: %d %s", ret, sqlite_err_msg);
       sqlite3_free(sqlite_err_msg);
@@ -174,7 +174,7 @@ Int_t TSQLiteServer::SelectDataBase(const char* /*dbname*/)
 TSQLResult *TSQLiteServer::GetDataBases(const char* /*wild*/)
 {
    Error("GetDataBases", "GetDataBases command makes no sense for SQLite!");
-   return 0;
+   return nullptr;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -187,7 +187,7 @@ TSQLResult *TSQLiteServer::GetTables(const char* /*dbname*/, const char *wild)
 {
    if (!IsConnected()) {
       Error("GetTables", "not connected");
-      return 0;
+      return nullptr;
    }
 
    TString sql = "SELECT name FROM sqlite_master where type='table'";
@@ -211,7 +211,7 @@ TSQLResult *TSQLiteServer::GetColumns(const char* /*dbname*/, const char* table,
 {
    if (!IsConnected()) {
       Error("GetColumns", "not connected");
-      return 0;
+      return nullptr;
    }
 
    if (wild) {
@@ -231,10 +231,10 @@ TSQLTableInfo *TSQLiteServer::GetTableInfo(const char* tablename)
 {
    if (!IsConnected()) {
       Error("GetTableInfo", "not connected");
-      return 0;
+      return nullptr;
    }
 
-   if ((tablename==0) || (*tablename==0)) return nullptr;
+   if ((tablename==nullptr) || (*tablename==0)) return nullptr;
 
    TSQLResult *columnRes = GetColumns("", tablename);
 
@@ -355,7 +355,7 @@ TSQLStatement* TSQLiteServer::Statement(const char *sql, Int_t)
    // -1 as we read until we encounter a \0.
    // NULL because we do not check which char was read last.
 #if SQLITE_VERSION_NUMBER >= 3005000
-   int retVal = sqlite3_prepare_v2(fSQLite, sql, -1, &preparedStmt, NULL);
+   int retVal = sqlite3_prepare_v2(fSQLite, sql, -1, &preparedStmt, nullptr);
 #else
    int retVal = sqlite3_prepare(fSQLite, sql, -1, &preparedStmt, NULL);
 #endif
@@ -378,7 +378,7 @@ const char *TSQLiteServer::ServerInfo()
 {
    if (!IsConnected()) {
       Error("ServerInfo", "not connected");
-      return 0;
+      return nullptr;
    }
 
    return fSrvInfo.Data();

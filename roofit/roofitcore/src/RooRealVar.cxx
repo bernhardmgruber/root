@@ -129,7 +129,7 @@ RooRealVar::RooRealVar(const char *name, const char *title,
     setRange(minValue,maxValue) ;
 
     Double_t clipValue ;
-    inRange(value,0,&clipValue) ;
+    inRange(value,nullptr,&clipValue) ;
     _value = clipValue ;
 
     TRACE_CREATE
@@ -226,7 +226,7 @@ Double_t RooRealVar::getValV(const RooArgSet*) const
 void RooRealVar::setVal(Double_t value)
 {
   Double_t clipValue ;
-  inRange(value,0,&clipValue) ;
+  inRange(value,nullptr,&clipValue) ;
 
   if (clipValue != _value) {
     setValueDirty() ;
@@ -301,7 +301,7 @@ const RooAbsBinning& RooRealVar::getBinning(const char* name, Bool_t verbose, Bo
 RooAbsBinning& RooRealVar::getBinning(const char* name, Bool_t verbose, Bool_t createOnTheFly)
 {
   // Return default (normalization) binning and range if no name is specified
-  if (name==0) {
+  if (name==nullptr) {
     return *_binning ;
   }
 
@@ -351,13 +351,13 @@ std::list<std::string> RooRealVar::getBinningNames() const
   }
 
   RooFIter iter = _altNonSharedBinning.fwdIterator();
-  const RooAbsArg* binning = 0;
+  const RooAbsArg* binning = nullptr;
   while((binning = iter.next())) {
     const char* name = binning->GetName();
     binningNames.push_back(string(name));
   }
   iter = sharedProp()->_altBinning.fwdIterator();
-  binning = 0;
+  binning = nullptr;
   while((binning = iter.next())) {
     const char* name = binning->GetName();
     binningNames.push_back(string(name));
@@ -445,7 +445,7 @@ void RooRealVar::setMin(const char* name, Double_t value)
   // Clip current value in window if it fell out
   if (!name) {
     Double_t clipValue ;
-    if (!inRange(_value,0,&clipValue)) {
+    if (!inRange(_value,nullptr,&clipValue)) {
       setVal(clipValue) ;
     }
   }
@@ -475,7 +475,7 @@ void RooRealVar::setMax(const char* name, Double_t value)
   // Clip current value in window if it fell out
   if (!name) {
     Double_t clipValue ;
-    if (!inRange(_value,0,&clipValue)) {
+    if (!inRange(_value,nullptr,&clipValue)) {
       setVal(clipValue) ;
     }
   }
@@ -843,7 +843,7 @@ TString* RooRealVar::format(const RooCmdArg& formatArg) const
   // Process & check varargs
   pc.process(tmp) ;
   if (!pc.ok(kTRUE)) {
-    return 0 ;
+    return nullptr ;
   }
 
   // Extract values from named arguments

@@ -109,8 +109,8 @@ RooCurve::RooCurve(const RooAbsReal &f, RooAbsRealLValue &x, Double_t xlo, Doubl
   }
   setYAxisLabel(title.Data());
 
-  RooAbsFunc *funcPtr = 0;
-  RooAbsFunc *rawPtr  = 0;
+  RooAbsFunc *funcPtr = nullptr;
+  RooAbsFunc *rawPtr  = nullptr;
   funcPtr= f.bindVars(x,normVars,kTRUE);
 
   // apply a scale factor if necessary

@@ -27,9 +27,9 @@ using namespace clang;
 namespace cling {
   ValueExtractionSynthesizer::ValueExtractionSynthesizer(clang::Sema* S,
                                                          bool isChildInterpreter)
-    : WrapperTransformer(S), m_Context(&S->getASTContext()), m_gClingVD(0),
-      m_UnresolvedNoAlloc(0), m_UnresolvedWithAlloc(0),
-      m_UnresolvedCopyArray(0), m_isChildInterpreter(isChildInterpreter) { }
+    : WrapperTransformer(S), m_Context(&S->getASTContext()), m_gClingVD(nullptr),
+      m_UnresolvedNoAlloc(nullptr), m_UnresolvedWithAlloc(nullptr),
+      m_UnresolvedCopyArray(nullptr), m_isChildInterpreter(isChildInterpreter) { }
 
   // pin the vtable here.
   ValueExtractionSynthesizer::~ValueExtractionSynthesizer() { }

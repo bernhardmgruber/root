@@ -83,14 +83,14 @@ Author: Andreas Morsch   27/10/2007
 
 ClassImp(TPythia8);
 
-TPythia8*  TPythia8::fgInstance = 0;
+TPythia8*  TPythia8::fgInstance = nullptr;
 
 ////////////////////////////////////////////////////////////////////////////////
 /// Constructor
 
 TPythia8::TPythia8(bool printBanner /*= true*/):
     TGenerator("TPythia8", "TPythia8"),
-    fPythia(0),
+    fPythia(nullptr),
     fNumberOfParticles(0)
 {
    if (fgInstance)
@@ -108,7 +108,7 @@ TPythia8::TPythia8(bool printBanner /*= true*/):
 
 TPythia8::TPythia8(const char *xmlDir, bool printBanner /*= true*/):
     TGenerator("TPythia8", "TPythia8"),
-    fPythia(0),
+    fPythia(nullptr),
     fNumberOfParticles(0)
 {
    if (fgInstance)
@@ -128,7 +128,7 @@ TPythia8::~TPythia8()
    if (fParticles) {
       fParticles->Delete();
       delete fParticles;
-      fParticles = 0;
+      fParticles = nullptr;
    }
    delete fPythia;
 }
@@ -193,7 +193,7 @@ void TPythia8::GenerateEvent()
 
 Int_t TPythia8::ImportParticles(TClonesArray *particles, Option_t *option)
 {
-   if (particles == 0) return 0;
+   if (particles == nullptr) return 0;
    TClonesArray &clonesParticles = *particles;
    clonesParticles.Clear();
    Int_t nparts=0;

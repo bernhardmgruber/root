@@ -1573,7 +1573,7 @@ static void stringifyPreprocSetting(PreprocessorOptions& PPOpts,
     CI->setASTConsumer(std::move(multiConsumer));
 
     // Set up Sema
-    CodeCompleteConsumer* CCC = 0;
+    CodeCompleteConsumer* CCC = nullptr;
     // Make sure we inform Sema we compile a Module.
     CI->createSema(COpts.ModuleName.empty() ? TU_Complete : TU_Module, CCC);
 

@@ -28,7 +28,7 @@ singleton.
 
 ClassImp(TPythia6Decayer);
 
-TPythia6Decayer* TPythia6Decayer::fgInstance = 0;
+TPythia6Decayer* TPythia6Decayer::fgInstance = nullptr;
 
 ////////////////////////////////////////////////////////////////////////////////
 /// Get the singleton object.

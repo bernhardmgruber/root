@@ -41,7 +41,7 @@ std::string GetCurrentDir()
    char *result = currWorkDir;
 
    do {
-      if (result == 0) {
+      if (result == nullptr) {
          len = 2 * len;
          if (fixedLength != currWorkDir) {
             delete[] currWorkDir;
@@ -53,7 +53,7 @@ std::string GetCurrentDir()
 #else
       result = getcwd(currWorkDir, len);
 #endif
-   } while (result == 0 && errno == ERANGE);
+   } while (result == nullptr && errno == ERANGE);
 
    std::string output = currWorkDir;
    output += '/';

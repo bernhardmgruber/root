@@ -63,18 +63,18 @@ ClassImp(RooDataHist);
 ////////////////////////////////////////////////////////////////////////////////
 /// Default constructor
 
-RooDataHist::RooDataHist() : _pbinvCacheMgr(0,10)
+RooDataHist::RooDataHist() : _pbinvCacheMgr(nullptr,10)
 {
   _arrSize = 0 ;
-  _wgt = 0 ;
-  _errLo = 0 ;
-  _errHi = 0 ;
-  _sumw2 = 0 ;
-  _binv = 0 ;
-  _pbinv = 0 ;
+  _wgt = nullptr ;
+  _errLo = nullptr ;
+  _errHi = nullptr ;
+  _sumw2 = nullptr ;
+  _binv = nullptr ;
+  _pbinv = nullptr ;
   _curWeight = 0 ;
   _curIndex = -1 ;
-  _binValid = 0 ;
+  _binValid = nullptr ;
   _curSumW2 = 0 ;
   _curVolume = 1 ;
   _curWgtErrHi = 0 ;
@@ -103,7 +103,7 @@ RooDataHist::RooDataHist() : _pbinvCacheMgr(0,10)
 /// data hist as function of the threshold category instead of the real variable.
 
 RooDataHist::RooDataHist(const char *name, const char *title, const RooArgSet& vars, const char* binningName) : 
-  RooAbsData(name,title,vars), _wgt(0), _binValid(0), _curWeight(0), _curVolume(1), _pbinv(0), _pbinvCacheMgr(0,10), _cache_sum_valid(0)
+  RooAbsData(name,title,vars), _wgt(nullptr), _binValid(nullptr), _curWeight(0), _curVolume(1), _pbinv(nullptr), _pbinvCacheMgr(nullptr,10), _cache_sum_valid(0)
 {
   // Initialize datastore
   _dstore = (defaultStorageType==Tree) ? ((RooAbsDataStore*) new RooTreeDataStore(name,title,_vars)) : 
@@ -140,7 +140,7 @@ RooDataHist::RooDataHist(const char *name, const char *title, const RooArgSet& v
 /// all missing dimensions will be projected.
 
 RooDataHist::RooDataHist(const char *name, const char *title, const RooArgSet& vars, const RooAbsData& data, Double_t wgt) :
-  RooAbsData(name,title,vars), _wgt(0), _binValid(0), _curWeight(0), _curVolume(1), _pbinv(0), _pbinvCacheMgr(0,10), _cache_sum_valid(0)
+  RooAbsData(name,title,vars), _wgt(nullptr), _binValid(nullptr), _curWeight(0), _curVolume(1), _pbinv(nullptr), _pbinvCacheMgr(nullptr,10), _cache_sum_valid(0)
 {
   // Initialize datastore
   _dstore = (defaultStorageType==Tree) ? ((RooAbsDataStore*) new RooTreeDataStore(name,title,_vars)) : 
@@ -149,7 +149,7 @@ RooDataHist::RooDataHist(const char *name, const char *title, const RooArgSet& v
   initialize() ;
   _dstore->setExternalWeightArray(_wgt,_errLo,_errHi,_sumw2) ;
 
-  add(data,(const RooFormulaVar*)0,wgt) ;
+  add(data,(const RooFormulaVar*)nullptr,wgt) ;
   appendToDir(this,kTRUE) ;
   TRACE_CREATE
 }
@@ -168,7 +168,7 @@ RooDataHist::RooDataHist(const char *name, const char *title, const RooArgSet& v
 RooDataHist::RooDataHist(const char *name, const char *title, const RooArgList& vars, RooCategory& indexCat, 
 			 map<string,TH1*> histMap, Double_t wgt) :
   RooAbsData(name,title,RooArgSet(vars,&indexCat)), 
-  _wgt(0), _binValid(0), _curWeight(0), _curVolume(1), _pbinv(0), _pbinvCacheMgr(0,10), _cache_sum_valid(0)
+  _wgt(nullptr), _binValid(nullptr), _curWeight(0), _curVolume(1), _pbinv(nullptr), _pbinvCacheMgr(nullptr,10), _cache_sum_valid(0)
 {
   // Initialize datastore
   _dstore = (defaultStorageType==Tree) ? ((RooAbsDataStore*) new RooTreeDataStore(name,title,_vars)) : 
@@ -194,7 +194,7 @@ RooDataHist::RooDataHist(const char *name, const char *title, const RooArgList& 
 RooDataHist::RooDataHist(const char *name, const char *title, const RooArgList& vars, RooCategory& indexCat, 
 			 map<string,RooDataHist*> dhistMap, Double_t wgt) :
   RooAbsData(name,title,RooArgSet(vars,&indexCat)), 
-  _wgt(0), _binValid(0), _curWeight(0), _curVolume(1), _pbinv(0), _pbinvCacheMgr(0,10), _cache_sum_valid(0)
+  _wgt(nullptr), _binValid(nullptr), _curWeight(0), _curVolume(1), _pbinv(nullptr), _pbinvCacheMgr(nullptr,10), _cache_sum_valid(0)
 {
   // Initialize datastore
   _dstore = (defaultStorageType==Tree) ? ((RooAbsDataStore*) new RooTreeDataStore(name,title,_vars)) : 
@@ -215,7 +215,7 @@ RooDataHist::RooDataHist(const char *name, const char *title, const RooArgList& 
 /// values are set accordingly on the arguments in 'vars'
 
 RooDataHist::RooDataHist(const char *name, const char *title, const RooArgList& vars, const TH1* hist, Double_t wgt) :
-  RooAbsData(name,title,vars), _wgt(0), _binValid(0), _curWeight(0), _curVolume(1), _pbinv(0), _pbinvCacheMgr(0,10), _cache_sum_valid(0)
+  RooAbsData(name,title,vars), _wgt(nullptr), _binValid(nullptr), _curWeight(0), _curVolume(1), _pbinv(nullptr), _pbinvCacheMgr(nullptr,10), _cache_sum_valid(0)
 {
   // Initialize datastore
   _dstore = (defaultStorageType==Tree) ? ((RooAbsDataStore*) new RooTreeDataStore(name,title,_vars)) : 
@@ -272,8 +272,8 @@ RooDataHist::RooDataHist(const char *name, const char *title, const RooArgList& 
 
 RooDataHist::RooDataHist(const char *name, const char *title, const RooArgList& vars, const RooCmdArg& arg1, const RooCmdArg& arg2, const RooCmdArg& arg3,
 			 const RooCmdArg& arg4,const RooCmdArg& arg5,const RooCmdArg& arg6,const RooCmdArg& arg7,const RooCmdArg& arg8) :
-  RooAbsData(name,title,RooArgSet(vars,(RooAbsArg*)RooCmdConfig::decodeObjOnTheFly("RooDataHist::RooDataHist", "IndexCat",0,0,arg1,arg2,arg3,arg4,arg5,arg6,arg7,arg8))), 
-  _wgt(0), _binValid(0), _curWeight(0), _curVolume(1), _pbinv(0), _pbinvCacheMgr(0,10), _cache_sum_valid(0)
+  RooAbsData(name,title,RooArgSet(vars,(RooAbsArg*)RooCmdConfig::decodeObjOnTheFly("RooDataHist::RooDataHist", "IndexCat",0,nullptr,arg1,arg2,arg3,arg4,arg5,arg6,arg7,arg8))), 
+  _wgt(nullptr), _binValid(nullptr), _curWeight(0), _curVolume(1), _pbinv(nullptr), _pbinvCacheMgr(nullptr,10), _cache_sum_valid(0)
 {
   // Initialize datastore
   _dstore = (defaultStorageType==Tree) ? ((RooAbsDataStore*) new RooTreeDataStore(name,title,_vars)) : 
@@ -284,9 +284,9 @@ RooDataHist::RooDataHist(const char *name, const char *title, const RooArgList& 
   pc.defineObject("impHist","ImportHisto",0) ;
   pc.defineInt("impDens","ImportHisto",0) ;
   pc.defineObject("indexCat","IndexCat",0) ;
-  pc.defineObject("impSliceHist","ImportHistoSlice",0,0,kTRUE) ; // array
+  pc.defineObject("impSliceHist","ImportHistoSlice",0,nullptr,kTRUE) ; // array
   pc.defineString("impSliceState","ImportHistoSlice",0,"",kTRUE) ; // array
-  pc.defineObject("impSliceDHist","ImportDataHistSlice",0,0,kTRUE) ; // array
+  pc.defineObject("impSliceDHist","ImportDataHistSlice",0,nullptr,kTRUE) ; // array
   pc.defineString("impSliceDState","ImportDataHistSlice",0,"",kTRUE) ; // array
   pc.defineDouble("weight","Weight",0,1) ; 
   pc.defineObject("dummy1","ImportDataHistSliceMany",0) ;
@@ -380,8 +380,8 @@ void RooDataHist::importTH1(const RooArgList& vars, const TH1& histo, Double_t w
 
   // Define x,y,z as 1st, 2nd and 3rd observable
   RooRealVar* xvar = (RooRealVar*) _vars.find(vars.at(0)->GetName()) ;
-  RooRealVar* yvar = (RooRealVar*) (vars.at(1) ? _vars.find(vars.at(1)->GetName()) : 0 ) ;
-  RooRealVar* zvar = (RooRealVar*) (vars.at(2) ? _vars.find(vars.at(2)->GetName()) : 0 ) ;
+  RooRealVar* yvar = (RooRealVar*) (vars.at(1) ? _vars.find(vars.at(1)->GetName()) : nullptr ) ;
+  RooRealVar* zvar = (RooRealVar*) (vars.at(2) ? _vars.find(vars.at(2)->GetName()) : nullptr ) ;
 
   // Transfer contents
   Int_t xmin(0),ymin(0),zmin(0) ;
@@ -439,7 +439,7 @@ void RooDataHist::importTH1Set(const RooArgList& vars, RooCategory& indexCat, ma
 {
   RooCategory* icat = (RooCategory*) _vars.find(indexCat.GetName()) ;
 
-  TH1* histo(0) ;  
+  TH1* histo(nullptr) ;  
   Bool_t init(kFALSE) ;
   for (map<string,TH1*>::iterator hiter = hmap.begin() ; hiter!=hmap.end() ; ++hiter) {
     // Store pointer to first histogram from which binning specification will be taken
@@ -476,8 +476,8 @@ void RooDataHist::importTH1Set(const RooArgList& vars, RooCategory& indexCat, ma
 
   // Define x,y,z as 1st, 2nd and 3rd observable
   RooRealVar* xvar = (RooRealVar*) _vars.find(vars.at(0)->GetName()) ;
-  RooRealVar* yvar = (RooRealVar*) (vars.at(1) ? _vars.find(vars.at(1)->GetName()) : 0 ) ;
-  RooRealVar* zvar = (RooRealVar*) (vars.at(2) ? _vars.find(vars.at(2)->GetName()) : 0 ) ;
+  RooRealVar* yvar = (RooRealVar*) (vars.at(1) ? _vars.find(vars.at(1)->GetName()) : nullptr ) ;
+  RooRealVar* zvar = (RooRealVar*) (vars.at(2) ? _vars.find(vars.at(2)->GetName()) : nullptr ) ;
 
   // Transfer contents
   Int_t xmin(0),ymin(0),zmin(0) ;
@@ -497,7 +497,7 @@ void RooDataHist::importTH1Set(const RooArgList& vars, RooCategory& indexCat, ma
   Double_t avgBV = volume / numEntries() ;
   
   Int_t ic(0),ix(0),iy(0),iz(0) ;
-  for (ic=0 ; ic < icat->numBins(0) ; ic++) {
+  for (ic=0 ; ic < icat->numBins(nullptr) ; ic++) {
     icat->setBin(ic) ;
     histo = hmap[icat->getCurrentLabel()] ;
     for (ix=0 ; ix < xvar->getBins() ; ix++) {
@@ -683,8 +683,8 @@ void RooDataHist::initialize(const char* binningName, Bool_t fillTree)
     // coverity[FORWARD_NULL]
     _lvvars.push_back(dynamic_cast<RooAbsLValue*>(rvarg));    
     // coverity[FORWARD_NULL]
-    const RooAbsBinning* binning = dynamic_cast<RooAbsLValue*>(rvarg)->getBinningPtr(0);
-    _lvbins.push_back(binning ? binning->clone() : 0);
+    const RooAbsBinning* binning = dynamic_cast<RooAbsLValue*>(rvarg)->getBinningPtr(nullptr);
+    _lvbins.push_back(binning ? binning->clone() : nullptr);
   }
 
   
@@ -777,7 +777,7 @@ void RooDataHist::checkBinBounds() const
 /// Copy constructor
 
 RooDataHist::RooDataHist(const RooDataHist& other, const char* newname) :
-  RooAbsData(other,newname), RooDirItem(), _idxMult(other._idxMult), _binValid(0), _curWeight(0), _curVolume(1), _pbinv(0), _pbinvCacheMgr(other._pbinvCacheMgr,0), _cache_sum_valid(0)
+  RooAbsData(other,newname), RooDirItem(), _idxMult(other._idxMult), _binValid(nullptr), _curWeight(0), _curVolume(1), _pbinv(nullptr), _pbinvCacheMgr(other._pbinvCacheMgr,nullptr), _cache_sum_valid(0)
 {
   Int_t i ;
 
@@ -806,8 +806,8 @@ RooDataHist::RooDataHist(const RooDataHist& other, const char* newname) :
     // coverity[FORWARD_NULL]
     _lvvars.push_back(dynamic_cast<RooAbsLValue*>(rvarg)) ;
     // coverity[FORWARD_NULL]
-    const RooAbsBinning* binning = dynamic_cast<RooAbsLValue*>(rvarg)->getBinningPtr(0) ;
-    _lvbins.push_back(binning ? binning->clone() : 0) ;    
+    const RooAbsBinning* binning = dynamic_cast<RooAbsLValue*>(rvarg)->getBinningPtr(nullptr) ;
+    _lvbins.push_back(binning ? binning->clone() : nullptr) ;    
   }
 
   _dstore->setExternalWeightArray(_wgt,_errLo,_errHi,_sumw2) ;
@@ -830,12 +830,12 @@ RooDataHist::RooDataHist(const RooDataHist& other, const char* newname) :
 RooDataHist::RooDataHist(const char* name, const char* title, RooDataHist* h, const RooArgSet& varSubset, 
 			 const RooFormulaVar* cutVar, const char* cutRange, Int_t nStart, Int_t nStop, Bool_t copyCache) :
   RooAbsData(name,title,varSubset),
-  _wgt(0), _binValid(0), _curWeight(0), _curVolume(1), _pbinv(0), _pbinvCacheMgr(0,10), _cache_sum_valid(0)
+  _wgt(nullptr), _binValid(nullptr), _curWeight(0), _curVolume(1), _pbinv(nullptr), _pbinvCacheMgr(nullptr,10), _cache_sum_valid(0)
 {
   // Initialize datastore
   _dstore = new RooTreeDataStore(name,title,*h->_dstore,_vars,cutVar,cutRange,nStart,nStop,copyCache) ;
   
-  initialize(0,kFALSE) ;
+  initialize(nullptr,kFALSE) ;
 
   _dstore->setExternalWeightArray(_wgt,_errLo,_errHi,_sumw2) ;
 
@@ -862,7 +862,7 @@ RooAbsData* RooDataHist::cacheClone(const RooAbsArg* newCacheOwner, const RooArg
 {
   checkInit() ;
 
-  RooDataHist* dhist = new RooDataHist(newName?newName:GetName(),GetTitle(),this,*get(),0,0,0,2000000000,kTRUE) ; 
+  RooDataHist* dhist = new RooDataHist(newName?newName:GetName(),GetTitle(),this,*get(),nullptr,nullptr,0,2000000000,kTRUE) ; 
 
   RooArgSet* selCacheVars = (RooArgSet*) newCacheVars->selectCommon(dhist->_cachedVars) ;
   dhist->attachCache(newCacheOwner, *selCacheVars) ;
@@ -884,14 +884,14 @@ RooAbsData* RooDataHist::reduceEng(const RooArgSet& varSubset, const RooFormulaV
   RooDataHist *rdh = new RooDataHist(GetName(), GetTitle(), *myVarSubset) ;
   delete myVarSubset ;
 
-  RooFormulaVar* cloneVar = 0;
-  RooArgSet* tmp(0) ;
+  RooFormulaVar* cloneVar = nullptr;
+  RooArgSet* tmp(nullptr) ;
   if (cutVar) {
     // Deep clone cutVar and attach clone to this dataset
     tmp = (RooArgSet*) RooArgSet(*cutVar).snapshot() ;
     if (!tmp) {
       coutE(DataHandling) << "RooDataHist::reduceEng(" << GetName() << ") Couldn't deep-clone cut variable, abort," << endl ;
-      return 0 ;
+      return nullptr ;
     }
     cloneVar = (RooFormulaVar*) tmp->find(*cutVar) ;
     cloneVar->attachDataSet(*this) ;
@@ -1015,22 +1015,22 @@ RooPlot *RooDataHist::plotOn(RooPlot *frame, PlotOpt o) const
   checkInit() ;
   if (o.bins) return RooAbsData::plotOn(frame,o) ;
 
-  if(0 == frame) {
+  if(nullptr == frame) {
     coutE(InputArguments) << ClassName() << "::" << GetName() << ":plotOn: frame is null" << endl;
-    return 0;
+    return nullptr;
   }
   RooAbsRealLValue *var= (RooAbsRealLValue*) frame->getPlotVar();
-  if(0 == var) {
+  if(nullptr == var) {
     coutE(InputArguments) << ClassName() << "::" << GetName()
 	 << ":plotOn: frame does not specify a plot variable" << endl;
-    return 0;
+    return nullptr;
   }
 
   RooRealVar* dataVar = (RooRealVar*) _vars.find(*var) ;
   if (!dataVar) {
     coutE(InputArguments) << ClassName() << "::" << GetName()
 	 << ":plotOn: dataset doesn't contain plot frame variable" << endl;
-    return 0;
+    return nullptr;
   }
 
   o.bins = &dataVar->getBinning() ;
@@ -1092,7 +1092,7 @@ Double_t RooDataHist::weight(const RooArgSet& bin, Int_t intOrder, Bool_t correc
 
     // 1-dimensional interpolation
     const auto real = static_cast<RooRealVar*>(_realVars[static_cast<std::size_t>(0)]);
-    const RooAbsBinning* binning = real->getBinningPtr(0) ;
+    const RooAbsBinning* binning = real->getBinningPtr(nullptr) ;
     wInt = interpolateDim(*real,binning,((RooAbsReal*)bin.find(*real))->getVal(), intOrder, correctForBinSize, cdfBoundaries) ;
     
   } else if (_realVars.getSize()==2) {
@@ -1110,7 +1110,7 @@ Double_t RooDataHist::weight(const RooArgSet& bin, Int_t intOrder, Bool_t correc
     Int_t i ;
     Double_t yarr[10] ;
     Double_t xarr[10] ;
-    const RooAbsBinning* binning = realX->getBinningPtr(0) ;
+    const RooAbsBinning* binning = realX->getBinningPtr(nullptr) ;
     for (i=ybinLo ; i<=intOrder+ybinLo ; i++) {
       Int_t ibin ;
       if (i>=0 && i<ybinM) {
@@ -1387,8 +1387,8 @@ void RooDataHist::add(const RooAbsData& dset, const RooFormulaVar* cutVar, Doubl
 {
   checkInit() ;
 
-  RooFormulaVar* cloneVar = 0;
-  RooArgSet* tmp(0) ;
+  RooFormulaVar* cloneVar = nullptr;
+  RooArgSet* tmp(nullptr) ;
   if (cutVar) {
     // Deep clone cutVar and attach clone to this dataset
     tmp = (RooArgSet*) RooArgSet(*cutVar).snapshot() ;
@@ -1727,12 +1727,12 @@ Double_t RooDataHist::sumEntries(const char* cutSpec, const char* cutRange) cons
 {
   checkInit() ;
 
-  if (cutSpec==0 && cutRange==0) {
+  if (cutSpec==nullptr && cutRange==nullptr) {
     return sumEntries();
   } else {
     
     // Setup RooFormulaVar for cutSpec if it is present
-    RooFormula* select = 0 ;
+    RooFormula* select = nullptr ;
     if (cutSpec) {
       select = new RooFormula("select",cutSpec,*get()) ;
     }
@@ -1854,7 +1854,7 @@ TIterator* RooDataHist::sliceIterator(RooAbsArg& sliceArg, const RooArgSet& othe
   RooAbsArg* intArg = _vars.find(sliceArg) ;
   if (!intArg) {
     coutE(InputArguments) << "RooDataHist::sliceIterator() variable " << sliceArg.GetName() << " is not part of this RooDataHist" << endl ;
-    return 0 ;
+    return nullptr ;
   }
   return new RooDataHistSliceIter(*this,*intArg) ;
 }
@@ -1932,7 +1932,7 @@ void RooDataHist::cacheValidEntries()
     iter->Reset() ;
     while((arg=(RooAbsArg*)iter->Next())) {
       // coverity[CHECKED_RETURN]
-      _binValid[i] &= arg->inRange(0) ;      
+      _binValid[i] &= arg->inRange(nullptr) ;      
     }
   }
   delete iter ;
@@ -2009,7 +2009,7 @@ void RooDataHist::Streamer(TBuffer &R__b)
       if (R__v>2) {
 
 	R__b.ReadClassBuffer(RooDataHist::Class(),this,R__v,R__s,R__c);
-	initialize(0,kFALSE) ;
+	initialize(nullptr,kFALSE) ;
 
       } else {	
 
@@ -2023,7 +2023,7 @@ void RooDataHist::Streamer(TBuffer &R__b)
 	Version_t R__v1 = R__b.ReadVersion(&R__s1, &R__c1); if (R__v1) { }
 	
 	RooAbsData::Streamer(R__b);
-	TTree* X_tree(0) ; R__b >> X_tree;
+	TTree* X_tree(nullptr) ; R__b >> X_tree;
 	RooArgSet X_truth ; X_truth.Streamer(R__b);
 	TString X_blindString ; X_blindString.Streamer(R__b);
 	R__b.CheckByteCount(R__s1, R__c1, RooTreeData::Class());

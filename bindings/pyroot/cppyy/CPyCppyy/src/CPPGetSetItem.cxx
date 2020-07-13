@@ -45,7 +45,7 @@ PyObject* CPyCppyy::CPPSetItem::PreProcessArgs(
     }
 
 // unroll any tuples, if present in the arguments
-    PyObject* unrolled = 0;
+    PyObject* unrolled = nullptr;
     if (realsize != nArgs-1) {
         unrolled = PyTuple_New(realsize);
 
@@ -91,7 +91,7 @@ PyObject* CPyCppyy::CPPGetItem::PreProcessArgs(
     }
 
 // unroll any tuples, if present in the arguments
-    PyObject* unrolled = 0;
+    PyObject* unrolled = nullptr;
     if (realsize != nArgs-1) {
         unrolled = PyTuple_New(realsize);
 

@@ -452,7 +452,7 @@ TEnum* TCling::CreateEnum(void *VD, TClass *cl) const
    // Handle new enum declaration for either global and nested enums.
 
    // Create the enum type.
-   TEnum* enumType = 0;
+   TEnum* enumType = nullptr;
    const clang::Decl* D = static_cast<const clang::Decl*>(VD);
    std::string buf;
    if (const EnumDecl* ED = llvm::dyn_cast<EnumDecl>(D)) {
@@ -465,7 +465,7 @@ TEnum* TCling::CreateEnum(void *VD, TClass *cl) const
       // If the enum is unnamed we do not add it to the list of enums i.e unusable.
    }
    if (buf.empty()) {
-      return 0;
+      return nullptr;
    }
    const char* name = buf.c_str();
    enumType = new TEnum(name, VD, cl);
@@ -791,7 +791,7 @@ int TCling_GenerateDictionary(const std::vector<std::string> &classes,
       //(2) prepare the file
       FILE* filePointer;
       filePointer = fopen(fileName, "w");
-      if (filePointer == NULL) {
+      if (filePointer == nullptr) {
          //can't open a file
          return 1;
       }
@@ -840,7 +840,7 @@ const char* fantomline = "TRint::EndOfLineAction();";
 //
 //
 
-void* TCling::fgSetOfSpecials = 0;
+void* TCling::fgSetOfSpecials = nullptr;
 
 //______________________________________________________________________________
 //
@@ -1333,8 +1333,8 @@ static void RegisterPreIncludedHeaders(cling::Interpreter &clingInterp)
 
 TCling::TCling(const char *name, const char *title, const char* const argv[])
 : TInterpreter(name, title), fMore(0), fGlobalsListSerial(-1), fMapfile(nullptr),
-  fRootmapFiles(nullptr), fLockProcessLine(true), fNormalizedCtxt(0),
-  fPrevLoadedDynLibInfo(0), fClingCallbacks(0), fAutoLoadCallBack(0),
+  fRootmapFiles(nullptr), fLockProcessLine(true), fNormalizedCtxt(nullptr),
+  fPrevLoadedDynLibInfo(nullptr), fClingCallbacks(nullptr), fAutoLoadCallBack(nullptr),
   fTransactionCount(0), fHeaderParsingOnDemand(true), fIsAutoParsingSuspended(kFALSE)
 {
    fPrompt[0] = 0;
@@ -1604,7 +1604,7 @@ TCling::~TCling()
    delete fTemporaries;
    delete fNormalizedCtxt;
    delete fLookupHelper;
-   gCling = 0;
+   gCling = nullptr;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -2028,7 +2028,7 @@ void TCling::RegisterModule(const char* modulename,
    for (const char** inclPath = includePaths; *inclPath; ++inclPath) {
       TCling::AddIncludePath(*inclPath);
    }
-   cling::Transaction* T = 0;
+   cling::Transaction* T = nullptr;
    // Put the template decls and the number of arguments to skip in the TNormalizedCtxt
    for (auto& fwdDeclArgToSkipPair : fwdDeclsArgToSkip){
       const std::string& fwdDecl = fwdDeclArgToSkipPair.first;
@@ -2417,7 +2417,7 @@ Long_t TCling::ProcessLine(const char* line, EErrorCode* error/*=0*/)
       // and is implemented by
       if (gApplication) {
          if (gApplication->IsCmdThread()) {
-            R__LOCKGUARD(fLockProcessLine ? gInterpreterMutex : 0);
+            R__LOCKGUARD(fLockProcessLine ? gInterpreterMutex : nullptr);
             gROOT->SetLineIsProcessing();
 
             UpdateAllCanvases();
@@ -2434,7 +2434,7 @@ Long_t TCling::ProcessLine(const char* line, EErrorCode* error/*=0*/)
          gInterpreterMutex = gGlobalMutex->Factory(kTRUE);
       gGlobalMutex->UnLock();
    }
-   R__LOCKGUARD_CLING(fLockProcessLine ? gInterpreterMutex : 0);
+   R__LOCKGUARD_CLING(fLockProcessLine ? gInterpreterMutex : nullptr);
    gROOT->SetLineIsProcessing();
 
    struct InterpreterFlagsRAII {
@@ -2666,8 +2666,8 @@ void TCling::InspectMembers(TMemberInspector& insp, const void* obj,
    // Printf("Inspecting class %s\n", clname);
 
    const clang::ASTContext& astContext = fInterpreter->getCI()->getASTContext();
-   const clang::Decl *scopeDecl = 0;
-   const clang::Type *recordType = 0;
+   const clang::Decl *scopeDecl = nullptr;
+   const clang::Type *recordType = nullptr;
 
    if (cl->GetClassInfo()) {
       TClingClassInfo * clingCI = (TClingClassInfo *)cl->GetClassInfo();
@@ -3124,7 +3124,7 @@ Bool_t TCling::IsLoaded(const char* filename) const
       return kTRUE;
 
    //FIXME: We must use the cling::Interpreter::lookupFileOrLibrary iface.
-   const clang::DirectoryLookup *CurDir = 0;
+   const clang::DirectoryLookup *CurDir = nullptr;
    clang::Preprocessor &PP = fInterpreter->getCI()->getPreprocessor();
    clang::HeaderSearch &HS = PP.getHeaderSearchInfo();
    const clang::FileEntry *FE = HS.LookupFile(file_name.c_str(),
@@ -3151,7 +3151,7 @@ Bool_t TCling::IsLoaded(const char* filename) const
          return kFALSE;
       else {
          clang::SrcMgr::SLocEntry SLocE = SM.getSLocEntry(FID);
-         if (SLocE.isFile() && SLocE.getFile().getContentCache()->getRawBuffer() == 0)
+         if (SLocE.isFile() && SLocE.getFile().getContentCache()->getRawBuffer() == nullptr)
             return kFALSE;
          if (!FID.isInvalid())
             return kTRUE;
@@ -3223,7 +3223,7 @@ void TCling::UpdateListOfLoadedSharedLibraries()
       LinkMap* fPrev;
    };
    if (!fPrevLoadedDynLibInfo || fPrevLoadedDynLibInfo == (void*)(size_t)-1) {
-      PointerNo4* procLinkMap = (PointerNo4*)dlopen(0,  RTLD_LAZY | RTLD_GLOBAL);
+      PointerNo4* procLinkMap = (PointerNo4*)dlopen(nullptr,  RTLD_LAZY | RTLD_GLOBAL);
       // 4th pointer of 4th pointer is the linkmap.
       // See http://syprog.blogspot.fr/2011/12/listing-loaded-shared-objects-in-linux.html
       LinkMap* linkMap = (LinkMap*) ((PointerNo4*)procLinkMap->fPtr)->fPtr;
@@ -3344,7 +3344,7 @@ Int_t TCling::Load(const char* filename, Bool_t system)
          // For the non system libs, we'd like to be able to unload them.
          // FIXME: Here we lose the information about kLoadLibAlreadyLoaded case.
          cling::Interpreter::CompilationResult compRes;
-         HandleInterpreterException(GetMetaProcessorImpl(), Form(".L %s", canonLib.c_str()), compRes, /*cling::Value*/0);
+         HandleInterpreterException(GetMetaProcessorImpl(), Form(".L %s", canonLib.c_str()), compRes, /*cling::Value*/nullptr);
          if (compRes == cling::Interpreter::kSuccess)
             res = cling::DynamicLibraryManager::kLoadLibSuccess;
       }
@@ -3383,7 +3383,7 @@ Long_t TCling::ProcessLineAsynch(const char* line, EErrorCode* error)
 
 Long_t TCling::ProcessLineSynch(const char* line, EErrorCode* error)
 {
-   R__LOCKGUARD_CLING(fLockProcessLine ? gInterpreterMutex : 0);
+   R__LOCKGUARD_CLING(fLockProcessLine ? gInterpreterMutex : nullptr);
    if (gApplication) {
       if (gApplication->IsCmdThread()) {
          return ProcessLine(line, error);
@@ -3612,7 +3612,7 @@ Int_t TCling::DeleteVariable(const char* name)
    llvm::StringRef srName(name);
    const char* unscopedName = name;
    llvm::StringRef::size_type posScope = srName.rfind("::");
-   const clang::DeclContext* declCtx = 0;
+   const clang::DeclContext* declCtx = nullptr;
    if (posScope != llvm::StringRef::npos) {
       const cling::LookupHelper& lh = fInterpreter->getLookupHelper();
       const clang::Decl* scopeDecl
@@ -3653,7 +3653,7 @@ Int_t TCling::DeleteVariable(const char* name)
    if (type->isPointerType()) {
       int** ppInt = (int**)fInterpreter->getAddressOfGlobal(GlobalDecl(varDecl));
       // set pointer to invalid.
-      if (ppInt) *ppInt = 0;
+      if (ppInt) *ppInt = nullptr;
    }
    return 1;
 }
@@ -3849,7 +3849,7 @@ void TCling::SetClassInfo(TClass* cl, Bool_t reload)
       TClass::RemoveClassDeclId(TClinginfo->GetDeclId());
    }
    delete TClinginfo;
-   cl->fClassInfo = 0;
+   cl->fClassInfo = nullptr;
    std::string name(cl->GetName());
 
    // Handle the special case of 'tuple' where we ignore the real implementation
@@ -3902,7 +3902,7 @@ void TCling::SetClassInfo(TClass* cl, Bool_t reload)
       }
       // this happens when no dictionary is available
       delete info;
-      cl->fClassInfo = 0;
+      cl->fClassInfo = nullptr;
    }
    if (zombieCandidate && !cl->GetCollectionType()) {
       cl->MakeZombie();
@@ -3992,7 +3992,7 @@ TCling::CheckClassInfo(const char *name, Bool_t autoload, Bool_t isClassOrNamesp
    // Note in the corresponding code in ROOT 5, CINT was not instantiating
    // this forward declaration.
    const cling::LookupHelper& lh = fInterpreter->getLookupHelper();
-   const clang::Type *type = 0;
+   const clang::Type *type = nullptr;
    const clang::Decl *decl
       = lh.findScope(classname,
                      gDebug > 5 ? cling::LookupHelper::WithDiagnostics
@@ -4046,8 +4046,8 @@ TCling::CheckClassInfo(const char *name, Bool_t autoload, Bool_t isClassOrNamesp
          if (isClassOrNamespaceOnly) {
             // We do not need to check for ClassDefInline when this is called from
             // TClass::Init, we only do it for the call from TClass::GetClass.
-            auto hasDictionary = tci.GetMethod("Dictionary", "", false, 0, ROOT::kExactMatch);
-            auto implLineFunc = tci.GetMethod("ImplFileLine", "", false, 0, ROOT::kExactMatch);
+            auto hasDictionary = tci.GetMethod("Dictionary", "", false, nullptr, ROOT::kExactMatch);
+            auto implLineFunc = tci.GetMethod("ImplFileLine", "", false, nullptr, ROOT::kExactMatch);
 
             if (hasDictionary.IsValid() && implLineFunc.IsValid()) {
                int lineNumber = 0;
@@ -4333,7 +4333,7 @@ TClass *TCling::GenerateTClass(const char *classname, Bool_t emulation, Bool_t s
             // Namespaces don't have class versions.
             return cl;
          }
-         TClingMethodInfo mi = cli->GetMethod("Class_Version", "", 0 /*poffset*/,
+         TClingMethodInfo mi = cli->GetMethod("Class_Version", "", nullptr /*poffset*/,
                                               ROOT::kExactMatch,
                                               TClingClassInfo::kInThisScope);
          if (!mi.IsValid()) {
@@ -4354,7 +4354,7 @@ TClass *TCling::GenerateTClass(const char *classname, Bool_t emulation, Bool_t s
                // This better be a static function.
                TClingCallFunc callfunc(GetInterpreterImpl(), *fNormalizedCtxt);
                callfunc.SetFunc(&mi);
-               newvers = callfunc.ExecInt(0);
+               newvers = callfunc.ExecInt(nullptr);
             } else {
                Error("GenerateTClass",
                      "Cannot invoke %s::Class_Version()! Class version might be wrong.",
@@ -4418,10 +4418,10 @@ TClass *TCling::GenerateTClass(ClassInfo_t *classinfo, Bool_t silent /* = kFALSE
    TClingClassInfo *info = (TClingClassInfo*)classinfo;
    if (!info || !info->IsValid()) {
       Fatal("GenerateTClass","Requires a valid ClassInfo object");
-      return 0;
+      return nullptr;
    }
    // We are in the case where we have AST nodes for this class.
-   TClass *cl = 0;
+   TClass *cl = nullptr;
    std::string classname;
    info->FullName(classname,*fNormalizedCtxt); // Could we use Name()?
    if (TClassEdit::IsSTLCont(classname)) {
@@ -4440,15 +4440,15 @@ TClass *TCling::GenerateTClass(ClassInfo_t *classinfo, Bool_t silent /* = kFALSE
          }
       }
 #endif
-      if (cl == 0) {
+      if (cl == nullptr) {
          int version = TClass::GetClass("TVirtualStreamerInfo")->GetClassVersion();
-         cl = new TClass(classinfo, version, 0, 0, -1, -1, silent);
+         cl = new TClass(classinfo, version, nullptr, nullptr, -1, -1, silent);
          cl->SetBit(TClass::kIsEmulation);
       }
    } else {
       // For regular class, just create a TClass on the fly ...
       // Not quite useful yet, but that what CINT used to do anyway.
-      cl = new TClass(classinfo, 1, 0, 0, -1, -1, silent);
+      cl = new TClass(classinfo, 1, nullptr, nullptr, -1, -1, silent);
    }
    // Add the new TClass to the map of declid and TClass*.
    if (cl) {
@@ -4473,7 +4473,7 @@ TClass *TCling::GenerateTClass(ClassInfo_t *classinfo, Bool_t silent /* = kFALSE
 
 Int_t TCling::GenerateDictionary(const char* classes, const char* includes /* = "" */, const char* /* options  = 0 */)
 {
-   if (classes == 0 || classes[0] == 0) {
+   if (classes == nullptr || classes[0] == 0) {
       Error("TCling::GenerateDictionary", "Cannot generate dictionary without passing classes.");
       return 0;
    }
@@ -4536,7 +4536,7 @@ TInterpreter::DeclId_t TCling::GetDataMember(ClassInfo_t *opaque_cl, const char 
       if (const ValueDecl* decl = (const ValueDecl*) d){
          std::string ioName;
          bool hasIoName = ROOT::TMetaUtils::ExtractAttrPropertyFromName(*decl,"ioname",ioName);
-         if (hasIoName && ioName != name) return 0;
+         if (hasIoName && ioName != name) return nullptr;
       }
       return d;
    }
@@ -4572,7 +4572,7 @@ TInterpreter::DeclId_t TCling::GetDataMember(ClassInfo_t *opaque_cl, const char 
 
    if (R.isSingleResult())
       return R.getFoundDecl();
-   return 0;
+   return nullptr;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -4583,12 +4583,12 @@ TInterpreter::DeclId_t TCling::GetEnum(TClass *cl, const char *name) const
 {
    R__LOCKGUARD(gInterpreterMutex);
 
-   const clang::Decl* possibleEnum = 0;
+   const clang::Decl* possibleEnum = nullptr;
    // FInd the context of the decl.
    if (cl) {
       TClingClassInfo *cci = (TClingClassInfo*)cl->GetClassInfo();
       if (cci) {
-         const clang::DeclContext* dc = 0;
+         const clang::DeclContext* dc = nullptr;
          if (const clang::Decl* D = cci->GetDecl()) {
             if (!(dc = dyn_cast<clang::NamespaceDecl>(D))) {
                dc = dyn_cast<clang::RecordDecl>(D);
@@ -4613,7 +4613,7 @@ TInterpreter::DeclId_t TCling::GetEnum(TClass *cl, const char *name) const
        && isa<clang::EnumDecl>(possibleEnum)) {
       return possibleEnum;
    }
-   return 0;
+   return nullptr;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -4621,7 +4621,7 @@ TInterpreter::DeclId_t TCling::GetEnum(TClass *cl, const char *name) const
 
 TInterpreter::DeclId_t TCling::GetDeclId( const llvm::GlobalValue *gv ) const
 {
-   if (!gv) return 0;
+   if (!gv) return nullptr;
 
    llvm::StringRef mangled_name = gv->getName();
 
@@ -4635,7 +4635,7 @@ TInterpreter::DeclId_t TCling::GetDeclId( const llvm::GlobalValue *gv ) const
          d = gcl.GetDataMember(mangled_name.str().c_str());
          return d;
       }
-      return 0;
+      return nullptr;
    }
 
    std::string scopename(demangled_name_c);
@@ -4655,7 +4655,7 @@ TInterpreter::DeclId_t TCling::GetDeclId( const llvm::GlobalValue *gv ) const
       // See if it is a function
       std::string::size_type pos = scopename.rfind('(');
       if (pos != std::string::npos) {
-         return 0;
+         return nullptr;
       }
       // Separate the scope and member name
       pos = scopename.rfind(':');
@@ -4691,7 +4691,7 @@ TInterpreter::DeclId_t TCling::GetDeclId( const llvm::GlobalValue *gv ) const
 TInterpreter::DeclId_t TCling::GetDataMemberWithValue(const void *ptrvalue) const
 {
    Error("GetDataMemberWithValue()", "not implemented");
-   return 0;
+   return nullptr;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -4701,7 +4701,7 @@ TInterpreter::DeclId_t TCling::GetDataMemberAtAddr(const void *addr) const
 {
    // NOT IMPLEMENTED.
    Error("GetDataMemberAtAddr()", "not implemented");
-   return 0;
+   return nullptr;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -4743,10 +4743,10 @@ TString TCling::GetMangledNameWithPrototype(TClass* cl, const char* method,
    R__LOCKGUARD(gInterpreterMutex);
    if (cl) {
       return ((TClingClassInfo*)cl->GetClassInfo())->
-         GetMethod(method, proto, objectIsConst, 0 /*poffset*/, mode).GetMangledName();
+         GetMethod(method, proto, objectIsConst, nullptr /*poffset*/, mode).GetMangledName();
    }
    TClingClassInfo gcl(GetInterpreterImpl());
-   return gcl.GetMethod(method, proto, objectIsConst, 0 /*poffset*/, mode).GetMangledName();
+   return gcl.GetMethod(method, proto, objectIsConst, nullptr /*poffset*/, mode).GetMangledName();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -4859,11 +4859,11 @@ void* TCling::GetInterfaceMethodWithPrototype(TClass* cl, const char* method,
    void* f;
    if (cl) {
       f = ((TClingClassInfo*)cl->GetClassInfo())->
-         GetMethod(method, proto, objectIsConst, 0 /*poffset*/, mode).InterfaceMethod(*fNormalizedCtxt);
+         GetMethod(method, proto, objectIsConst, nullptr /*poffset*/, mode).InterfaceMethod(*fNormalizedCtxt);
    }
    else {
       TClingClassInfo gcl(GetInterpreterImpl());
-      f = gcl.GetMethod(method, proto, objectIsConst, 0 /*poffset*/, mode).InterfaceMethod(*fNormalizedCtxt);
+      f = gcl.GetMethod(method, proto, objectIsConst, nullptr /*poffset*/, mode).InterfaceMethod(*fNormalizedCtxt);
    }
    return f;
 }
@@ -4881,11 +4881,11 @@ TInterpreter::DeclId_t TCling::GetFunctionWithValues(ClassInfo_t *opaque_cl, con
    DeclId_t f;
    TClingClassInfo *cl = (TClingClassInfo*)opaque_cl;
    if (cl) {
-      f = cl->GetMethodWithArgs(method, params, objectIsConst, 0 /*poffset*/).GetDeclId();
+      f = cl->GetMethodWithArgs(method, params, objectIsConst, nullptr /*poffset*/).GetDeclId();
    }
    else {
       TClingClassInfo gcl(GetInterpreterImpl());
-      f = gcl.GetMethod(method, params, objectIsConst, 0 /*poffset*/).GetDeclId();
+      f = gcl.GetMethod(method, params, objectIsConst, nullptr /*poffset*/).GetDeclId();
    }
    return f;
 }
@@ -4904,11 +4904,11 @@ TInterpreter::DeclId_t TCling::GetFunctionWithPrototype(ClassInfo_t *opaque_cl, 
    DeclId_t f;
    TClingClassInfo *cl = (TClingClassInfo*)opaque_cl;
    if (cl) {
-      f = cl->GetMethod(method, proto, objectIsConst, 0 /*poffset*/, mode).GetDeclId();
+      f = cl->GetMethod(method, proto, objectIsConst, nullptr /*poffset*/, mode).GetDeclId();
    }
    else {
       TClingClassInfo gcl(GetInterpreterImpl());
-      f = gcl.GetMethod(method, proto, objectIsConst, 0 /*poffset*/, mode).GetDeclId();
+      f = gcl.GetMethod(method, proto, objectIsConst, nullptr /*poffset*/, mode).GetDeclId();
    }
    return f;
 }
@@ -4983,7 +4983,7 @@ void TCling::Execute(const char* function, const char* params, int* error)
    Long_t offset = 0L;
    TClingCallFunc func(GetInterpreterImpl(), *fNormalizedCtxt);
    func.SetFunc(&cl, function, params, &offset);
-   func.Exec(0);
+   func.Exec(nullptr);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -5145,7 +5145,7 @@ void TCling::ExecuteWithArgsAndReturn(TMethod* method, void* address,
 
 Long_t TCling::ExecuteMacro(const char* filename, EErrorCode* error)
 {
-   R__LOCKGUARD_CLING(fLockProcessLine ? gInterpreterMutex : 0);
+   R__LOCKGUARD_CLING(fLockProcessLine ? gInterpreterMutex : nullptr);
    fCurExecutingMacros.push_back(filename);
    Long_t result = TApplication::ExecuteFile(filename, (int*)error);
    fCurExecutingMacros.pop_back();
@@ -5220,7 +5220,7 @@ const char* TCling::GetCurrentMacroName() const
 
 const char* TCling::TypeName(const char* typeDesc)
 {
-   TTHREAD_TLS(char*) t = 0;
+   TTHREAD_TLS(char*) t = nullptr;
    TTHREAD_TLS(unsigned int) tlen = 0;
 
    unsigned int dlen = strlen(typeDesc);
@@ -5243,7 +5243,7 @@ const char* TCling::TypeName(const char* typeDesc)
       // except in the case of templates where there will be a space
       // just before any closing '>': eg.
       //    TObj<std::vector<UShort_t,__malloc_alloc_template<0> > >*
-      else if (s && (template_start == 0 || (s < template_start))) {
+      else if (s && (template_start == nullptr || (s < template_start))) {
          strlcpy(t, s + 1, dlen + 1);
       }
       else {
@@ -5791,7 +5791,7 @@ Int_t TCling::UnloadLibraryMap(const char* library)
       TString library_rootmap(library);
       if (!library_rootmap.EndsWith(".rootmap"))
          library_rootmap.Append(".rootmap");
-      TNamed* mfile = 0;
+      TNamed* mfile = nullptr;
       while ((mfile = (TNamed *)fRootmapFiles->FindObject(library_rootmap))) {
          fRootmapFiles->Remove(mfile);
          delete mfile;
@@ -5841,7 +5841,7 @@ TClass *TCling::GetClass(const std::type_info& typeinfo, Bool_t load) const
 {
    int err = 0;
    char* demangled_name = TClassEdit::DemangleTypeIdName(typeinfo, err);
-   if (err) return 0;
+   if (err) return nullptr;
    TClass* theClass = TClass::GetClass(demangled_name, load, kTRUE);
    free(demangled_name);
    return theClass;
@@ -6368,7 +6368,7 @@ void* TCling::LazyFunctionCreatorAutoload(const std::string& mangled_name) {
    int err = 0;
    char* demangled_name_c = TClassEdit::DemangleName(mangled_name.c_str(), err);
    if (err) {
-      return 0;
+      return nullptr;
    }
 
    std::string name(demangled_name_c);
@@ -6421,7 +6421,7 @@ void* TCling::LazyFunctionCreatorAutoload(const std::string& mangled_name) {
    TString libs = GetClassSharedLibs(name.c_str());
    if (libs.IsNull()) {
       // Not found in the map, all done.
-      return 0;
+      return nullptr;
    }
    //fprintf(stderr, "library: %s\n", iter->second.c_str());
    // Now we have the name of the libraries to load, so load them.
@@ -6432,7 +6432,7 @@ void* TCling::LazyFunctionCreatorAutoload(const std::string& mangled_name) {
       if (gSystem->Load(lib, "", kFALSE /*system*/) < 0) {
          // The library load failed, all done.
          //fprintf(stderr, "load failed: %s\n", errmsg.c_str());
-         return 0;
+         return nullptr;
       }
    }
 
@@ -6503,7 +6503,7 @@ void TCling::UpdateClassInfoWithDecl(const NamedDecl* ND)
    const NamedDecl *canon = nullptr;
 
    std::string name;
-   TagDecl* tdDef = 0;
+   TagDecl* tdDef = nullptr;
    if (td) {
       canon = tdDef = td->getDefinition();
       // Let's pass the decl to the TClass only if it has a definition.
@@ -6796,7 +6796,7 @@ void TCling::LibraryLoaded(const void* dyLibHandle, const char* canonicalName) {
 ////////////////////////////////////////////////////////////////////////////////
 
 void TCling::LibraryUnloaded(const void* dyLibHandle, const char* canonicalName) {
-   fPrevLoadedDynLibInfo = 0;
+   fPrevLoadedDynLibInfo = nullptr;
    fSharedLibs = "";
 }
 
@@ -6927,15 +6927,15 @@ const char* TCling::GetClassSharedLibs(const char* cls)
    }
 
    if (!cls || !*cls) {
-      return 0;
+      return nullptr;
    }
    // lookup class to find list of libraries
    if (fMapfile) {
-      TEnvRec* libs_record = 0;
+      TEnvRec* libs_record = nullptr;
       libs_record = fMapfile->Lookup(cls);
       if (libs_record) {
          const char* libs = libs_record->GetValue();
-         return (*libs) ? libs : 0;
+         return (*libs) ? libs : nullptr;
       }
       else {
          // Try the old format...
@@ -6949,15 +6949,15 @@ const char* TCling::GetClassSharedLibs(const char* cls)
          // Use TEnv::Lookup here as the rootmap file must start with Library.
          // and do not support using any stars (so we do not need to waste time
          // with the search made by TEnv::GetValue).
-         TEnvRec* libs_record = 0;
+         TEnvRec* libs_record = nullptr;
          libs_record = fMapfile->Lookup(c);
          if (libs_record) {
             const char* libs = libs_record->GetValue();
-            return (*libs) ? libs : 0;
+            return (*libs) ? libs : nullptr;
          }
       }
    }
-   return 0;
+   return nullptr;
 }
 
 /// This interface returns a list of dependent libraries in the form:
@@ -7121,7 +7121,7 @@ const char* TCling::GetSharedLibDeps(const char* lib, bool useDyld/* = false*/)
    }
 
    if (!fMapfile || !lib || !lib[0]) {
-      return 0;
+      return nullptr;
    }
    TString libname(lib);
    Ssiz_t idx = libname.Last('.');
@@ -7138,7 +7138,7 @@ const char* TCling::GetSharedLibDeps(const char* lib, bool useDyld/* = false*/)
          return libs;
       }
    }
-   return 0;
+   return nullptr;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -7305,7 +7305,7 @@ int TCling::GetSecurityError() const
 int TCling::LoadFile(const char* path) const
 {
    cling::Interpreter::CompilationResult compRes;
-   HandleInterpreterException(GetMetaProcessorImpl(), TString::Format(".L %s", path), compRes, /*cling::Value*/0);
+   HandleInterpreterException(GetMetaProcessorImpl(), TString::Format(".L %s", path), compRes, /*cling::Value*/nullptr);
    return compRes == cling::Interpreter::kFailure;
 }
 
@@ -7435,7 +7435,7 @@ int TCling::UnloadFile(const char* path) const
    }
    // Unload a shared library or a source file.
    cling::Interpreter::CompilationResult compRes;
-   HandleInterpreterException(GetMetaProcessorImpl(), Form(".U %s", canonical.c_str()), compRes, /*cling::Value*/0);
+   HandleInterpreterException(GetMetaProcessorImpl(), Form(".U %s", canonical.c_str()), compRes, /*cling::Value*/nullptr);
    return compRes == cling::Interpreter::kFailure;
 }
 
@@ -7567,7 +7567,7 @@ void TCling::AddFriendToClass(clang::FunctionDecl* function,
 TInterpreter::DeclId_t TCling::GetDeclId(CallFunc_t* func) const
 {
    if (func) return ((TClingCallFunc*)func)->GetDecl()->getCanonicalDecl();
-   return 0;
+   return nullptr;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -7579,7 +7579,7 @@ TInterpreter::DeclId_t TCling::GetDeclId(CallFunc_t* func) const
 TInterpreter::DeclId_t TCling::GetDeclId(ClassInfo_t* cinfo) const
 {
    if (cinfo) return ((TClingClassInfo*)cinfo)->GetDeclId();
-   return 0;
+   return nullptr;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -7589,7 +7589,7 @@ TInterpreter::DeclId_t TCling::GetDeclId(ClassInfo_t* cinfo) const
 TInterpreter::DeclId_t TCling::GetDeclId(DataMemberInfo_t* data) const
 {
    if (data) return ((TClingDataMemberInfo*)data)->GetDeclId();
-   return 0;
+   return nullptr;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -7599,7 +7599,7 @@ TInterpreter::DeclId_t TCling::GetDeclId(DataMemberInfo_t* data) const
 TInterpreter::DeclId_t TCling::GetDeclId(MethodInfo_t* method) const
 {
    if (method) return ((TClingMethodInfo*)method)->GetDeclId();
-   return 0;
+   return nullptr;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -7609,7 +7609,7 @@ TInterpreter::DeclId_t TCling::GetDeclId(MethodInfo_t* method) const
 TInterpreter::DeclId_t TCling::GetDeclId(TypedefInfo_t* tinfo) const
 {
    if (tinfo) return ((TClingTypedefInfo*)tinfo)->GetDecl()->getCanonicalDecl();
-   return 0;
+   return nullptr;
 }
 
 //______________________________________________________________________________
@@ -8583,7 +8583,7 @@ Bool_t TCling::FuncTempInfo_IsValid(FuncTempInfo_t *t_info) const
    // Currently the address of ft_info is actually the decl itself,
    // so we have nothing to do.
 
-   return t_info != 0;
+   return t_info != nullptr;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

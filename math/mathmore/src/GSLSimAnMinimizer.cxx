@@ -50,7 +50,7 @@ bool GSLSimAnMinimizer::Minimize() {
    if (debugLevel >=1 ) std::cout <<"Minimize using GSLSimAnMinimizer " << std::endl;
 
    const ROOT::Math::IMultiGenFunction * function = ObjFunction();
-   if (function == 0) {
+   if (function == nullptr) {
       MATH_ERROR_MSG("GSLSimAnMinimizer::Minimize","Function has not been set");
       return false;
    }
@@ -117,7 +117,7 @@ bool GSLSimAnMinimizer::Minimize() {
 unsigned int GSLSimAnMinimizer::NCalls() const {
    // return number of function calls
    const ROOT::Math::MinimTransformFunction * tfunc = dynamic_cast<const ROOT::Math::MinimTransformFunction *>(ObjFunction());
-   const ROOT::Math::MultiNumGradFunction * f = 0;
+   const ROOT::Math::MultiNumGradFunction * f = nullptr;
    if (tfunc) f = dynamic_cast<const ROOT::Math::MultiNumGradFunction *>(tfunc->OriginalFunction());
    else
       f = dynamic_cast<const ROOT::Math::MultiNumGradFunction *>(ObjFunction());

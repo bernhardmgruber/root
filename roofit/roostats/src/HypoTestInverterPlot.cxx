@@ -112,7 +112,7 @@ TGraphErrors* HypoTestInverterPlot::MakePlot(Option_t * opt)
       }
    }
 
-   TGraphErrors* graph = new TGraphErrors(nEntries,&xArray.front(),&yArray.front(),0,&yErrArray.front());
+   TGraphErrors* graph = new TGraphErrors(nEntries,&xArray.front(),&yArray.front(),nullptr,&yErrArray.front());
    TString pValueName = "CLs";
    if (type == 1 ) pValueName = "CLb";
    if (type == 2 || (type == 0 && !fResults->fUseCLs) ) pValueName = "CLs+b";
@@ -151,8 +151,8 @@ TMultiGraph* HypoTestInverterPlot::MakeExpectedPlot(double nsig1, double nsig2 )
    TString pValueName = "CLs";
    if (!fResults->fUseCLs) pValueName = "CLs+b";
    g0->SetTitle(TString::Format("Expected %s - Median",pValueName.Data()) );
-   TGraphAsymmErrors * g1 = 0;
-   TGraphAsymmErrors * g2 = 0;
+   TGraphAsymmErrors * g1 = nullptr;
+   TGraphAsymmErrors * g2 = nullptr;
    if (doFirstBand) {
       g1 = new TGraphAsymmErrors;
       if (nsig1 - int(nsig1) < 0.01)
@@ -268,8 +268,8 @@ void HypoTestInverterPlot::Draw(Option_t * opt) {
    bool drawCLb = option.Contains("CLB");
    bool draw2CL = option.Contains("2CL");
 
-   TGraphErrors * gobs = 0;
-   TGraph * gplot = 0;
+   TGraphErrors * gobs = nullptr;
+   TGraph * gplot = nullptr;
    if (drawObs) {
       gobs = MakePlot();
       // add object to top-level directory to avoid mem leak
@@ -282,7 +282,7 @@ void HypoTestInverterPlot::Draw(Option_t * opt) {
       else gobs->Draw("PL");
 
    }
-   TMultiGraph * gexp = 0;
+   TMultiGraph * gexp = nullptr;
    if (drawExp) {
       gexp = MakeExpectedPlot();
       // add object to current directory to avoid mem leak
@@ -312,7 +312,7 @@ void HypoTestInverterPlot::Draw(Option_t * opt) {
    }
 
 
-   TGraph *gclb = 0;
+   TGraph *gclb = nullptr;
    if (drawCLb) {
       gclb = MakePlot("CLb");
       if (gROOT) gROOT->Add(gclb);
@@ -321,8 +321,8 @@ void HypoTestInverterPlot::Draw(Option_t * opt) {
       // draw in red observed cls or clsb
       if (gobs) gobs->SetMarkerColor(kRed);
    }
-   TGraph * gclsb = 0;
-   TGraph * gcls = 0;
+   TGraph * gclsb = nullptr;
+   TGraph * gcls = nullptr;
    if (draw2CL) {
       if (fResults->fUseCLs) {
          gclsb = MakePlot("CLs+b");
@@ -378,7 +378,7 @@ void HypoTestInverterPlot::Draw(Option_t * opt) {
 ///  - type = 2 only alt  (B)
 
 SamplingDistPlot * HypoTestInverterPlot::MakeTestStatPlot(int index, int type, int nbins) {
-   SamplingDistPlot * pl = 0;
+   SamplingDistPlot * pl = nullptr;
    if (type == 0) {
       HypoTestResult * result = (HypoTestResult*) fResults->fYObjects.At(index);
       if (result)
@@ -401,5 +401,5 @@ SamplingDistPlot * HypoTestInverterPlot::MakeTestStatPlot(int index, int type, i
          return pl;
       }
    }
-   return 0;
+   return nullptr;
 }

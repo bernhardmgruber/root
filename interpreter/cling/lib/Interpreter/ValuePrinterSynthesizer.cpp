@@ -126,7 +126,7 @@ namespace cling {
     QualType QT = E->getType();
     // For now we skip void and function pointer types.
     if (!QT.isNull() && (QT->isVoidType() || QT->isFunctionType()))
-      return 0;
+      return nullptr;
 
     // Find cling_PrintValue
     if (!m_LookupResult)

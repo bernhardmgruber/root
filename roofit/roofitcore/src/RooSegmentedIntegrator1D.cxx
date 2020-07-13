@@ -62,7 +62,7 @@ void RooSegmentedIntegrator1D::registerIntegrator(RooNumIntFactory& fact)
 ///
 /// coverity[UNINIT_CTOR]
 
-RooSegmentedIntegrator1D::RooSegmentedIntegrator1D() : _array(0)
+RooSegmentedIntegrator1D::RooSegmentedIntegrator1D() : _array(nullptr)
 {
 }
 
@@ -118,7 +118,7 @@ typedef RooIntegrator1D* pRooIntegrator1D ;
 
 Bool_t RooSegmentedIntegrator1D::initialize()
 {
-  _array = 0 ;
+  _array = nullptr ;
   
   Bool_t limitsOK = checkLimits(); 
   if (!limitsOK) return kFALSE ;
@@ -166,7 +166,7 @@ RooSegmentedIntegrator1D::~RooSegmentedIntegrator1D()
 Bool_t RooSegmentedIntegrator1D::setLimits(Double_t* xmin, Double_t* xmax) 
 {
   if(_useIntegrandLimits) {
-    oocoutE((TObject*)0,InputArguments) << "RooSegmentedIntegrator1D::setLimits: cannot override integrand's limits" << endl;
+    oocoutE((TObject*)nullptr,InputArguments) << "RooSegmentedIntegrator1D::setLimits: cannot override integrand's limits" << endl;
     return kFALSE;
   }
   _xmin= *xmin;
@@ -189,7 +189,7 @@ Bool_t RooSegmentedIntegrator1D::checkLimits() const
   }
   _range= _xmax - _xmin;
   if(_range <= 0) {
-    oocoutE((TObject*)0,InputArguments) << "RooIntegrator1D::checkLimits: bad range with min >= max" << endl;
+    oocoutE((TObject*)nullptr,InputArguments) << "RooIntegrator1D::checkLimits: bad range with min >= max" << endl;
     return kFALSE;
   }
   Bool_t ret =  (RooNumber::isInfinite(_xmin) || RooNumber::isInfinite(_xmax)) ? kFALSE : kTRUE;

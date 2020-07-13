@@ -226,7 +226,7 @@ const char* TMySQLStatement::GetFieldName(Int_t nfield)
 
 Bool_t TMySQLStatement::NextResultRow()
 {
-   if ((fStmt==0) || !IsResultSetMode()) return kFALSE;
+   if ((fStmt==nullptr) || !IsResultSetMode()) return kFALSE;
 
    Bool_t res = !mysql_stmt_fetch(fStmt);
 
@@ -247,7 +247,7 @@ Bool_t TMySQLStatement::NextIteration()
 {
    ClearError();
 
-   if (!IsSetParsMode() || (fBind==0)) {
+   if (!IsSetParsMode() || (fBind==nullptr)) {
       SetError(-1,"Cannot call for that statement","NextIteration");
       return kFALSE;
    }
@@ -401,7 +401,7 @@ long double TMySQLStatement::ConvertToNumeric(Int_t npar)
    void* addr = fBuffer[npar].fMem;
    Bool_t sig = fBuffer[npar].fSign;
 
-   if (addr==0) return 0;
+   if (addr==nullptr) return 0;
 
    switch(fBind[npar].buffer_type) {
       case MYSQL_TYPE_LONG:
@@ -434,7 +434,7 @@ long double TMySQLStatement::ConvertToNumeric(Int_t npar)
       case MYSQL_TYPE_BLOB: {
          char* str = (char*) addr;
          ULong_t len = fBuffer[npar].fResLength;
-         if ((str==0) || (*str==0) || (len==0)) return 0;
+         if ((str==nullptr) || (*str==0) || (len==0)) return 0;
          Int_t size = fBuffer[npar].fSize;
          if (1.*len<size)
             str[len] = 0;
@@ -564,7 +564,7 @@ Double_t TMySQLStatement::GetDouble(Int_t npar)
 
 const char *TMySQLStatement::GetString(Int_t npar)
 {
-   CheckGetField("GetString", 0);
+   CheckGetField("GetString", nullptr);
 
    if ((fBind[npar].buffer_type==MYSQL_TYPE_STRING)
       || (fBind[npar].buffer_type==MYSQL_TYPE_BLOB)
@@ -590,7 +590,7 @@ const char *TMySQLStatement::GetString(Int_t npar)
 
 Bool_t TMySQLStatement::GetBinary(Int_t npar, void* &mem, Long_t& size)
 {
-   mem = 0;
+   mem = nullptr;
    size = 0;
 
    CheckGetField("GetBinary", kFALSE);
@@ -624,7 +624,7 @@ Bool_t TMySQLStatement::GetDate(Int_t npar, Int_t& year, Int_t& month, Int_t& da
       case MYSQL_TYPE_TIMESTAMP:
       case MYSQL_TYPE_DATE: {
          MYSQL_TIME* tm = (MYSQL_TIME*) fBuffer[npar].fMem;
-         if (tm==0) return kFALSE;
+         if (tm==nullptr) return kFALSE;
          year = tm->year;
          month = tm->month;
          day = tm->day;
@@ -650,7 +650,7 @@ Bool_t TMySQLStatement::GetTime(Int_t npar, Int_t& hour, Int_t& min, Int_t& sec)
       case MYSQL_TYPE_TIMESTAMP:
       case MYSQL_TYPE_TIME: {
          MYSQL_TIME* tm = (MYSQL_TIME*) fBuffer[npar].fMem;
-         if (tm==0) return kFALSE;
+         if (tm==nullptr) return kFALSE;
          hour = tm->hour;
          min = tm->minute;
          sec = tm->second;
@@ -675,7 +675,7 @@ Bool_t TMySQLStatement::GetDatime(Int_t npar, Int_t& year, Int_t& month, Int_t& 
       case MYSQL_TYPE_DATETIME:
       case MYSQL_TYPE_TIMESTAMP: {
          MYSQL_TIME* tm = (MYSQL_TIME*) fBuffer[npar].fMem;
-         if (tm==0) return kFALSE;
+         if (tm==nullptr) return kFALSE;
          year = tm->year;
          month = tm->month;
          day = tm->day;
@@ -703,7 +703,7 @@ Bool_t TMySQLStatement::GetTimestamp(Int_t npar, Int_t& year, Int_t& month, Int_
       case MYSQL_TYPE_DATETIME:
       case MYSQL_TYPE_TIMESTAMP: {
          MYSQL_TIME* tm = (MYSQL_TIME*) fBuffer[npar].fMem;
-         if (tm==0) return kFALSE;
+         if (tm==nullptr) return kFALSE;
          year = tm->year;
          month = tm->month;
          day = tm->day;
@@ -791,22 +791,22 @@ void *TMySQLStatement::BeforeSet(const char* method, Int_t npar, Int_t sqltype, 
 
    if (!IsSetParsMode()) {
       SetError(-1,"Cannot set parameter for statement", method);
-      return 0;
+      return nullptr;
    }
 
    if ((npar<0) || (npar>=fNumBuffers)) {
       SetError(-1,Form("Invalid parameter number %d",npar), method);
-      return 0;
+      return nullptr;
    }
 
    if ((fIterationCount==0) && (fBuffer[npar].fSqlType==0))
       if (!SetSQLParamType(npar, sqltype, sig, size)) {
          SetError(-1,"Cannot initialize parameter buffer", method);
-         return 0;
+         return nullptr;
       }
 
    if ((fBuffer[npar].fSqlType!=sqltype) ||
-      (fBuffer[npar].fSign != sig)) return 0;
+      (fBuffer[npar].fSign != sig)) return nullptr;
 
    fBuffer[npar].fResNull = false;
 
@@ -826,7 +826,7 @@ Bool_t TMySQLStatement::SetNull(Int_t npar)
 {
    void* addr = BeforeSet("SetNull", npar, MYSQL_TYPE_LONG);
 
-   if (addr!=0)
+   if (addr!=nullptr)
       *((int*) addr) = 0;
 
    if ((npar>=0) && (npar<fNumBuffers))
@@ -842,10 +842,10 @@ Bool_t TMySQLStatement::SetInt(Int_t npar, Int_t value)
 {
    void* addr = BeforeSet("SetInt", npar, MYSQL_TYPE_LONG);
 
-   if (addr!=0)
+   if (addr!=nullptr)
       *((int*) addr) = value;
 
-   return (addr!=0);
+   return (addr!=nullptr);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -855,10 +855,10 @@ Bool_t TMySQLStatement::SetUInt(Int_t npar, UInt_t value)
 {
    void* addr = BeforeSet("SetUInt", npar, MYSQL_TYPE_LONG, kFALSE);
 
-   if (addr!=0)
+   if (addr!=nullptr)
       *((unsigned int*) addr) = value;
 
-   return (addr!=0);
+   return (addr!=nullptr);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -868,10 +868,10 @@ Bool_t TMySQLStatement::SetLong(Int_t npar, Long_t value)
 {
    void* addr = BeforeSet("SetLong", npar, MYSQL_TYPE_LONG);
 
-   if (addr!=0)
+   if (addr!=nullptr)
       *((int*) addr) = value;
 
-   return (addr!=0);
+   return (addr!=nullptr);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -881,10 +881,10 @@ Bool_t TMySQLStatement::SetLong64(Int_t npar, Long64_t value)
 {
    void* addr = BeforeSet("SetLong64", npar, MYSQL_TYPE_LONGLONG);
 
-   if (addr!=0)
+   if (addr!=nullptr)
       *((Long64_t*) addr) = value;
 
-   return (addr!=0);
+   return (addr!=nullptr);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -894,10 +894,10 @@ Bool_t TMySQLStatement::SetULong64(Int_t npar, ULong64_t value)
 {
    void* addr = BeforeSet("SetULong64", npar, MYSQL_TYPE_LONGLONG, kFALSE);
 
-   if (addr!=0)
+   if (addr!=nullptr)
       *((ULong64_t*) addr) = value;
 
-   return (addr!=0);
+   return (addr!=nullptr);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -907,10 +907,10 @@ Bool_t TMySQLStatement::SetDouble(Int_t npar, Double_t value)
 {
    void* addr = BeforeSet("SetDouble", npar, MYSQL_TYPE_DOUBLE, kFALSE);
 
-   if (addr!=0)
+   if (addr!=nullptr)
       *((double*) addr) = value;
 
-   return (addr!=0);
+   return (addr!=nullptr);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -922,7 +922,7 @@ Bool_t TMySQLStatement::SetString(Int_t npar, const char* value, Int_t maxsize)
 
    void* addr = BeforeSet("SetString", npar, MYSQL_TYPE_STRING, true, maxsize);
 
-   if (addr==0) return kFALSE;
+   if (addr==nullptr) return kFALSE;
 
    if (len >= fBuffer[npar].fSize) {
       free(fBuffer[npar].fMem);
@@ -958,7 +958,7 @@ Bool_t TMySQLStatement::SetBinary(Int_t npar, void* mem, Long_t size, Long_t max
 
    void* addr = BeforeSet("SetBinary", npar, bin_type, true, maxsize);
 
-   if (addr==0) return kFALSE;
+   if (addr==nullptr) return kFALSE;
 
    if (size >= fBuffer[npar].fSize) {
       free(fBuffer[npar].fMem);
@@ -987,13 +987,13 @@ Bool_t TMySQLStatement::SetDate(Int_t npar, Int_t year, Int_t month, Int_t day)
 {
    MYSQL_TIME* addr = (MYSQL_TIME*) BeforeSet("SetDate", npar, MYSQL_TYPE_DATE);
 
-   if (addr!=0) {
+   if (addr!=nullptr) {
       addr->year = year;
       addr->month = month;
       addr->day = day;
    }
 
-   return (addr!=0);
+   return (addr!=nullptr);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -1003,13 +1003,13 @@ Bool_t TMySQLStatement::SetTime(Int_t npar, Int_t hour, Int_t min, Int_t sec)
 {
    MYSQL_TIME* addr = (MYSQL_TIME*) BeforeSet("SetTime", npar, MYSQL_TYPE_TIME);
 
-   if (addr!=0) {
+   if (addr!=nullptr) {
       addr->hour = hour;
       addr->minute = min;
       addr->second = sec;
    }
 
-   return (addr!=0);
+   return (addr!=nullptr);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -1019,7 +1019,7 @@ Bool_t TMySQLStatement::SetDatime(Int_t npar, Int_t year, Int_t month, Int_t day
 {
    MYSQL_TIME* addr = (MYSQL_TIME*) BeforeSet("SetDatime", npar, MYSQL_TYPE_DATETIME);
 
-   if (addr!=0) {
+   if (addr!=nullptr) {
       addr->year = year;
       addr->month = month;
       addr->day = day;
@@ -1028,7 +1028,7 @@ Bool_t TMySQLStatement::SetDatime(Int_t npar, Int_t year, Int_t month, Int_t day
       addr->second = sec;
    }
 
-   return (addr!=0);
+   return (addr!=nullptr);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -1038,7 +1038,7 @@ Bool_t TMySQLStatement::SetTimestamp(Int_t npar, Int_t year, Int_t month, Int_t 
 {
    MYSQL_TIME* addr = (MYSQL_TIME*) BeforeSet("SetTimestamp", npar, MYSQL_TYPE_TIMESTAMP);
 
-   if (addr!=0) {
+   if (addr!=nullptr) {
       addr->year = year;
       addr->month = month;
       addr->day = day;
@@ -1047,7 +1047,7 @@ Bool_t TMySQLStatement::SetTimestamp(Int_t npar, Int_t year, Int_t month, Int_t 
       addr->second = sec;
    }
 
-   return (addr!=0);
+   return (addr!=nullptr);
 }
 
 #else

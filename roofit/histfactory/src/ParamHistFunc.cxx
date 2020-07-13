@@ -679,7 +679,7 @@ Int_t ParamHistFunc::getAnalyticalIntegralWN(RooArgSet& allVars, RooArgSet& anal
 
   // Check if this configuration was created before
   Int_t sterileIdx(-1) ;
-  CacheElem* cache = (CacheElem*) _normIntMgr.getObj(normSet,&analVars,&sterileIdx,(const char*)0) ;
+  CacheElem* cache = (CacheElem*) _normIntMgr.getObj(normSet,&analVars,&sterileIdx,(const char*)nullptr) ;
   if (cache) {
     return _normIntMgr.lastIndex()+1 ;
   }
@@ -688,7 +688,7 @@ Int_t ParamHistFunc::getAnalyticalIntegralWN(RooArgSet& allVars, RooArgSet& anal
   cache = new CacheElem ;
 
   // Store cache element
-  Int_t code = _normIntMgr.setObj(normSet,&analVars,(RooAbsCacheElement*)cache,0) ;
+  Int_t code = _normIntMgr.setObj(normSet,&analVars,(RooAbsCacheElement*)cache,nullptr) ;
 
   return code+1 ; 
 
@@ -709,7 +709,7 @@ Double_t ParamHistFunc::analyticalIntegralWN(Int_t /*code*/, const RooArgSet* /*
   // multiply by the bind width
   
   RooFIter paramIter = _paramSet.fwdIterator();
-  RooRealVar* param = NULL;
+  RooRealVar* param = nullptr;
   Int_t nominalItr = 0;
   while((param = (RooRealVar*) paramIter.next())) {
 
@@ -755,7 +755,7 @@ std::list<Double_t>* ParamHistFunc::plotSamplingHint(RooAbsRealLValue& obs, Doub
   RooAbsLValue* lvarg = &obs;
 
   // Retrieve position of all bin boundaries
-  const RooAbsBinning* binning = lvarg->getBinningPtr(0) ;
+  const RooAbsBinning* binning = lvarg->getBinningPtr(nullptr) ;
   Double_t* boundaries = binning->array() ;
 
   std::list<Double_t>* hint = new std::list<Double_t> ;
@@ -790,7 +790,7 @@ std::list<Double_t>* ParamHistFunc::binBoundaries(RooAbsRealLValue& obs, Double_
   RooAbsLValue* lvarg = &obs;
 
   // Retrieve position of all bin boundaries
-  const RooAbsBinning* binning = lvarg->getBinningPtr(0) ;
+  const RooAbsBinning* binning = lvarg->getBinningPtr(nullptr) ;
   Double_t* boundaries = binning->array() ;
 
   std::list<Double_t>* hint = new std::list<Double_t> ;

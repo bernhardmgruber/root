@@ -25,7 +25,7 @@ namespace Internal {
 
 /////////////////////////////////////////////////////////////////////////////
 
-TFriendProxy::TFriendProxy() : fDirector(0,-1), fIndex(-1)
+TFriendProxy::TFriendProxy() : fDirector(nullptr,-1), fIndex(-1)
 {
 }
 
@@ -33,7 +33,7 @@ TFriendProxy::TFriendProxy() : fDirector(0,-1), fIndex(-1)
    /// Constructor.
 
    TFriendProxy::TFriendProxy(TBranchProxyDirector *director, TTree *main, Int_t index) :
-      fDirector(0,-1), fIndex(index)
+      fDirector(nullptr,-1), fIndex(index)
    {
       if (main && main->GetListOfFriends()) {
          TObject *obj = main->GetListOfFriends()->At(fIndex);
@@ -70,9 +70,9 @@ TFriendProxy::TFriendProxy() : fDirector(0,-1), fIndex(-1)
          TObject *obj = newmain->GetListOfFriends()->At(fIndex);
          TFriendElement *element = dynamic_cast<TFriendElement*>( obj );
          if (element) fDirector.SetTree(element->GetTree());
-         else fDirector.SetTree(0);
+         else fDirector.SetTree(nullptr);
       } else {
-         fDirector.SetTree(0);
+         fDirector.SetTree(nullptr);
       }
    }
 

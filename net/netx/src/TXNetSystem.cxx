@@ -64,26 +64,26 @@ typedef XrdClientVector<XrdOucString> VecString_t;
 ////////////////////////////////////////////////////////////////////////////////
 /// Create system management class without connecting to server.
 
-TXNetSystem::TXNetSystem(Bool_t owner) : TNetSystem(owner), fDirList(0)
+TXNetSystem::TXNetSystem(Bool_t owner) : TNetSystem(owner), fDirList(nullptr)
 {
    SetTitle("(x)rootd system administration");
    fIsRootd = kFALSE;
    fIsXRootd = kFALSE;
    fDir = "";
-   fDirp = 0;
+   fDirp = nullptr;
    fUrl = "";
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 /// Create system management class and connect to server specified by url.
 
-TXNetSystem::TXNetSystem(const char *url, Bool_t owner) : TNetSystem(owner), fDirList(0)
+TXNetSystem::TXNetSystem(const char *url, Bool_t owner) : TNetSystem(owner), fDirList(nullptr)
 {
    SetTitle("(x)rootd system administration");
    fIsRootd = kFALSE;
    fIsXRootd = kFALSE;
    fDir = "";
-   fDirp = 0;
+   fDirp = nullptr;
    fUrl = url;
 
    fgAddrFQDN.SetOwner();
@@ -154,8 +154,8 @@ XrdClientAdmin *TXNetSystem::Connect(const char *url)
             Int_t rproto = TXNetFile::GetRootdProtocol(s);
             if (rproto < 0) {
                Error("TXNetSystem", "getting protocol of the rootd server");
-               cadm = 0;
-               return 0;
+               cadm = nullptr;
+               return nullptr;
             }
             // Finalize TSocket initialization
             s->SetRemoteProtocol(rproto);
@@ -185,7 +185,7 @@ XrdClientAdmin *TXNetSystem::Connect(const char *url)
 
             // Type of server
             fIsRootd = kTRUE;
-            cadm = 0;
+            cadm = nullptr;
 
          } else {
             Error("Connect", "some severe error occurred while opening"
@@ -194,13 +194,13 @@ XrdClientAdmin *TXNetSystem::Connect(const char *url)
                Printf("   '%s'", cadm->LastServerError()->errmsg);
             else
                Printf("   (error message not available)");
-            cadm = 0;
+            cadm = nullptr;
             return cadm;
          }
       } else {
          Error("Connect",
                "while opening the connection at %s - exit", url);
-         cadm = 0;
+         cadm = nullptr;
          return cadm;
       }
    }
@@ -251,7 +251,7 @@ void* TXNetSystem::OpenDirectory(const char* dir)
          else
             cg.NotifyLastError();
       }
-      return 0;
+      return nullptr;
    }
 
    if (gDebug > 1)
@@ -270,12 +270,12 @@ void TXNetSystem::FreeDirectory(void *dirp)
          return;
       }
       fDir = "";
-      fDirp = 0;
+      fDirp = nullptr;
       fDirEntry = "";
       if (fDirList) {
          ((VecString_t*)fDirList)->Clear();
          delete ((VecString_t*)fDirList);
-         fDirList = 0;
+         fDirList = nullptr;
       }
       return;
    }
@@ -319,7 +319,7 @@ const char* TXNetSystem::GetDirEntry(void *dirp)
    if (fIsXRootd) {
       if (dirp != fDirp) {
          Error("GetDirEntry","invalid directory pointer");
-         return 0;
+         return nullptr;
       }
 
       // Only request new directory listing the first time called
@@ -332,8 +332,8 @@ const char* TXNetSystem::GetDirEntry(void *dirp)
             if (!ok) {
                cg.NotifyLastError();
                delete (VecString_t*)fDirList;
-               fDirList = 0;
-               return 0;
+               fDirList = nullptr;
+               return nullptr;
             }
          }
       }
@@ -343,7 +343,7 @@ const char* TXNetSystem::GetDirEntry(void *dirp)
          fDirEntry = ((VecString_t*)fDirList)->Pop_front().c_str();
          return fDirEntry.Data();
       }
-      return 0;   // until all of them have been returned
+      return nullptr;   // until all of them have been returned
    }
 
    if (gDebug > 1) Info("GetDirEntry","Calling TNetSystem::GetDirEntry");
@@ -561,7 +561,7 @@ Int_t TXNetSystem::Prepare(TCollection *paths,
       TString *buf = (bufout) ? bufout : new TString();
 
       // Prepare the buffer
-      TObject *o = 0;
+      TObject *o = nullptr;
       TUrl u;
       TString path;
       TIter nxt(paths);
@@ -667,7 +667,7 @@ Int_t TXNetSystem::Locate(const char *path, TString &eurl)
             XrdClientUrlInfo ui((const char *)&li.Location[0]);
             // We got the IP address but we need the FQDN: if we did not resolve
             // it yet do it and cache the result
-            TNamed *hn = 0;
+            TNamed *hn = nullptr;
             if (fgAddrFQDN.GetSize() <= 0 ||
                !(hn = dynamic_cast<TNamed *>(fgAddrFQDN.FindObject(ui.Host.c_str())))) {
                TInetAddress a(gSystem->GetHostByName(ui.Host.c_str()));
@@ -703,13 +703,13 @@ Int_t TXNetSystem::Locate(const char *path, TString &eurl)
 
 XrdClientAdmin *TXNetSystem::GetClientAdmin(const char *url)
 {
-   XrdClientAdmin *ca = 0;
+   XrdClientAdmin *ca = nullptr;
 
    // ID key
    TString key = TXNetSystem::GetKey(url);
 
    // If we have one for 'key', just use it
-   TXrdClientAdminWrapper *caw = 0;
+   TXrdClientAdminWrapper *caw = nullptr;
    if (fgAdminHash.GetSize() > 0 &&
       (caw = dynamic_cast<TXrdClientAdminWrapper *>(fgAdminHash.FindObject(key.Data()))))
       return caw->fXCA;
@@ -759,7 +759,7 @@ TXrdClientAdminWrapper::~TXrdClientAdminWrapper()
 /// Construct a guard object
 
 TXNetSystemConnectGuard::TXNetSystemConnectGuard(TXNetSystem *xn, const char *url)
-                        : fClientAdmin(0)
+                        : fClientAdmin(nullptr)
 {
     if (xn)
        // Connect
@@ -772,7 +772,7 @@ TXNetSystemConnectGuard::TXNetSystemConnectGuard(TXNetSystem *xn, const char *ur
 
 TXNetSystemConnectGuard::~TXNetSystemConnectGuard()
 {
-   fClientAdmin = 0;
+   fClientAdmin = nullptr;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

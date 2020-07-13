@@ -366,7 +366,7 @@ static int BuildScopeProxyDict(Cppyy::TCppScope_t scope, PyObject* pyclass, cons
 
         // it could still be that this is an anonymous enum, which is not in the list
         // provided by the class
-            if (strstr(Cppyy::GetDatamemberType(scope, idata).c_str(), "(anonymous)") != 0) {
+            if (strstr(Cppyy::GetDatamemberType(scope, idata).c_str(), "(anonymous)") != nullptr) {
                 AddPropertyToClass(pyclass, scope, idata);
                 continue;
             }
@@ -665,7 +665,7 @@ PyObject* CPyCppyy::CreateScopeProxy(const std::string& name, PyObject* parent, 
     if (!pyscope) {
     // construct the base classes
         PyObject* pybases = BuildCppClassBases(klass);
-        if (pybases != 0) {
+        if (pybases != nullptr) {
         // create a fresh Python class, given bases, name, and empty dictionary
             pyscope = CreateNewCppProxyClass(klass, pybases);
             Py_DECREF(pybases);
@@ -847,7 +847,7 @@ PyObject* CPyCppyy::BindCppObjectNoCast(Cppyy::TCppObject_t address,
     Py_DECREF(pyclass);
 
 // bind, register and return if successful
-    if (pyobj != 0) { // fill proxy value?
+    if (pyobj != nullptr) { // fill proxy value?
         unsigned objflags =
             (isRef ? CPPInstance::kIsReference : 0) | (isValue ? CPPInstance::kIsValue : 0);
         pyobj->Set(address, (CPPInstance::EFlags)objflags);

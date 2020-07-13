@@ -227,7 +227,7 @@ void topDriver( string input ) {
 
       std::vector< EstimateSummary > dummy;
       RooWorkspace* ws = factory.MakeSingleChannelModel( dummy, measurement.GetConstantParams() );
-      if( ws==NULL ) {
+      if( ws==nullptr ) {
 	std::cout << "Failed to create SingleChannelModel for channel: " << channel.GetName()
 		  << " and measurement: " << measurement.GetName() << std::endl;
 	throw hf_exc();
@@ -285,7 +285,7 @@ void topDriver( string input ) {
 
     // Now, combine the channels
     RooWorkspace* ws=factory.MakeCombinedModel(channel_names, channel_workspaces);
-    if( ws == NULL ) {
+    if( ws == nullptr ) {
       std::cout << "Error: Failed to create workspace" << std::endl;
       throw hf_exc();
     }

@@ -1071,7 +1071,7 @@ bool CPyCppyy::CStringConverter::SetArg(
     const char* cstr = CPyCppyy_PyText_AsStringAndSize(pyobject, &len);
     if (!cstr) {
     // special case: allow ctypes c_char_p
-        PyObject* pytype = 0, *pyvalue = 0, *pytrace = 0;
+        PyObject* pytype = nullptr, *pyvalue = nullptr, *pytrace = nullptr;
         PyErr_Fetch(&pytype, &pyvalue, &pytrace);
         if (Py_TYPE(pyobject) == GetCTypesType(ct_c_char_p)) {
             para.fValue.fVoidp = (void*)((CPyCppyy_tagCDataObject*)pyobject)->b_ptr;

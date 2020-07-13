@@ -202,14 +202,14 @@ namespace RooStats {
       if( itr == fChannelPdfMap.end() ) {
 	std::cout << "Warning: Could not find channel: " << channel
 		  << " in pdf: " << fModel->GetName() << std::endl;
-	return NULL;
+	return nullptr;
       }
       
       RooAbsPdf* pdf = itr->second;
-      if( pdf == NULL ) {
+      if( pdf == nullptr ) {
 	std::cout << "Warning: Pdf associated with channel: " << channel
 		  << " is NULL" << std::endl;
-	return NULL;
+	return nullptr;
       }
 
       return pdf;
@@ -371,7 +371,7 @@ namespace RooStats {
       
       // Loop over the parameters and print their values, etc
       TIterator* paramItr = params->createIterator();
-      RooRealVar* param = NULL;
+      RooRealVar* param = nullptr;
       while( (param=(RooRealVar*)paramItr->Next()) ) {
 
 	if( !IncludeConstantParams && param->isConstant() ) continue;
@@ -409,12 +409,12 @@ namespace RooStats {
       
       // Loop over the parameters and print their values, etc
       TIterator* paramItr = params->createIterator();
-      RooRealVar* param = NULL;
+      RooRealVar* param = nullptr;
       while( (param=(RooRealVar*)paramItr->Next()) ) {
 
 	if( !IncludeConstantParams && param->isConstant() ) continue;
 
-	if( findChild(param->GetName(), channel_pdf)==NULL ) continue;
+	if( findChild(param->GetName(), channel_pdf)==nullptr ) continue;
 
 	std::cout << std::setw(30) << param->GetName();
 	std::cout << std::setw(15) << param->getVal();
@@ -451,12 +451,12 @@ namespace RooStats {
       
       // Loop over the parameters and print their values, etc
       TIterator* paramItr = params->createIterator();
-      RooRealVar* param = NULL;
+      RooRealVar* param = nullptr;
       while( (param=(RooRealVar*)paramItr->Next()) ) {
 
 	if( !IncludeConstantParams && param->isConstant() ) continue;
 
-	if( findChild(param->GetName(), sample_func)==NULL ) continue;
+	if( findChild(param->GetName(), sample_func)==nullptr ) continue;
 
 	std::cout << std::setw(30) << param->GetName();
 	std::cout << std::setw(15) << param->getVal();
@@ -582,7 +582,7 @@ namespace RooStats {
       std::map< std::string, RooAbsReal*> SampleFunctionMap = GetSampleFunctionMap(channel);
 
       // Okay, 'loop' once 
-      TH1* total_hist=NULL;
+      TH1* total_hist=nullptr;
       std::map< std::string, RooAbsReal*>::iterator itr = SampleFunctionMap.begin();
       for( ; itr != SampleFunctionMap.end(); ++itr) {
 	std::string sample_name = itr->first;
@@ -679,7 +679,7 @@ namespace RooStats {
 
       int dim = vars.getSize();
 
-      TH1* hist = NULL;
+      TH1* hist = nullptr;
 
       if( dim==1 ) {
 	RooRealVar* varX = (RooRealVar*) vars.at(0);
@@ -718,7 +718,7 @@ namespace RooStats {
 
       stack->Draw();
       
-      if( data!=NULL ) {
+      if( data!=nullptr ) {
 	TH1* data_hist = GetDataHist(data, channel, channel+"_data_tmp");
 	data_hist->Draw("SAME");
       }
@@ -740,7 +740,7 @@ namespace RooStats {
       
       // Loop over the subnodes and add
       TIterator* itr = productComponents.createIterator();
-      RooAbsArg* arg = NULL;
+      RooAbsArg* arg = nullptr;
       while( (arg=(RooAbsArg*)itr->Next()) ) {
 	std::string ClassName = arg->ClassName();
 	if( ClassName == "RooProduct" ) {
@@ -823,7 +823,7 @@ namespace RooStats {
 	// the "unconstrained" pdf node for that channel
 	RooArgSet* components = pdf->getComponents();
 	TIterator* argItr = components->createIterator();
-	RooAbsArg* arg = NULL;
+	RooAbsArg* arg = nullptr;
 	while( (arg=(RooAbsArg*)argItr->Next()) ) {
 	  std::string ClassName = arg->ClassName();
 	  if( ClassName == "RooRealSumPdf" ) {
@@ -889,13 +889,13 @@ namespace RooStats {
 
     RooAbsArg* HistFactoryNavigation::findChild(const std::string& name, RooAbsReal* parent) const {
       
-      RooAbsArg* term=NULL;
+      RooAbsArg* term=nullptr;
 
       // Check if it is a "component",
       // ie a sub node:
       RooArgSet* components = parent->getComponents();
       TIterator* argItr = components->createIterator();
-      RooAbsArg* arg = NULL;
+      RooAbsArg* arg = nullptr;
       while( (arg=(RooAbsArg*)argItr->Next()) ) {
 	std::string ArgName = arg->GetName();
 	if( ArgName == name ) {
@@ -906,7 +906,7 @@ namespace RooStats {
       delete components;
       delete argItr;
 
-      if( term != NULL ) return term;
+      if( term != nullptr ) return term;
 
       // If that failed, 
       // Check if it's a Parameter
@@ -914,7 +914,7 @@ namespace RooStats {
       RooArgSet* args = new RooArgSet();
       RooArgSet* paramSet = parent->getParameters(args);
       TIterator* paramItr = paramSet->createIterator();
-      RooAbsArg* param = NULL;
+      RooAbsArg* param = nullptr;
       while( (param=(RooAbsArg*)paramItr->Next()) ) {
 	std::string ParamName = param->GetName();
 	if( ParamName == name ) {
@@ -950,10 +950,10 @@ namespace RooStats {
       // First, as a sanity check, let's see if the parameter
       // itself actually exists and if the model depends on it:
       RooRealVar* param = dynamic_cast<RooRealVar*>(findChild(parameter, fModel));
-      if( param==NULL ) {
+      if( param==nullptr ) {
 	std::cout << "Error: Couldn't Find parameter: " << parameter << " in model."
 		  << std::endl;
-	return NULL;
+	return nullptr;
       }
 
       // The "gamma"'s use a different constraint term name
@@ -964,10 +964,10 @@ namespace RooStats {
       // Now, get the constraint itself
       RooAbsReal* term = dynamic_cast<RooAbsReal*>(findChild(ConstraintTermName, fModel));
 
-      if( term==NULL ) {
+      if( term==nullptr ) {
 	std::cout << "Error: Couldn't Find constraint term for parameter: " << parameter
 		  << " (Looked for '" << ConstraintTermName << "')" << std::endl;
-	return NULL;
+	return nullptr;
       }
 
       return term;
@@ -978,7 +978,7 @@ namespace RooStats {
     double HistFactoryNavigation::GetConstraintUncertainty(const std::string& parameter) {
       
       RooAbsReal* constraintTerm = GetConstraintTerm(parameter);
-      if( constraintTerm==NULL ) {
+      if( constraintTerm==nullptr ) {
 	std::cout << "Error: Cannot get uncertainty because parameter: " << parameter
 		  << " has no constraint term" << std::endl;
 	throw hf_exc();
@@ -1014,7 +1014,7 @@ namespace RooStats {
 
 	// Get the sigma and its value
 	RooAbsReal* sigmaVar = dynamic_cast<RooAbsReal*>(constraintTerm->findServer(sigmaName.c_str()));
-	if( sigmaVar==NULL ) {
+	if( sigmaVar==nullptr ) {
 	  std::cout << "Error: Failed to find the 'sigma' node: " << sigmaName
 		    << " in the RooGaussian: " << constraintTerm->GetName() << std::endl;
 	  throw hf_exc();
@@ -1026,7 +1026,7 @@ namespace RooStats {
 	// Poisson errors are given by inverting: tau = 1 / (sigma*sigma)
 	std::string tauName = "nom_" + parameter;
 	RooAbsReal* tauVar = dynamic_cast<RooAbsReal*>( constraintTerm->findServer(tauName.c_str()) );
-	if( tauVar==NULL ) {
+	if( tauVar==nullptr ) {
 	  std::cout << "Error: Failed to find the nominal 'tau' node: " << tauName
 		    << " for the RooPoisson: " << constraintTerm->GetName() << std::endl;
 	  throw hf_exc();
@@ -1048,7 +1048,7 @@ namespace RooStats {
 
       // First, check that the node to replace is actually a node:
       RooAbsArg* nodeToReplace = findChild(ToReplace, fModel);
-      if( nodeToReplace==NULL ) {
+      if( nodeToReplace==nullptr ) {
         std::cout << "Error: Cannot replace node: " << ToReplace
             << " because this node wasn't found in: " << fModel->GetName()
             << std::endl;
@@ -1111,7 +1111,7 @@ namespace RooStats {
       /////// NODE SIZE
       {
 	TIterator* itr = components.createIterator();
-	RooAbsArg* arg = NULL;
+	RooAbsArg* arg = nullptr;
 	while( (arg=(RooAbsArg*)itr->Next()) ) {
 	  RooAbsReal* component = dynamic_cast<RooAbsReal*>(arg);
 	  std::string NodeName = component->GetName();
@@ -1134,7 +1134,7 @@ namespace RooStats {
       std::cout << std::endl;
 
       TIterator* itr = components.createIterator();
-      RooAbsArg* arg = NULL;
+      RooAbsArg* arg = nullptr;
       while( (arg=(RooAbsArg*)itr->Next()) ) {
 	RooAbsReal* component = dynamic_cast<RooAbsReal*>(arg);
 	std::string NodeName = component->GetName();
@@ -1144,7 +1144,7 @@ namespace RooStats {
 	// annoying messages from being printed
 	RooFit::MsgLevel levelBefore = RooMsgService::instance().globalKillBelow();
 	RooMsgService::instance().setGlobalKillBelow(RooFit::FATAL);
-	TH1* hist=NULL;
+	TH1* hist=nullptr;
 	try {
 	  hist = MakeHistFromRooFunction( component, observable_list, NodeName+"_tmp");
 	} catch(...) {
@@ -1206,7 +1206,7 @@ namespace RooStats {
 
       int dim = vars.getSize();
 
-      TH1* hist=NULL;
+      TH1* hist=nullptr;
 
       if( dim==1 ) {
 	RooRealVar* varX = (RooRealVar*) vars.at(0);
@@ -1266,7 +1266,7 @@ namespace RooStats {
       
       // Loop over the parameters and print their values, etc
       TIterator* paramItr = params->createIterator();
-      RooRealVar* param = NULL;
+      RooRealVar* param = nullptr;
       while( (param=(RooRealVar*)paramItr->Next()) ) {
 
 	std::string ParamName = param->GetName();
@@ -1286,7 +1286,7 @@ namespace RooStats {
     RooRealVar* HistFactoryNavigation::var(const std::string& varName) const {
       
       RooAbsArg* arg = findChild(varName, fModel);
-      if( !arg ) return NULL;
+      if( !arg ) return nullptr;
 
       RooRealVar* var_obj = dynamic_cast<RooRealVar*>(arg);
       return var_obj;

@@ -82,40 +82,40 @@ static int nullptr_nonzero(PyObject*)
 }
 
 static PyNumberMethods nullptr_as_number = {
-    0, 0, 0,
+    nullptr, nullptr, nullptr,
 #if PY_VERSION_HEX < 0x03000000
-    0,
+    nullptr,
 #endif
-    0, 0, 0, 0, 0, 0,
+    nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
     (inquiry)nullptr_nonzero,           // tp_nonzero (nb_bool in p3)
-    0, 0, 0, 0, 0, 0,
+    nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
 #if PY_VERSION_HEX < 0x03000000
-    0,                                  // nb_coerce
+    nullptr,                                  // nb_coerce
 #endif
-    0, 0, 0,
+    nullptr, nullptr, nullptr,
 #if PY_VERSION_HEX < 0x03000000
-    0, 0,
+    nullptr, nullptr,
 #endif
-    0, 0, 0,
+    nullptr, nullptr, nullptr,
 #if PY_VERSION_HEX < 0x03000000
-    0,                                  // nb_inplace_divide
+    nullptr,                                  // nb_inplace_divide
 #endif
-    0, 0, 0, 0, 0, 0, 0
+    nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr
 #if PY_VERSION_HEX >= 0x02020000
-    , 0                                 // nb_floor_divide
+    , nullptr                                 // nb_floor_divide
 #if PY_VERSION_HEX < 0x03000000
-    , 0                                 // nb_true_divide
+    , nullptr                                 // nb_true_divide
 #else
-    , 0                                 // nb_true_divide
+    , nullptr                                 // nb_true_divide
 #endif
-    , 0, 0
+    , nullptr, nullptr
 #endif
 #if PY_VERSION_HEX >= 0x02050000
-    , 0                                 // nb_index
+    , nullptr                                 // nb_index
 #endif
 #if PY_VERSION_HEX >= 0x03050000
-    , 0                                 // nb_matrix_multiply
-    , 0                                 // nb_inplace_matrix_multiply
+    , nullptr                                 // nb_matrix_multiply
+    , nullptr                                 // nb_inplace_matrix_multiply
 #endif
 };
 
@@ -125,21 +125,21 @@ static PyTypeObject PyNullPtr_t_Type = {
     sizeof(PyObject),    // tp_basicsize
     0,                   // tp_itemsize
     nullptr_dealloc,     // tp_dealloc (never called)
-    0, 0, 0, 0,
+    nullptr, nullptr, nullptr, nullptr,
     nullptr_repr,        // tp_repr
     &nullptr_as_number,  // tp_as_number
-    0, 0,
+    nullptr, nullptr,
     (hashfunc)_Py_HashPointer, // tp_hash
-    0, 0, 0, 0, 0, Py_TPFLAGS_DEFAULT, 0, 0, 0, 0, 0, 0, 0,
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+    nullptr, nullptr, nullptr, nullptr, nullptr, Py_TPFLAGS_DEFAULT, nullptr, nullptr, nullptr, nullptr, 0, nullptr, nullptr,
+    nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, 0, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr
 #if PY_VERSION_HEX >= 0x02030000
-    , 0                  // tp_del
+    , nullptr                  // tp_del
 #endif
 #if PY_VERSION_HEX >= 0x02060000
     , 0                  // tp_version_tag
 #endif
 #if PY_VERSION_HEX >= 0x03040000
-    , 0                  // tp_finalize
+    , nullptr                  // tp_finalize
 #endif
 };
 
@@ -254,7 +254,7 @@ PyDictEntry* CPyCppyyLookDictString(PyDictObject* mp, PyObject* key, long hash)
         return ep;
 
 // filter for builtins
-    if (PyDict_GetItem(PyEval_GetBuiltins(), key) != 0)
+    if (PyDict_GetItem(PyEval_GetBuiltins(), key) != nullptr)
         return ep;
 
 // normal lookup failed, attempt to get C++ enum/global/class from top-level
@@ -369,15 +369,15 @@ static PyObject* MakeCppTemplateClass(PyObject*, PyObject* args)
 }
 
 //----------------------------------------------------------------------------
-static char* GCIA_kwlist[] = {(char*)"instance", (char*)"field", (char*)"byref", NULL};
+static char* GCIA_kwlist[] = {(char*)"instance", (char*)"field", (char*)"byref", nullptr};
 static void* GetCPPInstanceAddress(const char* fname, PyObject* args, PyObject* kwds)
 {
 // Helper to get the address (address-of-address) of various object proxy types.
-    CPPInstance* pyobj = 0; PyObject* pyname = 0; int byref = 0;
+    CPPInstance* pyobj = nullptr; PyObject* pyname = nullptr; int byref = 0;
     if (PyArg_ParseTupleAndKeywords(args, kwds, const_cast<char*>("O|O!b"), GCIA_kwlist,
             &pyobj, &CPyCppyy_PyText_Type, &pyname, &byref) && CPPInstance_Check(pyobj)) {
 
-        if (pyname != 0) {
+        if (pyname != nullptr) {
         // locate property proxy for offset info
             CPPDataMember* pyprop = nullptr;
 
@@ -643,7 +643,7 @@ static PyObject* SetGlobalSignalPolicy(PyObject*, PyObject* args)
 {
 // Set the global signal policy, which determines whether a jmp address
 // should be saved to return to after a C++ segfault.
-    PyObject* setProtected = 0;
+    PyObject* setProtected = nullptr;
     if (!PyArg_ParseTuple(args, const_cast<char*>("O"), &setProtected))
         return nullptr;
 

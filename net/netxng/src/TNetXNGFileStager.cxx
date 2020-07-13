@@ -104,7 +104,7 @@ Int_t TNetXNGFileStager::LocateCollection(TFileCollection *fc,
    TIter it(fc->GetList());
    TString startUrl, endUrl;
 
-   while ((info = dynamic_cast<TFileInfo *>(it.Next())) != NULL) {
+   while ((info = dynamic_cast<TFileInfo *>(it.Next())) != nullptr) {
       startUrl = info->GetCurrentUrl()->GetUrl();
 
       // File not staged

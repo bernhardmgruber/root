@@ -71,13 +71,13 @@ TChain::TChain()
 , fTreeOffsetLen(100)
 , fNtrees(0)
 , fTreeNumber(-1)
-, fTreeOffset(0)
+, fTreeOffset(nullptr)
 , fCanDeleteRefs(kFALSE)
-, fTree(0)
-, fFile(0)
-, fFiles(0)
-, fStatus(0)
-, fProofChain(0)
+, fTree(nullptr)
+, fFile(nullptr)
+, fFiles(nullptr)
+, fStatus(nullptr)
+, fProofChain(nullptr)
 {
    fTreeOffset = new Long64_t[fTreeOffsetLen];
    fFiles = new TObjArray(fTreeOffsetLen);
@@ -85,8 +85,8 @@ TChain::TChain()
    fTreeOffset[0]  = 0;
    if (gDirectory) gDirectory->Remove(this);
    gROOT->GetListOfSpecials()->Add(this);
-   fFile = 0;
-   fDirectory = 0;
+   fFile = nullptr;
+   fDirectory = nullptr;
 
    // Reset PROOF-related bits
    ResetBit(kProofUptodate);
@@ -145,13 +145,13 @@ TChain::TChain(const char* name, const char* title)
 , fTreeOffsetLen(100)
 , fNtrees(0)
 , fTreeNumber(-1)
-, fTreeOffset(0)
+, fTreeOffset(nullptr)
 , fCanDeleteRefs(kFALSE)
-, fTree(0)
-, fFile(0)
-, fFiles(0)
-, fStatus(0)
-, fProofChain(0)
+, fTree(nullptr)
+, fFile(nullptr)
+, fFiles(nullptr)
+, fStatus(nullptr)
+, fProofChain(nullptr)
 {
    //
    //*-*
@@ -160,7 +160,7 @@ TChain::TChain(const char* name, const char* title)
    fFiles = new TObjArray(fTreeOffsetLen);
    fStatus = new TList();
    fTreeOffset[0]  = 0;
-   fFile = 0;
+   fFile = nullptr;
 
    // Reset PROOF-related bits
    ResetBit(kProofUptodate);
@@ -191,24 +191,24 @@ TChain::~TChain()
    SafeDelete(fProofChain);
    fStatus->Delete();
    delete fStatus;
-   fStatus = 0;
+   fStatus = nullptr;
    fFiles->Delete();
    delete fFiles;
-   fFiles = 0;
+   fFiles = nullptr;
 
    //first delete cache if exists
    auto tc = fFile && fTree ? fTree->GetReadCache(fFile) : nullptr;
    if (tc) {
       delete tc;
-      fFile->SetCacheRead(0, fTree);
+      fFile->SetCacheRead(nullptr, fTree);
    }
 
    delete fFile;
-   fFile = 0;
+   fFile = nullptr;
    // Note: We do *not* own the tree.
-   fTree = 0;
+   fTree = nullptr;
    delete[] fTreeOffset;
-   fTreeOffset = 0;
+   fTreeOffset = nullptr;
 
    // Remove from the global lists
    if (rootAlive) {
@@ -218,7 +218,7 @@ TChain::~TChain()
    }
 
    // This is the same as fFile, don't delete it a second time.
-   fDirectory = 0;
+   fDirectory = nullptr;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -242,7 +242,7 @@ Int_t TChain::Add(TChain* chain)
    chain->GetEntries(); //to force the computation of nentries
    TIter next(chain->GetListOfFiles());
    Int_t nf = 0;
-   TChainElement* element = 0;
+   TChainElement* element = nullptr;
    while ((element = (TChainElement*) next())) {
       Long64_t nentries = element->GetEntries();
       if (fTreeOffset[fNtrees] == TTree::kMaxEntries) {
@@ -462,7 +462,7 @@ Int_t TChain::Add(const char* name, Long64_t nentries /* = TTree::kMaxEntries */
 
 Int_t TChain::AddFile(const char* name, Long64_t nentries /* = TTree::kMaxEntries */, const char* tname /* = "" */)
 {
-   if(name==0 || name[0]=='\0') {
+   if(name==nullptr || name[0]=='\0') {
       Error("AddFile", "No file name; no files connected");
       return 0;
    }
@@ -501,9 +501,9 @@ Int_t TChain::AddFile(const char* name, Long64_t nentries /* = TTree::kMaxEntrie
       }
       if (!file || file->IsZombie()) {
          delete file;
-         file = 0;
+         file = nullptr;
          delete[] filename;
-         filename = 0;
+         filename = nullptr;
          return 0;
       }
 
@@ -513,9 +513,9 @@ Int_t TChain::AddFile(const char* name, Long64_t nentries /* = TTree::kMaxEntrie
       if (!obj || !obj->InheritsFrom(TTree::Class())) {
          Error("AddFile", "cannot find tree with name %s in file %s", treename, filename);
          delete file;
-         file = 0;
+         file = nullptr;
          delete[] filename;
-         filename = 0;
+         filename = nullptr;
          return 0;
       }
       TTree* tree = (TTree*) obj;
@@ -523,7 +523,7 @@ Int_t TChain::AddFile(const char* name, Long64_t nentries /* = TTree::kMaxEntrie
       pksize = tree->GetPacketSize();
       // Note: This deletes the tree we fetched.
       delete file;
-      file = 0;
+      file = nullptr;
    }
 
    if (nentries > 0) {
@@ -563,15 +563,15 @@ Int_t TChain::AddFileInfoList(TCollection* filelist, Long64_t nfiles /* = TTree:
       return 0;
    TIter next(filelist);
 
-   TObject *o = 0;
+   TObject *o = nullptr;
    Long64_t cnt=0;
    while ((o = next())) {
       // Get the url
       TString cn = o->ClassName();
-      const char *url = 0;
+      const char *url = nullptr;
       if (cn == "TFileInfo") {
          TFileInfo *fi = (TFileInfo *)o;
-         url = (fi->GetCurrentUrl()) ? fi->GetCurrentUrl()->GetUrl() : 0;
+         url = (fi->GetCurrentUrl()) ? fi->GetCurrentUrl()->GetUrl() : nullptr;
          if (!url) {
             Warning("AddFileInfoList", "found TFileInfo with empty Url - ignoring");
             continue;
@@ -760,7 +760,7 @@ void TChain::CanDeleteRefs(Bool_t flag /* = kTRUE */)
 void TChain::CreatePackets()
 {
    TIter next(fFiles);
-   TChainElement* element = 0;
+   TChainElement* element = nullptr;
    while ((element = (TChainElement*) next())) {
       element->CreatePackets();
    }
@@ -839,7 +839,7 @@ TBranch* TChain::FindBranch(const char* branchname)
    if (fTree) {
       return fTree->FindBranch(branchname);
    }
-   return 0;
+   return nullptr;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -860,7 +860,7 @@ TLeaf* TChain::FindLeaf(const char* searchname)
    if (fTree) {
       return fTree->FindLeaf(searchname);
    }
-   return 0;
+   return nullptr;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -879,7 +879,7 @@ const char* TChain::GetAlias(const char* aliasName) const
    if (fTree) {
       return fTree->GetAlias(aliasName);
    }
-   return 0;
+   return nullptr;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -900,7 +900,7 @@ TBranch* TChain::GetBranch(const char* name)
    if (fTree) {
       return fTree->GetBranch(name);
    }
-   return 0;
+   return nullptr;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -1059,7 +1059,7 @@ TLeaf* TChain::GetLeaf(const char* branchname, const char *leafname)
    if (fTree) {
       return fTree->GetLeaf(branchname, leafname);
    }
-   return 0;
+   return nullptr;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -1080,7 +1080,7 @@ TLeaf* TChain::GetLeaf(const char* name)
    if (fTree) {
       return fTree->GetLeaf(name);
    }
-   return 0;
+   return nullptr;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -1106,7 +1106,7 @@ TObjArray* TChain::GetListOfBranches()
    if (fTree) {
       return fTree->GetListOfBranches();
    }
-   return 0;
+   return nullptr;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -1129,7 +1129,7 @@ TObjArray* TChain::GetListOfLeaves()
    if (fTree) {
       return fTree->GetListOfLeaves();
    }
-   return 0;
+   return nullptr;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -1245,7 +1245,7 @@ void TChain::InvalidateCurrentTree()
       }
    }
    fTreeNumber = -1;
-   fTree = 0;
+   fTree = nullptr;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -1331,7 +1331,7 @@ Long64_t TChain::LoadTree(Long64_t entry)
          //
          TIter next(fFriends);
          TFriendLock lock(this, kLoadTree);
-         TFriendElement* fe = 0;
+         TFriendElement* fe = nullptr;
          while ((fe = (TFriendElement*) next())) {
             TTree* at = fe->GetTree();
             // If the tree is a
@@ -1410,7 +1410,7 @@ Long64_t TChain::LoadTree(Long64_t entry)
    }
 
    // Delete the current tree and open the new tree.
-   TTreeCache* tpf = 0;
+   TTreeCache* tpf = nullptr;
    // Delete file unless the file owns this chain!
    // FIXME: The "unless" case here causes us to leak memory.
    if (fFile) {
@@ -1428,7 +1428,7 @@ Long64_t TChain::LoadTree(Long64_t entry)
                tpf->ResetCache();
             }
 
-            fFile->SetCacheRead(0, fTree);
+            fFile->SetCacheRead(nullptr, fTree);
             // If the tree has clones, copy them into the chain
             // clone list so we can change their branch addresses
             // when necessary.
@@ -1447,7 +1447,7 @@ Long64_t TChain::LoadTree(Long64_t entry)
             fFile->Close("R");
          }
          delete fFile;
-         fFile = 0;
+         fFile = nullptr;
       } else {
          // If the tree has clones, copy them into the chain
          // clone list so we can change their branch addresses
@@ -1486,10 +1486,10 @@ Long64_t TChain::LoadTree(Long64_t entry)
    if (!fFile || fFile->IsZombie()) {
       if (fFile) {
          delete fFile;
-         fFile = 0;
+         fFile = nullptr;
       }
       // Note: We do *not* own fTree.
-      fTree = 0;
+      fTree = nullptr;
       returnCode = -3;
    } else {
       // Note: We do *not* own fTree after this, the file does!
@@ -1498,7 +1498,7 @@ Long64_t TChain::LoadTree(Long64_t entry)
          // Now that we do not check during the addition, we need to check here!
          Error("LoadTree", "Cannot find tree with name %s in file %s", element->GetName(), element->GetTitle());
          delete fFile;
-         fFile = 0;
+         fFile = nullptr;
          // We do not return yet so that 'fEntries' can be updated with the
          // sum of the entries of all the other trees.
          returnCode = -4;
@@ -1522,7 +1522,7 @@ Long64_t TChain::LoadTree(Long64_t entry)
          // we have no place to hold the pointer to the
          // TTreeCache.
          delete tpf;
-         tpf = 0;
+         tpf = nullptr;
       }
    } else {
       if (fCacheUserSet) {
@@ -1610,12 +1610,12 @@ Long64_t TChain::LoadTree(Long64_t entry)
       // calling LoadTree (and to overload a few more).
       TIter next(fFriends);
       TFriendLock lock(this, kLoadTree);
-      TFriendElement* fe = 0;
+      TFriendElement* fe = nullptr;
       while ((fe = (TFriendElement*) next())) {
          TTree* t = fe->GetTree();
          if (!t) continue;
          if (t->GetTreeIndex()) {
-            t->GetTreeIndex()->UpdateFormulaLeaves(0);
+            t->GetTreeIndex()->UpdateFormulaLeaves(nullptr);
          }
          if (t->GetTree() && t->GetTree()->GetTreeIndex()) {
             t->GetTree()->GetTreeIndex()->UpdateFormulaLeaves(GetTree());
@@ -1702,12 +1702,12 @@ Long64_t TChain::LoadTree(Long64_t entry)
 void TChain::Lookup(Bool_t force)
 {
    TIter next(fFiles);
-   TChainElement* element = 0;
+   TChainElement* element = nullptr;
    Int_t nelements = fFiles->GetEntries();
    printf("\n");
    printf("TChain::Lookup - Looking up %d files .... \n", nelements);
    Int_t nlook = 0;
-   TFileStager *stg = 0;
+   TFileStager *stg = nullptr;
    while ((element = (TChainElement*) next())) {
       // Do not do it more than needed
       if (element->HasBeenLookedUp() && !force) continue;
@@ -1817,7 +1817,7 @@ void TChain::ls(Option_t* option) const
 {
    TObject::ls(option);
    TIter next(fFiles);
-   TChainElement* file = 0;
+   TChainElement* file = nullptr;
    TROOT::IncreaseDirLevel();
    while ((file = (TChainElement*)next())) {
       file->ls(option);
@@ -2031,7 +2031,7 @@ Long64_t TChain::Merge(TFile* file, Int_t basketsize, Option_t* option)
 
    // Reset the compression level of the branches.
    if (opt.Contains("c")) {
-      TBranch* branch = 0;
+      TBranch* branch = nullptr;
       TIter nextb(newTree->GetListOfBranches());
       while ((branch = (TBranch*) nextb())) {
          branch->SetCompressionSettings(file->GetCompressionSettings());
@@ -2040,7 +2040,7 @@ Long64_t TChain::Merge(TFile* file, Int_t basketsize, Option_t* option)
 
    // Reset the basket size of the branches.
    if (basketsize > 1000) {
-      TBranch* branch = 0;
+      TBranch* branch = nullptr;
       TIter nextb(newTree->GetListOfBranches());
       while ((branch = (TBranch*) nextb())) {
          branch->SetBasketSize(basketsize);
@@ -2243,16 +2243,16 @@ Long64_t TChain::Process(TSelector* selector, Option_t* option, Long64_t nentrie
 void TChain::RecursiveRemove(TObject *obj)
 {
    if (fFile == obj) {
-      fFile = 0;
-      fDirectory = 0;
-      fTree = 0;
+      fFile = nullptr;
+      fDirectory = nullptr;
+      fTree = nullptr;
    }
    if (fDirectory == obj) {
-      fDirectory = 0;
-      fTree = 0;
+      fDirectory = nullptr;
+      fTree = nullptr;
    }
    if (fTree == obj) {
-      fTree = 0;
+      fTree = nullptr;
    }
 }
 
@@ -2285,17 +2285,17 @@ void TChain::RemoveFriend(TTree* oldFriend)
 void TChain::Reset(Option_t*)
 {
    delete fFile;
-   fFile = 0;
+   fFile = nullptr;
    fNtrees         = 0;
    fTreeNumber     = -1;
-   fTree           = 0;
-   fFile           = 0;
+   fTree           = nullptr;
+   fFile           = nullptr;
    fFiles->Delete();
    fStatus->Delete();
    fTreeOffset[0]  = 0;
    TChainElement* element = new TChainElement("*", "");
    fStatus->Add(element);
-   fDirectory = 0;
+   fDirectory = nullptr;
 
    TTree::Reset();
 }
@@ -2308,8 +2308,8 @@ void TChain::ResetAfterMerge(TFileMergeInfo *info)
 {
    fNtrees         = 0;
    fTreeNumber     = -1;
-   fTree           = 0;
-   fFile           = 0;
+   fTree           = nullptr;
+   fFile           = nullptr;
    fFiles->Delete();
    fTreeOffset[0]  = 0;
 
@@ -2443,7 +2443,7 @@ void TChain::ResetBranchAddress(TBranch *branch)
 {
    TChainElement* element = (TChainElement*) fStatus->FindObject(branch->GetName());
    if (element) {
-      element->SetBaddress(0);
+      element->SetBaddress(nullptr);
    }
    if (fTree) {
       fTree->ResetBranchAddress(branch);
@@ -2456,9 +2456,9 @@ void TChain::ResetBranchAddress(TBranch *branch)
 void TChain::ResetBranchAddresses()
 {
    TIter next(fStatus);
-   TChainElement* element = 0;
+   TChainElement* element = nullptr;
    while ((element = (TChainElement*) next())) {
-      element->SetBaddress(0);
+      element->SetBaddress(nullptr);
    }
    if (fTree) {
       fTree->ResetBranchAddresses();
@@ -2531,7 +2531,7 @@ Int_t TChain::SetBranchAddress(const char *bname, void* add, TBranch** ptr)
       }
    } else {
       if (ptr) {
-         *ptr = 0;
+         *ptr = nullptr;
       }
    }
    return res;
@@ -2546,7 +2546,7 @@ Int_t TChain::SetBranchAddress(const char *bname, void* add, TBranch** ptr)
 
 Int_t TChain::SetBranchAddress(const char* bname, void* add, TClass* realClass, EDataType datatype, Bool_t isptr)
 {
-   return SetBranchAddress(bname, add, 0, realClass, datatype, isptr);
+   return SetBranchAddress(bname, add, nullptr, realClass, datatype, isptr);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -2622,7 +2622,7 @@ void TChain::SetDirectory(TDirectory* dir)
       fDirectory->Append(this);
       fFile = fDirectory->GetFile();
    } else {
-      fFile = 0;
+      fFile = nullptr;
    }
 }
 
@@ -2643,20 +2643,20 @@ void TChain::SetEntryList(TEntryList *elist, Option_t *opt)
       //TEventList in SetEventList() function)
       if (fEntryList->TestBit(kCanDelete)) {
          TEntryList *tmp = fEntryList;
-         fEntryList = 0; // Avoid problem with RecursiveRemove.
+         fEntryList = nullptr; // Avoid problem with RecursiveRemove.
          delete tmp;
       } else {
-         fEntryList = 0;
+         fEntryList = nullptr;
       }
    }
    if (!elist){
-      fEntryList = 0;
-      fEventList = 0;
+      fEntryList = nullptr;
+      fEventList = nullptr;
       return;
    }
    if (!elist->TestBit(kCanDelete)){
       //this is a direct call to SetEntryList, not via SetEventList
-      fEventList = 0;
+      fEventList = nullptr;
    }
    if (elist->GetN() == 0){
       fEntryList = elist;
@@ -2665,7 +2665,7 @@ void TChain::SetEntryList(TEntryList *elist, Option_t *opt)
    if (fProofChain){
       //for processing on proof, event list and entry list can't be
       //set at the same time.
-      fEventList = 0;
+      fEventList = nullptr;
       fEntryList = elist;
       return;
    }
@@ -2674,7 +2674,7 @@ void TChain::SetEntryList(TEntryList *elist, Option_t *opt)
    Int_t listfound=0;
    TString treename, filename;
 
-   TEntryList *templist = 0;
+   TEntryList *templist = nullptr;
    for (Int_t ie = 0; ie<ne; ie++){
       auto chainElement = (TChainElement*)fFiles->UncheckedAt(ie);
       treename = chainElement->GetName();
@@ -2688,7 +2688,7 @@ void TChain::SetEntryList(TEntryList *elist, Option_t *opt)
 
    if (listfound == 0){
       Error("SetEntryList", "No list found for the trees in this chain");
-      fEntryList = 0;
+      fEntryList = nullptr;
       return;
    }
    fEntryList = elist;
@@ -2739,14 +2739,14 @@ void TChain::SetEntryListFile(const char *filename, Option_t * /*opt*/)
       //TEventList in SetEventList() function)
       if (fEntryList->TestBit(kCanDelete)) {
          TEntryList *tmp = fEntryList;
-         fEntryList = 0; // Avoid problem with RecursiveRemove.
+         fEntryList = nullptr; // Avoid problem with RecursiveRemove.
          delete tmp;
       } else {
-         fEntryList = 0;
+         fEntryList = nullptr;
       }
    }
 
-   fEventList = 0;
+   fEventList = nullptr;
 
    TString basename(filename);
 
@@ -2760,7 +2760,7 @@ void TChain::SetEntryListFile(const char *filename, Option_t * /*opt*/)
    }
    fEntryList = new TEntryListFromFile(basename.Data(), behind_dot_root.Data(), fNtrees);
    fEntryList->SetBit(kCanDelete, kTRUE);
-   fEntryList->SetDirectory(0);
+   fEntryList->SetDirectory(nullptr);
    ((TEntryListFromFile*)fEntryList)->SetFileNames(fFiles);
 }
 
@@ -2782,16 +2782,16 @@ void TChain::SetEventList(TEventList *evlist)
    if (fEntryList) {
       if (fEntryList->TestBit(kCanDelete)) {
          TEntryList *tmp = fEntryList;
-         fEntryList = 0; // Avoid problem with RecursiveRemove.
+         fEntryList = nullptr; // Avoid problem with RecursiveRemove.
          delete tmp;
       } else {
-         fEntryList = 0;
+         fEntryList = nullptr;
       }
    }
 
    if (!evlist) {
-      fEntryList = 0;
-      fEventList = 0;
+      fEntryList = nullptr;
+      fEventList = nullptr;
       return;
    }
 
@@ -2803,10 +2803,10 @@ void TChain::SetEventList(TEventList *evlist)
          //TEventList in SetEventList() function)
          if (fEntryList->TestBit(kCanDelete)){
             TEntryList *tmp = fEntryList;
-            fEntryList = 0; // Avoid problem with RecursiveRemove.
+            fEntryList = nullptr; // Avoid problem with RecursiveRemove.
             delete tmp;
          } else {
-            fEntryList = 0;
+            fEntryList = nullptr;
          }
       }
       return;
@@ -2815,7 +2815,7 @@ void TChain::SetEventList(TEventList *evlist)
    char enlistname[100];
    snprintf(enlistname,100, "%s_%s", evlist->GetName(), "entrylist");
    TEntryList *enlist = new TEntryList(enlistname, evlist->GetTitle());
-   enlist->SetDirectory(0);
+   enlist->SetDirectory(nullptr);
 
    Int_t nsel = evlist->GetN();
    Long64_t globalentry, localentry;

@@ -870,7 +870,7 @@ Cppyy::TCppObject_t Cppyy::CallConstructor(
     void* obj = nullptr;
     if (WrapperCall(method, nargs, args, nullptr, &obj))
         return (TCppObject_t)obj;
-    return (TCppObject_t)0;
+    return (TCppObject_t)nullptr;
 }
 
 void Cppyy::CallDestructor(TCppType_t type, TCppObject_t self)
@@ -886,7 +886,7 @@ Cppyy::TCppObject_t Cppyy::CallO(TCppMethod_t method,
     void* obj = ::operator new(gInterpreter->ClassInfo_Size(cr->GetClassInfo()));
     if (WrapperCall(method, nargs, args, self, obj))
         return (TCppObject_t)obj;
-    return (TCppObject_t)0;
+    return (TCppObject_t)nullptr;
 }
 
 Cppyy::TCppFuncAddr_t Cppyy::GetFunctionAddress(TCppMethod_t method, bool check_enabled)
@@ -1002,7 +1002,7 @@ static inline
 void cond_add(Cppyy::TCppScope_t scope, const std::string& ns_scope,
     std::set<std::string>& cppnames, const char* name, bool nofilter = false)
 {
-    if (!name || name[0] == '_' || strstr(name, ".h") != 0 || strncmp(name, "operator", 8) == 0)
+    if (!name || name[0] == '_' || strstr(name, ".h") != nullptr || strncmp(name, "operator", 8) == 0)
         return;
 
     if (scope == GLOBAL_HANDLE) {
@@ -1078,7 +1078,7 @@ void Cppyy::GetAllCppNames(TCppScope_t scope, std::set<std::string>& cppnames)
         while ((obj = (TFunction*)itr.Next())) {
             const char* nm = obj->GetName();
         // skip templated functions, adding only the un-instantiated ones
-            if (nm && nm[0] != '_' && strstr(nm, "<") == 0 && strncmp(nm, "operator", 8) != 0) {
+            if (nm && nm[0] != '_' && strstr(nm, "<") == nullptr && strncmp(nm, "operator", 8) != 0) {
                 if (gInitialNames.find(nm) == gInitialNames.end())
                     cppnames.insert(nm);
             }
@@ -1189,7 +1189,7 @@ bool Cppyy::HasComplexHierarchy(TCppType_t klass)
     size_t nbases = 0;
 
     TClassRef& cr = type_from_handle(klass);
-    if (cr.GetClass() && cr->GetListOfBases() != 0)
+    if (cr.GetClass() && cr->GetListOfBases() != nullptr)
         nbases = GetNumBases(klass);
 
     if (1 < nbases)
@@ -1211,7 +1211,7 @@ Cppyy::TCppIndex_t Cppyy::GetNumBases(TCppType_t klass)
 {
 // Get the total number of base classes that this class has.
     TClassRef& cr = type_from_handle(klass);
-    if (cr.GetClass() && cr->GetListOfBases() != 0)
+    if (cr.GetClass() && cr->GetListOfBases() != nullptr)
         return (TCppIndex_t)cr->GetListOfBases()->GetSize();
     return (TCppIndex_t)0;
 }
@@ -1228,7 +1228,7 @@ bool Cppyy::IsSubtype(TCppType_t derived, TCppType_t base)
         return true;
     TClassRef& derived_type = type_from_handle(derived);
     TClassRef& base_type = type_from_handle(base);
-    return derived_type->GetBaseClass(base_type) != 0;
+    return derived_type->GetBaseClass(base_type) != nullptr;
 }
 
 bool Cppyy::IsSmartPtr(TCppType_t klass)
@@ -2064,7 +2064,7 @@ Cppyy::TCppEnum_t Cppyy::GetEnum(TCppScope_t scope, const std::string& enum_name
     if (cr.GetClass())
         return (TCppEnum_t)cr->GetListOfEnums(kTRUE)->FindObject(enum_name.c_str());
 
-    return (TCppEnum_t)0;
+    return (TCppEnum_t)nullptr;
 }
 
 Cppyy::TCppIndex_t Cppyy::GetNumEnumData(TCppEnum_t etype)
@@ -2248,7 +2248,7 @@ cppyy_object_t cppyy_constructor(
     try {
         return cppyy_object_t(Cppyy::CallConstructor(method, klass, nargs, args));
     } CPPYY_HANDLE_EXCEPTION
-    return (cppyy_object_t)0;
+    return (cppyy_object_t)nullptr;
 }
 
 void cppyy_destructor(cppyy_type_t klass, cppyy_object_t self) {
@@ -2260,7 +2260,7 @@ cppyy_object_t cppyy_call_o(cppyy_method_t method, cppyy_object_t self,
     try {
         return cppyy_object_t(Cppyy::CallO(method, (void*)self, nargs, args, result_type));
     } CPPYY_HANDLE_EXCEPTION
-    return (cppyy_object_t)0;
+    return (cppyy_object_t)nullptr;
 }
 
 cppyy_funcaddr_t cppyy_function_address(cppyy_method_t method) {
@@ -2574,12 +2574,12 @@ unsigned long long cppyy_strtoull(const char* str) {
 }
 #else
 long long cppyy_strtoll(const char* str) {
-    return strtoll(str, NULL, 0);
+    return strtoll(str, nullptr, 0);
 }
 
 extern "C" {
 unsigned long long cppyy_strtoull(const char* str) {
-    return strtoull(str, NULL, 0);
+    return strtoull(str, nullptr, 0);
 }
 }
 #endif

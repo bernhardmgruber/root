@@ -118,7 +118,7 @@ namespace RooStats {
 	cerr << "Not all necessary info are set to access the input file. Check your config" << std::endl;
 	cerr << "fileptr: " << inFile
 	     << "path/obj: " << name << std::endl;
-	return 0;
+	return nullptr;
       }
 #ifdef DEBUG
       cout << "Retrieving " << name ;
@@ -127,7 +127,7 @@ namespace RooStats {
 #ifdef DEBUG
       cout << " found at " << ptr << " with integral " << ptr->Integral() << " and mean " << ptr->GetMean() << std::endl;
 #endif
-      if (ptr) ptr->SetDirectory(0); //         for the current histogram h
+      if (ptr) ptr->SetDirectory(nullptr); //         for the current histogram h
       //TH1::AddDirectory(kFALSE);
       return ptr;
 
@@ -156,7 +156,7 @@ namespace RooStats {
 	     << "obj: " << obj << std::endl;
       }
       else 
-	ptr->SetDirectory(0); //         for the current histogram h
+	ptr->SetDirectory(nullptr); //         for the current histogram h
 
       return ptr;
 
@@ -270,7 +270,7 @@ namespace RooStats {
       data_es.name = "Data";
       data_es.channel = channel.GetName();
       TH1* data_hist = (TH1*) channel.GetData().GetHisto();
-      if( data_hist != NULL ) {
+      if( data_hist != nullptr ) {
 	//data_es.nominal = (TH1*) channel.GetData().GetHisto()->Clone();
 	data_es.nominal = data_hist;
 	channel_estimateSummary.push_back( data_es );
@@ -353,7 +353,7 @@ namespace RooStats {
 	  sample_es.relStatError      = (TH1*) sample.GetStatError().GetErrorHist()->Clone();
 	}
 	else {
-	  sample_es.relStatError    = NULL;
+	  sample_es.relStatError    = nullptr;
 	}
 
 

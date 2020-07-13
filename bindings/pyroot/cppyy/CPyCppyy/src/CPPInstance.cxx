@@ -683,58 +683,58 @@ static PyNumberMethods op_as_number = {
 #if PY_VERSION_HEX < 0x03000000
     (binaryfunc)op_div_stub,       // nb_divide
 #endif
-    0,                             // nb_remainder
-    0,                             // nb_divmod
-    0,                             // nb_power
+    nullptr,                             // nb_remainder
+    nullptr,                             // nb_divmod
+    nullptr,                             // nb_power
     (unaryfunc)op_neg_stub,        // nb_negative
     (unaryfunc)op_pos_stub,        // nb_positive
-    0,                             // nb_absolute
+    nullptr,                             // nb_absolute
     (inquiry)op_nonzero,           // nb_bool (nb_nonzero in p2)
     (unaryfunc)op_invert_stub,     // nb_invert
-    0,                             // nb_lshift
-    0,                             // nb_rshift
-    0,                             // nb_and
-    0,                             // nb_xor
-    0,                             // nb_or
+    nullptr,                             // nb_lshift
+    nullptr,                             // nb_rshift
+    nullptr,                             // nb_and
+    nullptr,                             // nb_xor
+    nullptr,                             // nb_or
 #if PY_VERSION_HEX < 0x03000000
-    0,                             // nb_coerce
+    nullptr,                             // nb_coerce
 #endif
-    0,                             // nb_int
-    0,                             // nb_long (nb_reserved in p3)
-    0,                             // nb_float
+    nullptr,                             // nb_int
+    nullptr,                             // nb_long (nb_reserved in p3)
+    nullptr,                             // nb_float
 #if PY_VERSION_HEX < 0x03000000
-    0,                             // nb_oct
-    0,                             // nb_hex
+    nullptr,                             // nb_oct
+    nullptr,                             // nb_hex
 #endif
-    0,                             // nb_inplace_add
-    0,                             // nb_inplace_subtract
-    0,                             // nb_inplace_multiply
+    nullptr,                             // nb_inplace_add
+    nullptr,                             // nb_inplace_subtract
+    nullptr,                             // nb_inplace_multiply
 #if PY_VERSION_HEX < 0x03000000
-    0,                             // nb_inplace_divide
+    nullptr,                             // nb_inplace_divide
 #endif
-    0,                             // nb_inplace_remainder
-    0,                             // nb_inplace_power
-    0,                             // nb_inplace_lshift
-    0,                             // nb_inplace_rshift
-    0,                             // nb_inplace_and
-    0,                             // nb_inplace_xor
-    0                              // nb_inplace_or
+    nullptr,                             // nb_inplace_remainder
+    nullptr,                             // nb_inplace_power
+    nullptr,                             // nb_inplace_lshift
+    nullptr,                             // nb_inplace_rshift
+    nullptr,                             // nb_inplace_and
+    nullptr,                             // nb_inplace_xor
+    nullptr                              // nb_inplace_or
 #if PY_VERSION_HEX >= 0x02020000
-    , 0                            // nb_floor_divide
+    , nullptr                            // nb_floor_divide
 #if PY_VERSION_HEX < 0x03000000
-    , 0                            // nb_true_divide
+    , nullptr                            // nb_true_divide
 #else
     , (binaryfunc)op_div_stub      // nb_true_divide
 #endif
-    , 0                            // nb_inplace_floor_divide
-    , 0                            // nb_inplace_true_divide
+    , nullptr                            // nb_inplace_floor_divide
+    , nullptr                            // nb_inplace_true_divide
 #endif
 #if PY_VERSION_HEX >= 0x02050000
-    , 0                            // nb_index
+    , nullptr                            // nb_index
 #endif
 #if PY_VERSION_HEX >= 0x03050000
-    , 0                            // nb_matrix_multiply
-    , 0                            // nb_inplace_matrix_multiply
+    , nullptr                            // nb_matrix_multiply
+    , nullptr                            // nb_inplace_matrix_multiply
 #endif
 };
 
@@ -746,57 +746,57 @@ PyTypeObject CPPInstance_Type = {
     sizeof(CPPInstance),           // tp_basicsize
     0,                             // tp_itemsize
     (destructor)op_dealloc,        // tp_dealloc
-    0,                             // tp_print
-    0,                             // tp_getattr
-    0,                             // tp_setattr
-    0,                             // tp_compare
+    nullptr,                             // tp_print
+    nullptr,                             // tp_getattr
+    nullptr,                             // tp_setattr
+    nullptr,                             // tp_compare
     (reprfunc)op_repr,             // tp_repr
     &op_as_number,                 // tp_as_number
-    0,                             // tp_as_sequence
-    0,                             // tp_as_mapping
+    nullptr,                             // tp_as_sequence
+    nullptr,                             // tp_as_mapping
     (hashfunc)op_hash,             // tp_hash
-    0,                             // tp_call
+    nullptr,                             // tp_call
     (reprfunc)op_str,              // tp_str
-    0,                             // tp_getattro
-    0,                             // tp_setattro
-    0,                             // tp_as_buffer
+    nullptr,                             // tp_getattro
+    nullptr,                             // tp_setattro
+    nullptr,                             // tp_as_buffer
     Py_TPFLAGS_DEFAULT |
         Py_TPFLAGS_BASETYPE |
         Py_TPFLAGS_HAVE_GC |
         Py_TPFLAGS_CHECKTYPES,     // tp_flags
     (char*)"cppyy object proxy (internal)", // tp_doc
-    0,                             // tp_traverse
+    nullptr,                             // tp_traverse
     (inquiry)op_clear,             // tp_clear
     (richcmpfunc)op_richcompare,   // tp_richcompare
     0,                             // tp_weaklistoffset
-    0,                             // tp_iter
-    0,                             // tp_iternext
+    nullptr,                             // tp_iter
+    nullptr,                             // tp_iternext
     op_methods,                    // tp_methods
-    0,                             // tp_members
+    nullptr,                             // tp_members
     op_getset,                     // tp_getset
-    0,                             // tp_base
-    0,                             // tp_dict
-    0,                             // tp_descr_get
-    0,                             // tp_descr_set
+    nullptr,                             // tp_base
+    nullptr,                             // tp_dict
+    nullptr,                             // tp_descr_get
+    nullptr,                             // tp_descr_set
     0,                             // tp_dictoffset
-    0,                             // tp_init
-    0,                             // tp_alloc
+    nullptr,                             // tp_init
+    nullptr,                             // tp_alloc
     (newfunc)op_new,               // tp_new
-    0,                             // tp_free
-    0,                             // tp_is_gc
-    0,                             // tp_bases
-    0,                             // tp_mro
-    0,                             // tp_cache
-    0,                             // tp_subclasses
-    0                              // tp_weaklist
+    nullptr,                             // tp_free
+    nullptr,                             // tp_is_gc
+    nullptr,                             // tp_bases
+    nullptr,                             // tp_mro
+    nullptr,                             // tp_cache
+    nullptr,                             // tp_subclasses
+    nullptr                              // tp_weaklist
 #if PY_VERSION_HEX >= 0x02030000
-    , 0                            // tp_del
+    , nullptr                            // tp_del
 #endif
 #if PY_VERSION_HEX >= 0x02060000
     , 0                            // tp_version_tag
 #endif
 #if PY_VERSION_HEX >= 0x03040000
-    , 0                            // tp_finalize
+    , nullptr                            // tp_finalize
 #endif
 };
 
