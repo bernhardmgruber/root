@@ -62,7 +62,7 @@ PyTypeObject InstanceArrayIter_Type = {
     sizeof(ia_iterobject),        // tp_basicsize
     0,
     (destructor)PyObject_GC_Del,  // tp_dealloc
-    nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
+    0, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
     Py_TPFLAGS_DEFAULT |
         Py_TPFLAGS_HAVE_GC,       // tp_flags
     nullptr,
@@ -161,7 +161,7 @@ PyTypeObject TupleOfInstances_Type = {
     0,                             // tp_basicsize
     0,                             // tp_itemsize
     nullptr,                             // tp_dealloc
-    nullptr,                             // tp_print
+    0,                             // tp_print
     nullptr,                             // tp_getattr
     nullptr,                             // tp_setattr
     nullptr,                             // tp_compare

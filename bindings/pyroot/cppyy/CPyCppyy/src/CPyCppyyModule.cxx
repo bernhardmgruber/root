@@ -125,7 +125,7 @@ static PyTypeObject PyNullPtr_t_Type = {
     sizeof(PyObject),    // tp_basicsize
     0,                   // tp_itemsize
     nullptr_dealloc,     // tp_dealloc (never called)
-    nullptr, nullptr, nullptr, nullptr,
+    0, nullptr, nullptr, nullptr,
     nullptr_repr,        // tp_repr
     &nullptr_as_number,  // tp_as_number
     nullptr, nullptr,

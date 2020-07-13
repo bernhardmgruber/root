@@ -18,7 +18,7 @@ namespace CPyCppyy {
 PyTypeObject RefFloat_Type = {     // python float is a C/C++ double
     PyVarObject_HEAD_INIT(&PyType_Type, 0)
     (char*)"cppyy.Double",         // tp_name
-    0, 0, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
+    0, 0, nullptr, 0, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
     Py_TPFLAGS_DEFAULT | Py_TPFLAGS_CHECKTYPES |
         Py_TPFLAGS_BASETYPE,       // tp_flags
     (char*)"CPyCppyy float object for pass by reference",   // tp_doc
@@ -40,7 +40,7 @@ PyTypeObject RefFloat_Type = {     // python float is a C/C++ double
 PyTypeObject RefInt_Type = {       // python int is a C/C++ long
     PyVarObject_HEAD_INIT(&PyType_Type, 0)
     (char*)"cppyy.Long",           // tp_name
-    0, 0, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
+    0, 0, nullptr, 0, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
     Py_TPFLAGS_DEFAULT | Py_TPFLAGS_CHECKTYPES |
         Py_TPFLAGS_BASETYPE
 #if PY_VERSION_HEX >= 0x03040000
@@ -75,7 +75,7 @@ PyTypeObject TypedefPointerToClass_Type = {
     PyVarObject_HEAD_INIT(&PyType_Type, 0)
     (char*)"cppyy.TypedefPointerToClass",// tp_name
     sizeof(typedefpointertoclassobject), // tp_basicsize
-    0, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
+    0, nullptr, 0, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
     (ternaryfunc)tpc_call,        // tp_call
     nullptr, nullptr, nullptr, nullptr,
     Py_TPFLAGS_DEFAULT |
@@ -235,7 +235,7 @@ PyTypeObject CustomInstanceMethod_Type = {
     (char*)"cppyy.InstanceMethod", // tp_name
     0, 0,
     (destructor)im_dealloc,        // tp_dealloc
-    nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
+    0, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
     im_call,                       // tp_call
     nullptr, nullptr, nullptr, nullptr,
     Py_TPFLAGS_DEFAULT | Py_TPFLAGS_CHECKTYPES |
@@ -287,7 +287,7 @@ PyTypeObject IndexIter_Type = {
     sizeof(indexiterobject),      // tp_basicsize
     0,
     (destructor)indexiter_dealloc,     // tp_dealloc
-    nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
+    0, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
     Py_TPFLAGS_DEFAULT |
         Py_TPFLAGS_HAVE_GC,       // tp_flags
     nullptr,
@@ -346,7 +346,7 @@ PyTypeObject VectorIter_Type = {
     sizeof(vectoriterobject),     // tp_basicsize
     0,
     (destructor)vectoriter_dealloc,         // tp_dealloc
-    nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
+    0, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
     Py_TPFLAGS_DEFAULT |
         Py_TPFLAGS_HAVE_GC,       // tp_flags
     nullptr,
