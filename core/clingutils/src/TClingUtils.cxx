@@ -4757,7 +4757,7 @@ clang::QualType ROOT::TMetaUtils::ReSubstTemplateArg(clang::QualType input, cons
       llvm::SmallVector<clang::TemplateArgument, 4> desArgs;
       for(const auto & I : *inputTST) {
          if (I.getKind() != clang::TemplateArgument::Type) {
-            desArgs.push_back(*I);
+            desArgs.push_back(I);
             continue;
          }
 
@@ -4771,7 +4771,7 @@ clang::QualType ROOT::TMetaUtils::ReSubstTemplateArg(clang::QualType input, cons
                desArgs.push_back(clang::TemplateArgument(newSubTy));
             }
          } else
-            desArgs.push_back(*I);
+            desArgs.push_back(I);
       }
 
       // If desugaring happened allocate new type in the AST.

@@ -900,7 +900,7 @@ const std::vector<Double_t> TMVA::MethodKNN::getRMS(const kNN::List &rlist, cons
       {
          if (!(lit.second > 0.0)) continue;
 
-         const kNN::Node<kNN::Event> *node_ = lit. -> first;
+         const kNN::Node<kNN::Event> *node_ = lit.first;
          const kNN::Event &event_ = node_-> GetEvent();
 
          if (rvec.empty()) {
