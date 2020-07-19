@@ -74,32 +74,19 @@ typedef struct gsl_function_struct gsl_function ;
 #define GSL_FN_EVAL(F,x) (*((F)->function))(x,(F)->params)
 
 //----From GSL_INTEGRATION.h ---------------------------------------
-using gsl_integration_workspace = struct
-
+struct gsl_integration_workspace
   {
-
     size_t limit;
-
     size_t size;
-
     size_t nrmax;
-
     size_t i;
-
     size_t maximum_level;
-
     double *alist;
-
     double *blist;
-
     double *rlist;
-
     double *elist;
-
     size_t *order;
-
     size_t *level;
-
   };
 
 gsl_integration_workspace *
