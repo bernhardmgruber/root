@@ -29,7 +29,7 @@ namespace
    };
 
    typedef std::list<Seg_t>           LSeg_t;
-   typedef std::list<Seg_t>::iterator LSegIt_t;
+   using LSegIt_t = std::list<Seg_t>::iterator;
 }
 
 /** \class TEvePolygonSetProjected

@@ -59,8 +59,8 @@ struct TX11GLManager::TGLContext_t {
 namespace {
 
    typedef std::deque<TX11GLManager::TGLContext_t> DeviceTable_t;
-   typedef DeviceTable_t::size_type SizeType_t;
-   typedef std::map<Int_t, XVisualInfo *> WinTable_t;
+   using SizeType_t = DeviceTable_t::size_type;
+   using WinTable_t = std::map<Int_t, XVisualInfo *>;
    XSetWindowAttributes dummyAttr;
 
    //RAII class for Pixmap

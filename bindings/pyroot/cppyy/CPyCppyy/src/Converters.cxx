@@ -2153,7 +2153,7 @@ bool CPyCppyy::PyObjectConverter::ToMemory(PyObject* value, void* address)
 //- function pointer converter -----------------------------------------------
 static unsigned int sWrapperCounter = 0;
 // cache mapping signature/return type to python callable and corresponding wrapper
-typedef std::pair<std::string, std::string> RetSigKey_t;
+using RetSigKey_t = std::pair<std::string, std::string>;
 static std::map<RetSigKey_t, std::vector<void*>> sWrapperFree;
 static std::map<RetSigKey_t, std::map<PyObject*, void*>> sWrapperLookup;
 static std::map<PyObject*, std::pair<void*, RetSigKey_t>> sWrapperWeakRefs;
@@ -2519,8 +2519,8 @@ namespace {
 #if defined (_LIBCPP_INITIALIZER_LIST) || defined(__GNUC__)
 struct faux_initlist
 {
-    typedef size_t size_type;
-    typedef void*  iterator;
+    using size_type = size_t;
+    using iterator = void *;
     iterator  _M_array;
     size_type _M_len;
 };

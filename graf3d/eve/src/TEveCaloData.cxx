@@ -207,7 +207,7 @@ void TEveCaloData::PrintCellsSelected()
 void TEveCaloData::ProcessSelection(vCellId_t& sel_cells, TGLSelectRecord& rec)
 {
    typedef std::set<CellId_t>           sCellId_t;
-   typedef std::set<CellId_t>::iterator sCellId_i;
+   using sCellId_i = std::set<CellId_t>::iterator;
 
    struct helper
    {

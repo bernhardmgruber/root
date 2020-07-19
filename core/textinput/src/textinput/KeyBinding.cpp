@@ -44,7 +44,7 @@ namespace textinput {
   KeyBinding::ToCommandCtrl(char In,
                             bool HadEscPending) {
     // Control was pressed and In was hit. Convert to command.
-    typedef Editor::Command C;
+    using C = Editor::Command;
     switch (In) {
       case 'a' - 0x60: return C(Editor::kMoveFront);
       case 'b' - 0x60: return C(Editor::kMoveLeft);
@@ -96,7 +96,7 @@ namespace textinput {
   Editor::Command
   KeyBinding::ToCommandEsc(char In) {
     // ESC was entered, followed by In. Convert to command.
-    typedef Editor::Command C;
+    using C = Editor::Command;
     switch (toupper(In)) {
       case 'B': return C(Editor::kMovePrevWord);
       case 'C': return C(Editor::kCmdToUpperMoveNextWord);
@@ -115,7 +115,7 @@ namespace textinput {
   KeyBinding::ToCommandExtended(InputData::EExtendedInput EI,
                                 bool HadEscPending) {
     // Convert extended input into the corresponding Command.
-    typedef Editor::Command C;
+    using C = Editor::Command;
     switch (EI) {
       case InputData::kEIUninitialized: return C(Editor::kCmdIgnore);
       case InputData::kEIHome: return C(Editor::kMoveFront);

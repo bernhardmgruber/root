@@ -1346,7 +1346,7 @@ TMethod* TDocParser::LocateMethodInCurrentLine(Ssiz_t &posMethodName, TString& r
                                                TString &anchor, std::ifstream& sourceFile,
                                                Bool_t allowPureVirtual)
 {
-   typedef std::map<std::string /*method name*/, Int_t > MethodCount_t;
+   using MethodCount_t = std::map<std::string, Int_t>;
    isconst = false;
 
    if (posMethodName == kNPOS) {

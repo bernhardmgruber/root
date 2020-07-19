@@ -352,15 +352,15 @@ namespace ROOT {
      // This wrapper class allow to avoid putting #include <map> in the
      // TROOT.h header file.
    public:
-      typedef std::map<std::string,TClass*>       IdMap_t;
-      typedef IdMap_t::key_type                   key_type;
-      typedef IdMap_t::const_iterator             const_iterator;
-      typedef IdMap_t::size_type                  size_type;
+      using IdMap_t = std::map<std::string, TClass *>;
+      using key_type = IdMap_t::key_type;
+      using const_iterator = IdMap_t::const_iterator;
+      using size_type = IdMap_t::size_type;
 #ifdef R__WIN32
      // Window's std::map does NOT defined mapped_type
       typedef TClass*                             mapped_type;
 #else
-      typedef IdMap_t::mapped_type                mapped_type;
+      using mapped_type = IdMap_t::mapped_type;
 #endif
 
    private:
@@ -418,12 +418,12 @@ namespace ROOT {
    class TMapDeclIdToTClass {
    // Wrapper class for the multimap of DeclId_t and TClass.
    public:
-      typedef multimap<TDictionary::DeclId_t, TClass*>   DeclIdMap_t;
-      typedef DeclIdMap_t::key_type                      key_type;
-      typedef DeclIdMap_t::mapped_type                   mapped_type;
-      typedef DeclIdMap_t::const_iterator                const_iterator;
-      typedef std::pair <const_iterator, const_iterator> equal_range;
-      typedef DeclIdMap_t::size_type                     size_type;
+      using DeclIdMap_t = multimap<TDictionary::DeclId_t, TClass *>;
+      using key_type = DeclIdMap_t::key_type;
+      using mapped_type = DeclIdMap_t::mapped_type;
+      using const_iterator = DeclIdMap_t::const_iterator;
+      using equal_range = std::pair<const_iterator, const_iterator>;
+      using size_type = DeclIdMap_t::size_type;
 
    private:
       DeclIdMap_t fMap;
@@ -3091,7 +3091,7 @@ TClass *TClass::GetClass(const char *name, Bool_t load, Bool_t silent)
          auto ci = gInterpreter->ClassInfo_Factory(normalizedName.c_str());
          auto funcDecl = gInterpreter->GetFunctionWithPrototype(ci, "Dictionary", "", false, ROOT::kExactMatch);
          auto method = gInterpreter->MethodInfo_Factory(funcDecl);
-         typedef void (*tcling_callfunc_Wrapper_t)(void *, int, void **, void *);
+         using tcling_callfunc_Wrapper_t = void (*)(void *, int, void **, void *);
          auto funcPtr = (tcling_callfunc_Wrapper_t)gInterpreter->MethodInfo_InterfaceMethod(method);
 
          TClass *res = nullptr;

@@ -53,12 +53,12 @@ typedef CPyCppyy::Parameter Parameter;
 const int SMALL_ARGS_N = 8;
 
 // data for life time management ---------------------------------------------
-typedef std::vector<TClassRef> ClassRefs_t;
+using ClassRefs_t = std::vector<TClassRef>;
 static ClassRefs_t g_classrefs(1);
 static const ClassRefs_t::size_type GLOBAL_HANDLE = 1;
 static const ClassRefs_t::size_type STD_HANDLE = GLOBAL_HANDLE + 1;
 
-typedef std::map<std::string, ClassRefs_t::size_type> Name2ClassRefIndex_t;
+using Name2ClassRefIndex_t = std::map<std::string, ClassRefs_t::size_type>;
 static Name2ClassRefIndex_t g_name2classrefidx;
 
 namespace {
@@ -73,7 +73,7 @@ static inline Cppyy::TCppType_t find_memoized(const std::string& name)
 
 class CallWrapper {
 public:
-    typedef const void* DeclId_t;
+    using DeclId_t = const void *;
 
 public:
     CallWrapper(TFunction* f) : fDecl(f->GetDeclId()), fName(f->GetName()), fTF(nullptr) {}
@@ -107,7 +107,7 @@ static inline CallWrapper* new_CallWrapper(CallWrapper::DeclId_t fid, const std:
     return wrap;
 }
 
-typedef std::vector<TGlobal*> GlobalVars_t;
+using GlobalVars_t = std::vector<TGlobal *>;
 static GlobalVars_t g_globalvars;
 
 static std::set<std::string> gSTLNames;

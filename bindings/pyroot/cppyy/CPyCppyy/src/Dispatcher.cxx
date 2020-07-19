@@ -62,9 +62,9 @@ namespace {
     };
 
     typedef std::vector<BaseInfo> BaseInfos_t;
-    typedef std::vector<Cppyy::TCppMethod_t> Ctors_t;
-    typedef std::vector<Ctors_t> AllCtors_t;
-    typedef std::vector<std::pair<Cppyy::TCppMethod_t, size_t>> CtorInfos_t;
+    using Ctors_t = std::vector<Cppyy::TCppMethod_t>;
+    using AllCtors_t = std::vector<Ctors_t>;
+    using CtorInfos_t = std::vector<std::pair<Cppyy::TCppMethod_t, size_t> >;
 } // unnamed namespace
 
 static void build_constructors(

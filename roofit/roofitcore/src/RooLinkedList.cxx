@@ -120,8 +120,8 @@ namespace RooLinkedListImplDetails {
       };
       /// a chunk of memory in the pool
       typedef RooLinkedListImplDetails::Chunk Chunk;
-      typedef std::list<Chunk*> ChunkList;
-      typedef std::map<const void*, Chunk*> AddrMap;
+      using ChunkList = std::list<Chunk *>;
+      using AddrMap = std::map<const void *, Chunk *>;
     public:
       /// constructor
       Pool();

@@ -448,7 +448,7 @@ void convert( EulerAngles const & from, Quaternion  & to)
 {
    // conversion from EulerAngles to Quaternion
 
-   typedef double Scalar;
+   using Scalar = double;
    const Scalar plus   = (from.Phi()+from.Psi())/2;
    const Scalar minus  = (from.Phi()-from.Psi())/2;
    const Scalar sPlus  = std::sin( plus  );

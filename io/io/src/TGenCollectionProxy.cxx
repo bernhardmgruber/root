@@ -1049,7 +1049,7 @@ void* TGenCollectionProxy::At(UInt_t idx)
             fEnv->fIdx = idx;
             break;
          }
-         typedef ROOT::TCollectionProxyInfo::Environ <std::pair<size_t, Bool_t>> EnvType_t;
+         using EnvType_t = ROOT::TCollectionProxyInfo::Environ<std::pair<size_t, Bool_t> >;
          EnvType_t *e = (EnvType_t *) fEnv;
          return &(e->fIterator.second);
       }

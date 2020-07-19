@@ -79,7 +79,7 @@ namespace IntegOptionsUtil {
    };
    template<>
    struct OptionTrait<IntegratorMultiDimOptions> {
-      typedef IntegratorMultiDimOptions OptType;
+      using OptType = IntegratorMultiDimOptions;
       static int N() { return OptType::DefaultNCalls(); }
       static int N(const OptType & opt) { return opt.NCalls(); }
       static const char * DescriptionOfN() {return "(max) function calls";}
@@ -94,7 +94,7 @@ namespace IntegOptionsUtil {
       os << std::setw(25) << "Absolute tolerance"     << " : " << std::setw(15) << opt.AbsTolerance() << std::endl;
       os << std::setw(25) << "Relative tolerance"     << " : " << std::setw(15) << opt.RelTolerance() << std::endl;
       os << std::setw(25) << "Workspace size"         << " : " << std::setw(15) << opt.WKSize() << std::endl;
-      typedef  OptionTrait<OptionType> OPT;
+      using OPT = OptionTrait<OptionType>;
       os << std::setw(25) << OPT::DescriptionOfN()    << " : " << std::setw(15) << OPT::N(opt) << std::endl;
       if (opt.ExtraOptions()) {
          os << opt.Integrator() << " specific options :"  << std::endl;
@@ -112,7 +112,7 @@ namespace IntegOptionsUtil {
       os << std::setw(25) << "Absolute tolerance"     << " : " << std::setw(15) << OptionType::DefaultAbsTolerance() << std::endl;
       os << std::setw(25) << "Relative tolerance"     << " : " <<std::setw(15) << OptionType::DefaultRelTolerance() << std::endl;
       os << std::setw(25) << "Workspace size"         << " : " << std::setw(15) << OptionType::DefaultWKSize() << std::endl;
-      typedef  OptionTrait<OptionType> OPT;
+      using OPT = OptionTrait<OptionType>;
       os << std::setw(25) <<  OPT::DescriptionOfN()   << " : " << std::setw(15) << OPT::N() << std::endl;
       IOptions * opts = GenAlgoOptions::FindDefault(integName.c_str());
       if (opts) opts->Print(os);

@@ -44,10 +44,13 @@ static PyClassMap_t gPyClasses;
 
 namespace CPyCppyy {
 
-typedef struct {
+using proxyobject = struct {
+
     PyObject_HEAD
+
     PyObject *dict;
-} proxyobject;
+
+};
 
 // helper for creating new C++ proxy python types
 static PyObject* CreateNewCppProxyClass(Cppyy::TCppScope_t klass, PyObject* pybases)
@@ -153,8 +156,8 @@ static int BuildScopeProxyDict(Cppyy::TCppScope_t scope, PyObject* pyclass, cons
     Cppyy::TCppMethod_t potGetItem = (Cppyy::TCppMethod_t)0;
 
 // load all public methods and data members
-    typedef std::vector<PyCallable*> Callables_t;
-    typedef std::map<std::string, Callables_t> CallableCache_t;
+    using Callables_t = std::vector<PyCallable *>;
+    using CallableCache_t = std::map<std::string, Callables_t>;
     CallableCache_t cache;
 
 // bypass custom __getattr__ for efficiency

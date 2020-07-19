@@ -1346,7 +1346,7 @@ Int_t TUnfoldDensity::ScanTau
  TGraph **lCurvePlot,TSpline **logTauXPlot,TSpline **logTauYPlot)
 {
    typedef std::map<Double_t,Double_t> TauScan_t;
-   typedef std::map<Double_t,std::pair<Double_t,Double_t> > LCurve_t;
+   using LCurve_t = std::map<Double_t, std::pair<Double_t, Double_t> >;
    TauScan_t curve;
    LCurve_t lcurve;
 

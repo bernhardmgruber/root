@@ -214,14 +214,14 @@ namespace BidirMMapPipe_impl {
                 szincr = 1 ///< size class increment (sz = 1 << (minsz + k * szincr))
             };
             /// a chunk of memory in the pool
-            typedef BidirMMapPipe_impl::PageChunk Chunk;
+            using Chunk = BidirMMapPipe_impl::PageChunk;
             /// list of chunks
-            typedef std::list<Chunk*> ChunkList;
+            using ChunkList = std::list<Chunk *>;
 
             friend class BidirMMapPipe_impl::PageChunk;
         public:
             /// convenience typedef
-            typedef PageChunk::MMapVariety MMapVariety;
+            using MMapVariety = PageChunk::MMapVariety;
             /// constructor
             PagePool(unsigned nPagesPerGroup);
             /// destructor

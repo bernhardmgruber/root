@@ -313,7 +313,7 @@ void TEveSceneList::ProcessSceneChanges(Bool_t dropLogicals, TExMap* stampMap)
    static const TEveException eh("TEveSceneList::ProcessSceneChanges ");
 
    typedef std::map<TObject*, TEveElement*> mObjectElement_t;
-   typedef mObjectElement_t::iterator       mObjectElement_i;
+   using mObjectElement_i = mObjectElement_t::iterator;
 
    mObjectElement_t changed_objects;
    {

@@ -83,7 +83,7 @@ void TMVA::RuleCut::MakeCuts( const std::vector<const Node*> & nodes )
 
    // some local typedefs
    typedef std::pair<Double_t,Int_t> CutDir_t; // first is cut value, second is direction
-   typedef std::pair<Int_t,CutDir_t> SelCut_t;
+   using SelCut_t = std::pair<Int_t, CutDir_t>;
 
    // Clear vectors
    fSelector.clear();

@@ -35,25 +35,21 @@
         PyObject *me_value; /* This field is only meaningful for combined tables */
     } PyDictEntry;
 
-    typedef struct _dictkeysobject {
-        Py_ssize_t dk_refcnt;
-        Py_ssize_t dk_size;
-        dict_lookup_func dk_lookup;
-        Py_ssize_t dk_usable;
-#if PY_VERSION_HEX >= 0x03060000
-        Py_ssize_t dk_nentries;
-        union {
+    using PyDictKeysObject = union {
+
             int8_t as_1[8];
+
             int16_t as_2[4];
+
             int32_t as_4[2];
+
 #if SIZEOF_VOID_P > 4
+
             int64_t as_8[1];
+
 #endif
-        } dk_indices;
-#else
-        PyDictKeyEntry dk_entries[1];
-#endif
-    } PyDictKeysObject;
+
+        };
 
 #define CPYCPPYY_GET_DICT_LOOKUP(mp)                                          \
     ((dict_lookup_func&)mp->ma_keys->dk_lookup)

@@ -710,7 +710,7 @@ TMatrixDSparse *TUnfold::MultiplyMSparseTranspMSparse
 
    // matrix multiplication
    typedef std::map<Int_t,Double_t> MMatrixRow_t;
-   typedef std::map<Int_t, MMatrixRow_t > MMatrix_t;
+   using MMatrix_t = std::map<Int_t, MMatrixRow_t>;
    MMatrix_t matrix;
 
    for(Int_t iRowAB=0;iRowAB<a->GetNrows();iRowAB++) {
@@ -2551,7 +2551,7 @@ Int_t TUnfold::ScanLcurve(Int_t nPoint,
            TGraph **lCurve,TSpline **logTauX,
                              TSpline **logTauY,TSpline **logTauCurvature)
 {
-  typedef std::map<Double_t,std::pair<Double_t,Double_t> > XYtau_t;
+  using XYtau_t = std::map<Double_t, std::pair<Double_t, Double_t> >;
   XYtau_t curve;
 
   //==========================================================

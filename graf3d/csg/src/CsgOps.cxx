@@ -1499,7 +1499,7 @@ namespace RootCsg {
    };
 
    typedef TBBoxLeaf *LeafPtr_t;
-   typedef TBBoxNode *NodePtr_t;
+   using NodePtr_t = TBBoxNode *;
 
    class TBBoxInternal : public TBBoxNode {
    public:
@@ -1509,7 +1509,7 @@ namespace RootCsg {
       TBBoxInternal(Int_t n, LeafPtr_t leafIt);
    };
 
-   typedef TBBoxInternal* InternalPtr_t;
+   using InternalPtr_t = TBBoxInternal *;
 
    class TBBoxTree {
    private:
@@ -1619,7 +1619,7 @@ namespace RootCsg {
    template <class TMesh>
    class TPolygonGeometry {
    public:
-      typedef typename TMesh::Polygon TPolygon;
+      using TPolygon = typename TMesh::Polygon;
 
    private:
       const TMesh    &fMesh;
@@ -1648,11 +1648,11 @@ namespace RootCsg {
    template <class TPolygon, class TVertex>
    class TMesh : public TBaseMesh {
    public:
-      typedef std::vector<TVertex> VLIST;
-      typedef std::vector<TPolygon> PLIST;
-      typedef TPolygon Polygon;
-      typedef TVertex Vertex;
-      typedef TPolygonGeometry<TMesh> TGBinder;
+      using VLIST = std::vector<TVertex>;
+      using PLIST = std::vector<TPolygon>;
+      using Polygon = TPolygon;
+      using Vertex = TVertex;
+      using TGBinder = TPolygonGeometry<TMesh<TPolygon, TVertex> >;
 
    private:
       VLIST fVerts;
@@ -1913,7 +1913,7 @@ namespace RootCsg {
             if ((newClassification != lastClassification) && newClassification && lastClassification)
             {
                Int_t newVertexIndex = fMesh.Verts().size();
-               typedef typename TMesh::Vertex VERTEX_t;
+               using VERTEX_t = typename TMesh::Vertex;
                fMesh.Verts().push_back(VERTEX_t());
                TVector3 v = aVertex - lastVertex;
                Double_t sideA = plane.SignedDistance(lastVertex);
@@ -1986,12 +1986,12 @@ namespace RootCsg {
       TMesh &fMesh;
 
    public:
-      typedef typename TMesh::Polygon Polygon;
-      typedef typename TMesh::Vertex Vertex;
-      typedef typename TMesh::VLIST VLIST;
-      typedef typename TMesh::PLIST PLIST;
-      typedef TPolygonGeometry<TMeshWrapper> TGBinder;
-      typedef TMeshWrapper<TMesh> MyType;
+      using Polygon = typename TMesh::Polygon;
+      using Vertex = typename TMesh::Vertex;
+      using VLIST = typename TMesh::VLIST;
+      using PLIST = typename TMesh::PLIST;
+      using TGBinder = TPolygonGeometry<TMeshWrapper<TMesh> >;
+      using MyType = TMeshWrapper<TMesh>;
 
    public:
       TMeshWrapper(TMesh &mesh):fMesh(mesh){}
@@ -2043,7 +2043,7 @@ namespace RootCsg {
                                          Int_t &inPiece, Int_t &outPiece,
                                          Double_t onEpsilon)
    {
-      typedef typename TMesh::Polygon::TVProp mesh;
+      using mesh = typename TMesh::Polygon::TVProp;
       TDefaultSplitFunctionBinder<mesh> defaultSplitFunction;
       TSplitFunction<MyType,TDefaultSplitFunctionBinder<mesh> >
          splitFunction(*this,defaultSplitFunction);
@@ -2053,10 +2053,10 @@ namespace RootCsg {
    template <typename AVProp, typename AFProp>
    class TPolygonBase {
    public:
-      typedef AVProp TVProp;
-      typedef AFProp TFProp;
-      typedef std::vector<TVProp> TVPropList;
-      typedef typename TVPropList::iterator TVPropIt;
+      using TVProp = AVProp;
+      using TFProp = AFProp;
+      using TVPropList = std::vector<TVProp>;
+      using TVPropIt = typename TVPropList::iterator;
 
    private :
       TVPropList fVerts;
@@ -2090,9 +2090,9 @@ namespace RootCsg {
       void          AddProp(const TVProp &prop){fVerts.push_back(prop);}
    };
 
-   typedef std::vector<Int_t> PIndexList_t;
-   typedef PIndexList_t::iterator PIndexIt_t;
-   typedef std::vector< PIndexList_t > OverlapTable_t;
+   using PIndexList_t = std::vector<Int_t>;
+   using PIndexIt_t = PIndexList_t::iterator;
+   using OverlapTable_t = std::vector<PIndexList_t>;
 
    template <typename TMesh>
    class TreeIntersector {
@@ -2232,13 +2232,13 @@ namespace RootCsg {
       TMesh  &fMesh;
       UInt_t  fUniqueEdgeTestId;
    public:
-      typedef typename TMesh::Polygon Polygon;
-      typedef typename TMesh::Vertex Vertex;
-      typedef typename TMesh::Polygon::TVProp VProp;
-      typedef typename TMesh::VLIST VLIST;
-      typedef typename TMesh::PLIST PLIST;
-      typedef TPolygonGeometry<TConnectedMeshWrapper> TGBinder;
-      typedef TConnectedMeshWrapper<TMesh> MyType;
+      using Polygon = typename TMesh::Polygon;
+      using Vertex = typename TMesh::Vertex;
+      using VProp = typename TMesh::Polygon::TVProp;
+      using VLIST = typename TMesh::VLIST;
+      using PLIST = typename TMesh::PLIST;
+      using TGBinder = TPolygonGeometry<TConnectedMeshWrapper<TMesh> >;
+      using MyType = TConnectedMeshWrapper<TMesh>;
 
       TConnectedMeshWrapper(TMesh &mesh) : fMesh(mesh), fUniqueEdgeTestId(0){}
 
@@ -2371,11 +2371,11 @@ namespace RootCsg {
    struct NullType_t{};
    //Original TestPolygon_t has two parameters, the second is face property
 
-   typedef TPolygonBase<TBlenderVProp, NullType_t> TestPolygon_t;
-   typedef TMesh<TestPolygon_t,TVertexBase> AMesh_t;
-   typedef TMesh<TestPolygon_t,TCVertex > AConnectedMesh_t;
-   typedef TMeshWrapper<AMesh_t> AMeshWrapper_t;
-   typedef TConnectedMeshWrapper<AConnectedMesh_t> AConnectedMeshWrapper_t;
+   using TestPolygon_t = TPolygonBase<TBlenderVProp, NullType_t>;
+   using AMesh_t = TMesh<TestPolygon_t, TVertexBase>;
+   using AConnectedMesh_t = TMesh<TestPolygon_t, TCVertex>;
+   using AMeshWrapper_t = TMeshWrapper<AMesh_t>;
+   using AConnectedMeshWrapper_t = TConnectedMeshWrapper<AConnectedMesh_t>;
 
    /////////////////////////////////////////////////////////////////////////////
 
@@ -2482,8 +2482,8 @@ namespace RootCsg {
       Int_t vertexNum = source.Verts().size();
       Int_t polyNum = source.Polys().size();
 
-      typedef typename MeshB::VLIST VLIST_t;
-      typedef typename MeshB::PLIST PLIST_t;
+      using VLIST_t = typename MeshB::VLIST;
+      using PLIST_t = typename MeshB::PLIST;
 
       output.Verts() = VLIST_t(vertexNum);
       output.Polys() = PLIST_t(polyNum);

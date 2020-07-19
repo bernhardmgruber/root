@@ -138,7 +138,7 @@ void TLinearMinimizer::SetFunction(const  ROOT::Math::IMultiGradFunction & objfu
    fObjFunc = chi2func;
 
    // need to get the gradient parametric model function
-   typedef  ROOT::Math::IParamMultiGradFunction ModelFunc;
+   using ModelFunc = ROOT::Math::IParamMultiGradFunction;
    const  ModelFunc * modfunc = dynamic_cast<const ModelFunc*>( &(chi2func->ModelFunction()) );
    assert(modfunc != 0);
 

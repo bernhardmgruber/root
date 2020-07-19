@@ -101,14 +101,14 @@ namespace ROOT {
      // TROOT.h header file.
    public:
       typedef std::map<std::string, TClassRec*> IdMap_t;
-      typedef IdMap_t::key_type                 key_type;
-      typedef IdMap_t::const_iterator           const_iterator;
-      typedef IdMap_t::size_type                size_type;
+      using key_type = IdMap_t::key_type;
+      using const_iterator = IdMap_t::const_iterator;
+      using size_type = IdMap_t::size_type;
 #ifdef R__WIN32
       // Window's std::map does NOT defined mapped_type
       typedef TClassRec*                        mapped_type;
 #else
-      typedef IdMap_t::mapped_type              mapped_type;
+      using mapped_type = IdMap_t::mapped_type;
 #endif
 
    private:

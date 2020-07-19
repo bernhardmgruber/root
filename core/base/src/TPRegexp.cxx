@@ -765,7 +765,7 @@ Int_t TPMERegexp::Match(const TString& s, UInt_t start)
 Int_t TPMERegexp::Split(const TString& s, Int_t maxfields)
 {
    typedef std::pair<int, int>   MarkerLoc_t;
-   typedef std::vector<MarkerLoc_t> MarkerLocVec_t;
+   using MarkerLocVec_t = std::vector<MarkerLoc_t>;
 
    // stores the marks for the split
    MarkerLocVec_t oMarks;

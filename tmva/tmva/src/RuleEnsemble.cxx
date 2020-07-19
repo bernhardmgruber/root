@@ -611,7 +611,7 @@ void TMVA::RuleEnsemble::MakeLinearTerms()
    UInt_t nvars = ((*events)[0])->GetNVariables(); // Event -> GetNVariables();
    Double_t val,ew;
    typedef std::pair< Double_t, Int_t> dataType;
-   typedef std::pair< Double_t, dataType > dataPoint;
+   using dataPoint = std::pair<Double_t, dataType>;
 
    std::vector< std::vector<dataPoint> > vardata(nvars);
    std::vector< Double_t > varsum(nvars,0.0);

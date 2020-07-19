@@ -20,7 +20,7 @@
 //- data _____________________________________________________________________
 namespace CPyCppyy {
     typedef Executor* (*ef_t) ();
-    typedef std::map<std::string, ef_t> ExecFactories_t;
+    using ExecFactories_t = std::map<std::string, ef_t>;
     static ExecFactories_t gExecFactories;
 
     extern PyObject* gNullPtrObject;

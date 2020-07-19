@@ -74,21 +74,33 @@ typedef struct gsl_function_struct gsl_function ;
 #define GSL_FN_EVAL(F,x) (*((F)->function))(x,(F)->params)
 
 //----From GSL_INTEGRATION.h ---------------------------------------
-typedef struct
+using gsl_integration_workspace = struct
+
   {
+
     size_t limit;
+
     size_t size;
+
     size_t nrmax;
+
     size_t i;
+
     size_t maximum_level;
+
     double *alist;
+
     double *blist;
+
     double *rlist;
+
     double *elist;
+
     size_t *order;
+
     size_t *level;
-  }
-gsl_integration_workspace;
+
+  };
 
 gsl_integration_workspace *
   gsl_integration_workspace_alloc (const size_t n);
@@ -443,10 +455,7 @@ gsl_coerce_double (const double x)
 
 /* Definition of an integration rule */
 
-typedef void gsl_integration_rule (const gsl_function * f,
-                                   double a, double b,
-                                   double *result, double *abserr,
-                                   double *defabs, double *resabs);
+using gsl_integration_rule = void (const gsl_function *, double, double, double *, double *, double *, double *);
 
 void gsl_integration_qk15 (const gsl_function * f, double a, double b,
                            double *result, double *abserr,

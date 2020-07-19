@@ -61,11 +61,15 @@ typedef struct {
 
 //______________________________________________________________________________
 // The body received after the first handshake's header
-typedef struct {
+using srv_HS_t = struct {
+
    int msglen;
+
    int protover;
+
    int msgval;
-} srv_HS_t;
+
+};
 
 ////////////////////////////////////////////////////////////////////////////////
 ///  PROOF daemon test program.

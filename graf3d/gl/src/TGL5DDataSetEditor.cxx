@@ -38,8 +38,8 @@ mutually exclusive things. So, only ROOT's GUI here.
 namespace {
 
 typedef TGL5DPainter::SurfIter_t    SurfIter_t;
-typedef std::map<Int_t, SurfIter_t> IterMap_t;
-typedef IterMap_t::iterator         IterMapIter_t;
+using IterMap_t = std::map<Int_t, SurfIter_t>;
+using IterMapIter_t = IterMap_t::iterator;
 
 }
 

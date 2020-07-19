@@ -61,11 +61,11 @@ namespace TStreamerInfoActions
 
    template <typename From>
    struct NoFactorMarker {
-      typedef From Value_t;
+      using Value_t = From;
    };
 
    struct BitsMarker {
-      typedef UInt_t Value_t;
+      using Value_t = UInt_t;
    };
 
    void TConfiguration::AddToOffset(Int_t delta)

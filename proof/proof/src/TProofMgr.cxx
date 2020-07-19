@@ -51,11 +51,15 @@ typedef struct {
    int fifth;
 } clnt_HS_t;
 // The body received after the first handshake's header
-typedef struct {
+using srv_HS_t = struct {
+
    int msglen;
+
    int protover;
+
    int msgval;
-} srv_HS_t;
+
+};
 
 ////////////////////////////////////////////////////////////////////////////////
 /// Create a PROOF manager for the standard (old) environment.

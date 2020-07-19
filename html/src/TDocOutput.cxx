@@ -38,7 +38,7 @@
 namespace {
 
    typedef std::vector<std::string> Words_t;
-   typedef Words_t::const_iterator SectionStart_t;
+   using SectionStart_t = Words_t::const_iterator;
 
    class TSectionInfo {
    public:
@@ -49,7 +49,7 @@ namespace {
          size_t fChars;
          size_t fSize;
    };
-   typedef std::list<TSectionInfo> SectionStarts_t;
+   using SectionStarts_t = std::list<TSectionInfo>;
 
    static void Sections_BuildIndex(SectionStarts_t& sectionStarts,
       SectionStart_t begin, SectionStart_t end,

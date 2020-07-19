@@ -2220,7 +2220,7 @@ void TGLUtil::RenderCrosses(const TAttMarker& marker, const std::vector<Double_t
       glLineWidth(1.f);
    }
 
-   typedef std::vector<Double_t>::size_type size_type;
+   using size_type = std::vector<Double_t>::size_type;
 
    glBegin(GL_LINES);
 
@@ -2875,13 +2875,13 @@ namespace {
       return kFALSE;
    }
 
-   typedef std::map<Int_t, RGB_t> ColorLookupTable_t;
-   typedef ColorLookupTable_t::const_iterator CLTCI_t;
+   using ColorLookupTable_t = std::map<Int_t, RGB_t>;
+   using CLTCI_t = ColorLookupTable_t::const_iterator;
 
    ColorLookupTable_t gObjectIDToColor;
 
-   typedef std::map<RGB_t, Int_t> ObjectLookupTable_t;
-   typedef ObjectLookupTable_t::const_iterator OLTCI_t;
+   using ObjectLookupTable_t = std::map<RGB_t, Int_t>;
+   using OLTCI_t = ObjectLookupTable_t::const_iterator;
 
    ObjectLookupTable_t gColorToObjectID;
 }
