@@ -42,8 +42,8 @@ TEveParamList::FloatConfig_t TEveParamList::GetFloatParameter(const TString& nam
 {
    static const TEveException eh("TEveParamList::GetFloatParameter ");
 
-   for (FloatConfigVec_ci itr = fFloatParameters.begin(); itr != fFloatParameters.end(); ++itr)
-      if (itr->fName.CompareTo(name)==0 ) return *itr;
+   for (const auto & fFloatParameter : fFloatParameters)
+      if (fFloatParameter.fName.CompareTo(name)==0 ) return fFloatParameter;
    Error(eh, "parameter not found.");
    return FloatConfig_t();
 }
@@ -55,8 +55,8 @@ TEveParamList::IntConfig_t TEveParamList::GetIntParameter(const TString& name)
 {
    static const TEveException eh("TEveParamList::GetIntParameter ");
 
-   for (IntConfigVec_ci itr = fIntParameters.begin(); itr != fIntParameters.end(); ++itr)
-      if (itr->fName.CompareTo(name) == 0) return *itr;
+   for (const auto & fIntParameter : fIntParameters)
+      if (fIntParameter.fName.CompareTo(name) == 0) return fIntParameter;
    Error(eh, "parameter not found.");
    return IntConfig_t();
 }
@@ -68,8 +68,8 @@ Bool_t TEveParamList::GetBoolParameter(const TString& name)
 {
    static const TEveException eh("TEveParamList::GetBoolParameter ");
 
-   for (BoolConfigVec_ci itr = fBoolParameters.begin(); itr != fBoolParameters.end(); ++itr)
-      if ( itr->fName.CompareTo(name)==0 ) return itr->fValue;
+   for (const auto & fBoolParameter : fBoolParameters)
+      if ( fBoolParameter.fName.CompareTo(name)==0 ) return fBoolParameter.fValue;
    Error(eh, "parameter not found.");
    return kFALSE;
 }

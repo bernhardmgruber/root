@@ -469,8 +469,8 @@ void TEveGTriVecValuator::ValueSet()
 
 void TEveGTriVecValuator::SetLimits(Int_t min, Int_t max)
 {
-   for (Int_t i=0; i<3; ++i)
-      fVal[i]->SetLimits(min, max);
+   for (auto & i : fVal)
+      i->SetLimits(min, max);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -479,7 +479,7 @@ void TEveGTriVecValuator::SetLimits(Int_t min, Int_t max)
 void TEveGTriVecValuator::SetLimits(Float_t min, Float_t max,
                                     TGNumberFormat::EStyle nef)
 {
-   for (Int_t i=0; i<3; ++i)
-      fVal[i]->SetLimits(min, max, 0, nef);
+   for (auto & i : fVal)
+      i->SetLimits(min, max, 0, nef);
 }
 

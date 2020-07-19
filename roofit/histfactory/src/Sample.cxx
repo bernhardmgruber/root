@@ -119,17 +119,17 @@ void RooStats::HistFactory::Sample::writeToFile( std::string OutputFileName, std
 
   // Must write all systematics that contain internal histograms
   // (This is not all systematics)
-  for( unsigned int i = 0; i < GetHistoSysList().size(); ++i ) {
-    GetHistoSysList().at(i).writeToFile( OutputFileName, DirName );
+  for(auto & i : GetHistoSysList()) {
+    i.writeToFile( OutputFileName, DirName );
   }
-  for( unsigned int i = 0; i < GetHistoFactorList().size(); ++i ) {
-    GetHistoFactorList().at(i).writeToFile( OutputFileName, DirName );
+  for(auto & i : GetHistoFactorList()) {
+    i.writeToFile( OutputFileName, DirName );
   }
-  for( unsigned int i = 0; i < GetShapeSysList().size(); ++i ) {
-    GetShapeSysList().at(i).writeToFile( OutputFileName, DirName );
+  for(auto & i : GetShapeSysList()) {
+    i.writeToFile( OutputFileName, DirName );
   }
-  for( unsigned int i = 0; i < GetShapeFactorList().size(); ++i ) {
-    GetShapeFactorList().at(i).writeToFile( OutputFileName, DirName );
+  for(auto & i : GetShapeFactorList()) {
+    i.writeToFile( OutputFileName, DirName );
   }
 
   return;
@@ -227,8 +227,7 @@ void RooStats::HistFactory::Sample::PrintXML( std::ofstream& xml ) {
 
 
   // Now, print the systematics:
-  for( unsigned int i = 0; i < fOverallSysList.size(); ++i ) {
-    RooStats::HistFactory::OverallSys sys = fOverallSysList.at(i);
+  for(auto sys : fOverallSysList) {
     sys.PrintXML(xml);
     /*
     xml << "      <OverallSys Name=\"" << sys.GetName() << "\" "
@@ -237,8 +236,7 @@ void RooStats::HistFactory::Sample::PrintXML( std::ofstream& xml ) {
 	<< "  /> " << std::endl;
     */
   }
-  for( unsigned int i = 0; i < fNormFactorList.size(); ++i ) {
-    RooStats::HistFactory::NormFactor sys = fNormFactorList.at(i);
+  for(auto sys : fNormFactorList) {
     sys.PrintXML(xml);
     /*
     xml << "      <NormFactor Name=\"" << sys.GetName() << "\" "
@@ -249,8 +247,7 @@ void RooStats::HistFactory::Sample::PrintXML( std::ofstream& xml ) {
 	<< "  /> " << std::endl;
     */
   }
-  for( unsigned int i = 0; i < fHistoSysList.size(); ++i ) {
-    RooStats::HistFactory::HistoSys sys = fHistoSysList.at(i);
+  for(auto sys : fHistoSysList) {
     sys.PrintXML(xml);
     /*
     xml << "      <HistoSys Name=\"" << sys.GetName() << "\" "
@@ -265,8 +262,7 @@ void RooStats::HistFactory::Sample::PrintXML( std::ofstream& xml ) {
 	<< "  /> " << std::endl;
     */
   }
-  for( unsigned int i = 0; i < fHistoFactorList.size(); ++i ) {
-    RooStats::HistFactory::HistoFactor sys = fHistoFactorList.at(i);
+  for(auto sys : fHistoFactorList) {
     sys.PrintXML(xml);
     /*
     xml << "      <HistoFactor Name=\"" << sys.GetName() << "\" "
@@ -281,8 +277,7 @@ void RooStats::HistFactory::Sample::PrintXML( std::ofstream& xml ) {
 	<< "  /> " << std::endl;
     */
   }
-  for( unsigned int i = 0; i < fShapeSysList.size(); ++i ) {
-    RooStats::HistFactory::ShapeSys sys = fShapeSysList.at(i);
+  for(auto sys : fShapeSysList) {
     sys.PrintXML(xml);
     /*
     xml << "      <ShapeSys Name=\"" << sys.GetName() << "\" "
@@ -294,8 +289,7 @@ void RooStats::HistFactory::Sample::PrintXML( std::ofstream& xml ) {
 	<< "  /> " << std::endl;
     */
   }
-  for( unsigned int i = 0; i < fShapeFactorList.size(); ++i ) {
-    RooStats::HistFactory::ShapeFactor sys = fShapeFactorList.at(i);
+  for(auto sys : fShapeFactorList) {
     sys.PrintXML(xml);
     /*
     xml << "      <ShapeFactor Name=\"" << sys.GetName() << "\" "

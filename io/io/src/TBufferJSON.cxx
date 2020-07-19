@@ -2805,8 +2805,8 @@ R__ALWAYS_INLINE void TBufferJSON::JsonReadFastArray(T *arr, Int_t arrsize, bool
             break;
          nlohmann::json &v = json->at(vname);
          if (v.is_array()) {
-            for (unsigned sub = 0; sub < v.size(); ++sub)
-               arr[p++] = v[sub].get<T>();
+            for (auto & sub : v)
+               arr[p++] = sub.get<T>();
          } else {
             nname = std::string("n") + idname;
             unsigned ncopy = (json->count(nname) == 1) ? json->at(nname).get<unsigned>() : 1;

@@ -2697,14 +2697,14 @@ static void R__WriteDependencyFile(const TString & build_loc, const TString &dep
        "TMemberInspector.h","TError.h","RtypesImp.h","TIsAProxy.h",
        "TFileMergeInfo.h","TCollectionProxyInfo.h"};
 
-      for (unsigned int h=0; h < sizeof(dictHeaders)/sizeof(dictHeaders[0]); ++h)
+      for (auto & dictHeader : dictHeaders)
       {
-         char *rootVersion = gSystem->Which(incPath,dictHeaders[h]);
+         char *rootVersion = gSystem->Which(incPath,dictHeader);
          if (rootVersion) {
             R__AddPath(adddictdep,rootVersion);
             delete [] rootVersion;
          } else {
-            R__AddPath(adddictdep,rootsysInclude + "/" + dictHeaders[h]);
+            R__AddPath(adddictdep,rootsysInclude + "/" + dictHeader);
          }
          adddictdep += " ";
       }
@@ -3443,8 +3443,8 @@ int TSystem::CompileMacro(const char *filename, Option_t *opt,
       { "+","-","*","/","&","%","|","^",">","<",
         "=","~",".","(",")","[","]","!",",","$",
         " ",":","'","#","@","\\","\"" };
-   for( int ic = 0; ic < maxforbidden; ic++ ) {
-      dict.ReplaceAll( forbidden_chars[ic],"_" );
+   for(auto & forbidden_char : forbidden_chars) {
+      dict.ReplaceAll( forbidden_char,"_" );
    }
    if ( dict.Last('.')!=dict.Length()-1 ) dict.Append(".");
    AssignAndDelete( dict, ConcatFileName( build_loc, dict ) );

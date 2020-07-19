@@ -1464,7 +1464,7 @@ TH1* RooAbsReal::createHistogram(const char *name, const RooAbsRealLValue& xvar,
 			      << ") INFO: Model has intrinsic binning definition, selecting that binning for the histogram"<< endl ;
       }
       Double_t* ba = new Double_t[bl->size()] ; int i=0 ;
-      for (list<double>::iterator it=bl->begin() ; it!=bl->end() ; ++it) { ba[i++] = *it ; }
+      for (double & it : *bl) { ba[i++] = it ; }
       intBinning = new RooBinning(bl->size()-1,ba) ;
       delete[] ba ;
     }
@@ -2898,8 +2898,8 @@ RooPlot* RooAbsReal::plotOnWithErrorBand(RooPlot* frame,const RooFitResult& fr, 
     // Cleanup
     delete paramPdf ;
     delete cloneFunc ;
-    for (vector<RooCurve*>::iterator i=cvec.begin() ; i!=cvec.end() ; ++i) {
-      delete (*i) ;
+    for (auto & i : cvec) {
+      delete i ;
     }
 
   } else {
@@ -2993,11 +2993,11 @@ RooPlot* RooAbsReal::plotOnWithErrorBand(RooPlot* frame,const RooFitResult& fr, 
 
     // Cleanup
     delete cloneFunc ;
-    for (vector<RooCurve*>::iterator i=plusVar.begin() ; i!=plusVar.end() ; ++i) {
-      delete (*i) ;
+    for (auto & i : plusVar) {
+      delete i ;
     }
-    for (vector<RooCurve*>::iterator i=minusVar.begin() ; i!=minusVar.end() ; ++i) {
-      delete (*i) ;
+    for (auto & i : minusVar) {
+      delete i ;
     }
 
   }

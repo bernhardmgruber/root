@@ -165,8 +165,8 @@ bool GSLMinimizer::Minimize() {
 
    // use a global step size = modules of  step vectors
    double stepSize = 0;
-   for (unsigned int i = 0; i < steps.size(); ++i)
-      stepSize += steps[i]*steps[i];
+   for (double step : steps)
+      stepSize += step*step;
    stepSize = std::sqrt(stepSize);
    if (stepSize < eps) {
       MATH_ERROR_MSGVAL("GSLMinimizer::Minimize","Step size is too small",stepSize);

@@ -126,8 +126,8 @@ std::vector<std::string> RooStats::HistFactory::Measurement::GetPreprocessFuncti
 
   
   std::vector<std::string> PreprocessFunctionExpressions;
-  for( unsigned int i = 0; i < fFunctionObjects.size(); ++i ) {
-    std::string expression = fFunctionObjects.at(i).GetCommand();
+  for(auto & fFunctionObject : fFunctionObjects) {
+    std::string expression = fFunctionObject.GetCommand();
     PreprocessFunctionExpressions.push_back( expression );
   }
   return PreprocessFunctionExpressions;
@@ -162,9 +162,8 @@ bool RooStats::HistFactory::Measurement::HasChannel( std::string ChanName )
 {
 
 
-  for( unsigned int i = 0; i < fChannels.size(); ++i ) {
+  for(auto & chan : fChannels) {
 
-    Channel& chan = fChannels.at(i);
     if( chan.GetName() == ChanName ) {
       return true;
     }
@@ -180,9 +179,8 @@ bool RooStats::HistFactory::Measurement::HasChannel( std::string ChanName )
 /// throws an exception in case the channel is not found
 RooStats::HistFactory::Channel& RooStats::HistFactory::Measurement::GetChannel( std::string ChanName )
 {
-  for( unsigned int i = 0; i < fChannels.size(); ++i ) {
+  for(auto & chan : fChannels) {
 
-    Channel& chan = fChannels.at(i);
     if( chan.GetName() == ChanName ) {
       return chan;
     }
@@ -216,8 +214,8 @@ void RooStats::HistFactory::Measurement::PrintTree( std::ostream& stream )
   stream << "Measurement Name: " << GetName()
 	 << "\t OutputFilePrefix: " << fOutputFilePrefix
 	 << "\t POI: ";
-  for(unsigned int i = 0; i < fPOI.size(); ++i) {
-    stream << fPOI.at(i);
+  for(auto & i : fPOI) {
+    stream << i;
   }
   stream << "\t Lumi: " << fLumi
 	 << "\t LumiRelErr: " << fLumiRelErr
@@ -229,24 +227,24 @@ void RooStats::HistFactory::Measurement::PrintTree( std::ostream& stream )
 
   if( fConstantParams.size() != 0 ) {
     stream << "Constant Params: ";
-    for( unsigned int i = 0; i < fConstantParams.size(); ++i ) {
-      stream << " " << fConstantParams.at(i);
+    for(auto & fConstantParam : fConstantParams) {
+      stream << " " << fConstantParam;
     }
     stream << std::endl;
   }
 
   if( fFunctionObjects.size() != 0 ) {
     stream << "Preprocess Functions: ";
-    for( unsigned int i = 0; i < fFunctionObjects.size(); ++i ) {
-      stream << " " << fFunctionObjects.at(i).GetCommand();
+    for(auto & fFunctionObject : fFunctionObjects) {
+      stream << " " << fFunctionObject.GetCommand();
     }
     stream << std::endl;
   }
   
   if( fChannels.size() != 0 ) {
     stream << "Channels:" << std::endl;
-    for( unsigned int i = 0; i < fChannels.size(); ++i ) {
-      fChannels.at(i).Print( stream );
+    for(auto & fChannel : fChannels) {
+      fChannel.Print( stream );
     }
   }
 
@@ -327,8 +325,7 @@ void RooStats::HistFactory::Measurement::PrintXML( std::string directory, std::s
   xml << "<Combination OutputFilePrefix=\"" << newOutputPrefix /*OutputFilePrefix*/ << "\" >" << std::endl << std::endl;
 
   // Add the Preprocessed Functions
-  for( unsigned int i = 0; i < fFunctionObjects.size(); ++i ) {
-    RooStats::HistFactory::PreprocessFunction func = fFunctionObjects.at(i);
+  for(auto func : fFunctionObjects) {
     func.PrintXML(xml);
     /*
     xml << "<Function Name=\"" << func.GetName() << "\" "
@@ -341,10 +338,10 @@ void RooStats::HistFactory::Measurement::PrintXML( std::string directory, std::s
   xml << std::endl;
 
   // Add the list of channels
-  for( unsigned int i = 0; i < fChannels.size(); ++i ) {
+  for(auto & fChannel : fChannels) {
      xml << "  <Input>" << "./";
      if (!directory.empty() ) xml << directory << "/";
-     xml << GetName() << "_" << fChannels.at(i).GetName() << ".xml" << "</Input>" << std::endl;
+     xml << GetName() << "_" << fChannel.GetName() << ".xml" << "</Input>" << std::endl;
   }
 
   xml << std::endl;
@@ -419,8 +416,8 @@ void RooStats::HistFactory::Measurement::PrintXML( std::string directory, std::s
 
   std::string prefix = std::string(GetName()) + "_";
 
-  for( unsigned int i = 0; i < fChannels.size(); ++i ) {
-    fChannels.at(i).PrintXML( directory, prefix );
+  for(auto & fChannel : fChannels) {
+    fChannel.PrintXML( directory, prefix );
   }
 
 
@@ -451,7 +448,7 @@ void RooStats::HistFactory::Measurement::writeToFile( TFile* file )
   // HistCollector collector;
 
 
-  for( unsigned int chanItr = 0; chanItr < outMeas.fChannels.size(); ++chanItr ) {
+  for(auto & channel : outMeas.fChannels) {
     
     // Go to the main directory 
     // in the file
@@ -459,7 +456,6 @@ void RooStats::HistFactory::Measurement::writeToFile( TFile* file )
     file->Flush();
 
     // Get the name of the channel:
-    RooStats::HistFactory::Channel& channel = outMeas.fChannels.at( chanItr );
     std::string chanName = channel.GetName();
 
     
@@ -511,9 +507,8 @@ void RooStats::HistFactory::Measurement::writeToFile( TFile* file )
 
     // Loop over samples:
 
-    for( unsigned int sampItr = 0; sampItr < channel.GetSamples().size(); ++sampItr ) {
+    for(auto & sample : channel.GetSamples()) {
 
-      RooStats::HistFactory::Sample& sample = channel.GetSamples().at( sampItr );
       std::string sampName = sample.GetName();
       
       cxcoutPHF << "Writing sample: " << sampName << std::endl;
@@ -649,10 +644,8 @@ void RooStats::HistFactory::Measurement::CollectHistograms()
 {
 
 
-  for( unsigned int chanItr = 0; chanItr < fChannels.size(); ++chanItr) {
+  for(auto & chan : fChannels) {
 
-    RooStats::HistFactory::Channel& chan = fChannels.at( chanItr );
-    
     chan.CollectHistograms();
 
   }

@@ -90,8 +90,8 @@ RooMultiVarGaussian::RooMultiVarGaussian(const char *name, const char *title,
   }
   
   // Fill X vector in same order as mu vector
-  for (list<string>::iterator iter=munames.begin() ; iter!=munames.end() ; ++iter) {
-    RooRealVar* xvar = (RooRealVar*) xvec.find(iter->c_str()) ;
+  for (auto & muname : munames) {
+    RooRealVar* xvar = (RooRealVar*) xvec.find(muname.c_str()) ;
     _x.add(*xvar) ;      
   }
 

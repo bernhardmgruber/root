@@ -939,8 +939,8 @@ RooAbsDataStore* RooVectorDataStore::merge(const RooArgSet& allVars, list<RooAbs
     mergedStore->_vars = *get(i) ;
       
     // Copy variables from merge sets
-    for (list<RooAbsDataStore*>::iterator iter = dstoreList.begin() ; iter!=dstoreList.end() ; ++iter) {
-      const RooArgSet* partSet = (*iter)->get(i) ;
+    for (auto & iter : dstoreList) {
+      const RooArgSet* partSet = iter->get(i) ;
       mergedStore->_vars = *partSet ;
     }
 

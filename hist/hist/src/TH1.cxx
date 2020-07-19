@@ -797,7 +797,7 @@ Bool_t TH1::Add(TF1 *f1, Double_t c1, Option_t *option)
 
    //   - Add statistics
    Double_t s1[10];
-   for (Int_t i = 0; i < 10; ++i) s1[i] = 0;
+   for (double & i : s1) i = 0;
    PutStats(s1);
    SetMinimum();
    SetMaximum();

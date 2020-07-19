@@ -384,11 +384,11 @@ namespace ROOT
       // Check if we have all the keys we need
       //-----------------------------------------------------------------------
       std::string keys[] = {"target", "source"};
-      for( int i = 0; i < 2; ++i ) {
-         it1 = rule.find( keys[i] );
+      for(auto & key : keys) {
+         it1 = rule.find( key );
          if( it1 == rule.end() ) {
             error_string = warning + " - required parameter is missing: ";
-            error_string += keys[i];
+            error_string += key;
             return false;
          }
       }

@@ -615,8 +615,8 @@ void TGeoTessellated::ResizeCenter(double maxsize)
    Vector3_t origin(fOrigin[0], fOrigin[1], fOrigin[2]);
    double maxedge = TMath::Max(TMath::Max(fDX, fDY), fDZ);
    double scale = maxsize / maxedge;
-   for (size_t i = 0; i < fVertices.size(); ++i) {
-      fVertices[i] = scale * (fVertices[i] - origin);
+   for (auto & fVertice : fVertices) {
+      fVertice = scale * (fVertice - origin);
    }
    fOrigin[0] = fOrigin[1] = fOrigin[2] = 0;
    fDX *= scale;

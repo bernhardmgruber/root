@@ -610,8 +610,8 @@ void PiecewiseInterpolation::setInterpCode(RooAbsReal& param, int code){
 ////////////////////////////////////////////////////////////////////////////////
 
 void PiecewiseInterpolation::setAllInterpCodes(int code){
-  for(unsigned int i=0; i<_interpCode.size(); ++i){
-    _interpCode.at(i) = code;
+  for(int & i : _interpCode){
+    i = code;
   }
 }
 

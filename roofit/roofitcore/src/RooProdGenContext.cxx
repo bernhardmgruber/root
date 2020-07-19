@@ -314,8 +314,8 @@ RooProdGenContext::RooProdGenContext(const RooProdPdf &model, const RooArgSet &v
 RooProdGenContext::~RooProdGenContext()
 {
   delete _uniIter ;
-  for (list<RooAbsGenContext*>::iterator iter=_gcList.begin() ; iter!=_gcList.end() ; ++iter) {
-    delete (*iter) ;
+  for (auto & iter : _gcList) {
+    delete iter ;
   }
 }
 
@@ -326,8 +326,8 @@ RooProdGenContext::~RooProdGenContext()
 void RooProdGenContext::attach(const RooArgSet& args) 
 {
   //Forward initGenerator call to all components
-  for (list<RooAbsGenContext*>::iterator iter=_gcList.begin() ; iter!=_gcList.end() ; ++iter) {
-    (*iter)->attach(args) ;
+  for (auto & iter : _gcList) {
+    iter->attach(args) ;
   }
 }
 
@@ -338,8 +338,8 @@ void RooProdGenContext::attach(const RooArgSet& args)
 void RooProdGenContext::initGenerator(const RooArgSet &theEvent)
 {
   // Forward initGenerator call to all components
-  for (list<RooAbsGenContext*>::iterator iter=_gcList.begin() ; iter!=_gcList.end() ; ++iter) {
-    (*iter)->initGenerator(theEvent) ;
+  for (auto & iter : _gcList) {
+    iter->initGenerator(theEvent) ;
   }
 }
 
@@ -355,8 +355,8 @@ void RooProdGenContext::generateEvent(RooArgSet &theEvent, Int_t remaining)
 {
   // Loop over the component generators
 
-  for (list<RooAbsGenContext*>::iterator iter=_gcList.begin() ; iter!=_gcList.end() ; ++iter) {
-    (*iter)->generateEvent(theEvent,remaining) ;
+  for (auto & iter : _gcList) {
+    iter->generateEvent(theEvent,remaining) ;
   }
 
   // Generate uniform variables (non-dependents)  
@@ -385,8 +385,8 @@ void RooProdGenContext::setProtoDataOrder(Int_t* lut)
   // Forward call to component generators
   RooAbsGenContext::setProtoDataOrder(lut) ;
 
-  for (list<RooAbsGenContext*>::iterator iter=_gcList.begin() ; iter!=_gcList.end() ; ++iter) {
-    (*iter)->setProtoDataOrder(lut) ;
+  for (auto & iter : _gcList) {
+    iter->setProtoDataOrder(lut) ;
   }
 
 }
@@ -407,7 +407,7 @@ void RooProdGenContext::printMultiline(ostream &os, Int_t content, Bool_t verbos
   TString indent2(indent) ;
   indent2.Append("    ") ;
 
-  for (list<RooAbsGenContext*>::const_iterator iter=_gcList.begin() ; iter!=_gcList.end() ; ++iter) {
-    (*iter)->printMultiline(os,content,verbose,indent2) ;
+  for (auto iter : _gcList) {
+    iter->printMultiline(os,content,verbose,indent2) ;
   }
 }

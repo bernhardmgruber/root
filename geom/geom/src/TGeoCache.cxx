@@ -52,7 +52,7 @@ TGeoNodeCache::TGeoNodeCache()
    fInfoBranch  = 0;
    fPWInfo      = 0;
    fNodeIdArray = 0;
-   for (Int_t i=0; i<100; i++) fIdBranch[i] = 0;
+   for (int & i : fIdBranch) i = 0;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -90,7 +90,7 @@ TGeoNodeCache::TGeoNodeCache(TGeoNode *top, Bool_t nodeid, Int_t capacity)
    fMatrix = fMatrixBranch[0] = fMPB[0];
    fNodeBranch[0] = top;
    fNodeIdArray = 0;
-   for (Int_t i=0; i<100; i++) fIdBranch[i] = 0;
+   for (int & i : fIdBranch) i = 0;
    if (nodeid) BuildIdArray();
    CdTop();
 }

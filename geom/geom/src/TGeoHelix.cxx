@@ -149,7 +149,7 @@ void TGeoHelix::InitDirection(Double_t dirx, Double_t diry, Double_t dirz, Bool_
    TObject::SetBit(kHelixNeedUpdate, kTRUE);
    if (is_normalized) return;
    Double_t norm = 1./TMath::Sqrt(dirx*dirx+diry*diry+dirz*dirz);
-   for (Int_t i=0; i<3; i++) fDirInit[i] *= norm;
+   for (double & i : fDirInit) i *= norm;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -212,7 +212,7 @@ void TGeoHelix::SetField(Double_t bx, Double_t by, Double_t bz, Bool_t is_normal
    TObject::SetBit(kHelixNeedUpdate, kTRUE);
    if (is_normalized) return;
    Double_t norm = 1./TMath::Sqrt(bx*bx+by*by+bz*bz);
-   for (Int_t i=0; i<3; i++) fB[i] *= norm;
+   for (double & i : fB) i *= norm;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

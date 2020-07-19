@@ -2116,7 +2116,7 @@ TH2D *TH3::DoProject2D(const char* name, const char * title, const TAxis* projX,
    if (!resetStats) {
       Double_t stats[kNstat];
       Double_t oldst[kNstat]; // old statistics
-      for (Int_t i = 0; i < kNstat; ++i) { oldst[i] = 0; }
+      for (double & i : oldst) { i = 0; }
       GetStats(oldst);
       std::copy(oldst,oldst+kNstat,stats);
       // not that projX refer to Y axis and projX refer to the X axis of projected histogram
@@ -2531,7 +2531,7 @@ TProfile2D *TH3::DoProjectProfile2D(const char* name, const char * title, const 
    Double_t stats[kNstat];
    // reset statistics
    if (resetStats)
-      for (Int_t i=0;i<kNstat;i++) stats[i] = 0;
+      for (double & stat : stats) stat = 0;
 
    p2->PutStats(stats);
    Double_t entries = fEntries;

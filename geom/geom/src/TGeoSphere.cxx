@@ -1536,7 +1536,7 @@ Double_t TGeoSphere::Safety(const Double_t *point, Bool_t in) const
       safe = saf[TMath::LocMin(4,saf)];
       return TMath::Min(safe,safphi);
    }
-   for (Int_t i=0; i<4; i++) saf[i]=-saf[i];
+   for (double & i : saf) i=-i;
    safe = saf[TMath::LocMax(4, saf)];
    if (TestShapeBit(kGeoPhiSeg)) return TMath::Max(safe, safphi);
    return safe;

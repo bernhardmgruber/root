@@ -155,12 +155,12 @@ TString TEveCaloData::GetHighlightTooltip()
    Bool_t single = fCellsHighlighted.size() == 1;
    Float_t sum = 0;
    TString s;
-   for (vCellId_i i = fCellsHighlighted.begin(); i!=fCellsHighlighted.end(); ++i)
+   for (auto & i : fCellsHighlighted)
    {
-      GetCellData(*i, cellData);
+      GetCellData(i, cellData);
 
       s += TString::Format("%s %.2f (%.3f, %.3f)",
-                           fSliceInfos[i->fSlice].fName.Data(), cellData.fValue,
+                           fSliceInfos[i.fSlice].fName.Data(), cellData.fValue,
                            cellData.Eta(), cellData.Phi());
 
       if (single) return s;
@@ -191,10 +191,10 @@ void TEveCaloData::PrintCellsSelected()
    printf("%d Selected selected cells:\n", (Int_t)fCellsSelected.size());
    CellData_t cellData;
 
-   for (vCellId_i i = fCellsSelected.begin(); i != fCellsSelected.end(); ++i)
+   for (auto & i : fCellsSelected)
    {
-      GetCellData(*i, cellData);
-      printf("Tower [%d] Slice [%d] Value [%.2f] ", i->fTower, i->fSlice, cellData.fValue);
+      GetCellData(i, cellData);
+      printf("Tower [%d] Slice [%d] Value [%.2f] ", i.fTower, i.fSlice, cellData.fValue);
       printf("Eta:(%f, %f) Phi(%f, %f)\n",  cellData.fEtaMin, cellData.fEtaMax, cellData.fPhiMin, cellData.fPhiMax);
    }
 }
@@ -213,13 +213,13 @@ void TEveCaloData::ProcessSelection(vCellId_t& sel_cells, TGLSelectRecord& rec)
    {
       static void fill_cell_set(sCellId_t& cset, vCellId_t& cvec)
       {
-         for (vCellId_i i = cvec.begin(); i != cvec.end(); ++i)
-            cset.insert(*i);
+         for (auto & i : cvec)
+            cset.insert(i);
       }
       static void fill_cell_vec(vCellId_t& cvec, sCellId_t& cset)
       {
-         for (sCellId_i i = cset.begin(); i != cset.end(); ++i)
-            cvec.push_back(*i);
+         for (auto i : cset)
+            cvec.push_back(i);
       }
    };
 
@@ -241,11 +241,11 @@ void TEveCaloData::ProcessSelection(vCellId_t& sel_cells, TGLSelectRecord& rec)
          {
             sCellId_t cs;
             helper::fill_cell_set(cs, cells);
-            for (vCellId_i i = sel_cells.begin(); i != sel_cells.end(); ++i)
+            for (auto & sel_cell : sel_cells)
             {
-               std::set<CellId_t>::iterator csi = cs.find(*i);
+               std::set<CellId_t>::iterator csi = cs.find(sel_cell);
                if (csi == cs.end())
-                  cs.insert(*i);
+                  cs.insert(sel_cell);
                else
                   cs.erase(csi);
             }
@@ -267,9 +267,9 @@ void TEveCaloData::ProcessSelection(vCellId_t& sel_cells, TGLSelectRecord& rec)
             {
                sCellId_t cs;
                helper::fill_cell_set(cs, cells);
-               for (vCellId_i i = sel_cells.begin(); i != sel_cells.end(); ++i)
+               for (auto & sel_cell : sel_cells)
                {
-                  if (cs.find(*i) == cs.end())
+                  if (cs.find(sel_cell) == cs.end())
                   {
                      differ = kTRUE;
                      break;
@@ -475,8 +475,8 @@ Int_t TEveCaloDataVec::AddTower(Float_t etaMin, Float_t etaMax, Float_t phiMin, 
 
    fGeomVec.push_back(CellGeom_t(etaMin, etaMax, phiMin, phiMax));
 
-   for (vvFloat_i it=fSliceVec.begin(); it!=fSliceVec.end(); ++it)
-      (*it).push_back(0);
+   for (auto & it : fSliceVec)
+      it.push_back(0);
 
    if (etaMin < fEtaMin) fEtaMin = etaMin;
    if (etaMax > fEtaMax) fEtaMax = etaMax;
@@ -526,9 +526,8 @@ void TEveCaloDataVec::GetCellList(Float_t eta, Float_t etaD,
    Float_t fracx=0, fracy=0, frac;
    Float_t minQ, maxQ;
 
-   for(vCellGeom_ci i=fGeomVec.begin(); i!=fGeomVec.end(); i++)
+   for(const auto & cg : fGeomVec)
    {
-      const CellGeom_t &cg = *i;
       fracx = TEveUtil::GetFraction(etaMin, etaMax, cg.fEtaMin, cg.fEtaMax);
       if (fracx > 1e-3)
       {
@@ -574,9 +573,9 @@ void TEveCaloDataVec::Rebin(TAxis* ax, TAxis* ay, vCellId_t &ids, Bool_t et, Reb
    rdata.fBinData.assign((ax->GetNbins()+2)*(ay->GetNbins()+2), -1);
 
    CellData_t cd;
-   for (vCellId_i it = ids.begin(); it != ids.end(); ++it)
+   for (auto & id : ids)
    {
-      GetCellData(*it, cd);
+      GetCellData(id, cd);
       Int_t iMin = ax->FindBin(cd.EtaMin());
       Int_t iMax = ax->FindBin(cd.EtaMax());
       Int_t jMin = ay->FindBin(cd.PhiMin());
@@ -594,7 +593,7 @@ void TEveCaloDataVec::Rebin(TAxis* ax, TAxis* ay, vCellId_t &ids, Bool_t et, Reb
             if (ratio > 1e-6f)
             {
                Float_t* slices = rdata.GetSliceVals(i + j*(ax->GetNbins()+2));
-               slices[(*it).fSlice] += ratio * cd.Value(et);
+               slices[id.fSlice] += ratio * cd.Value(et);
             }
          }
       }
@@ -628,8 +627,8 @@ void TEveCaloDataVec::DataChanged()
    for (UInt_t tw=0; tw<fGeomVec.size(); tw++)
    {
       sum=0;
-      for (vvFloat_i it=fSliceVec.begin(); it!=fSliceVec.end(); ++it)
-         sum += (*it)[tw];
+      for (auto & it : fSliceVec)
+         sum += it[tw];
 
       if (sum > fMaxValEt ) fMaxValEt=sum;
 
@@ -650,10 +649,8 @@ void  TEveCaloDataVec::SetAxisFromBins(Double_t epsX, Double_t epsY)
    std::vector<Double_t> binX;
    std::vector<Double_t> binY;
 
-   for(vCellGeom_ci i=fGeomVec.begin(); i!=fGeomVec.end(); i++)
+   for(const auto & ch : fGeomVec)
    {
-      const CellGeom_t &ch = *i;
-
       binX.push_back(ch.EtaMin());
       binX.push_back(ch.EtaMax());
       binY.push_back(ch.PhiMin());
@@ -859,10 +856,10 @@ void TEveCaloDataHist::Rebin(TAxis* ax, TAxis* ay, TEveCaloData::vCellId_t &ids,
    Int_t binx, biny;
    Int_t bin;
 
-   for (vCellId_i it=ids.begin(); it!=ids.end(); ++it)
+   for (auto & id : ids)
    {
-      GetCellData(*it, cd);
-      GetHist(it->fSlice)->GetBinXYZ((*it).fTower, i, j, w);
+      GetCellData(id, cd);
+      GetHist(id.fSlice)->GetBinXYZ(id.fTower, i, j, w);
       binx = ax->FindBin(fEtaAxis->GetBinCenter(i));
       biny = ay->FindBin(fPhiAxis->GetBinCenter(j));
       bin = biny*(ax->GetNbins()+2)+binx;
@@ -870,7 +867,7 @@ void TEveCaloDataHist::Rebin(TAxis* ax, TAxis* ay, TEveCaloData::vCellId_t &ids,
       Double_t ratio = TEveUtil::GetFraction(ax->GetBinLowEdge(binx), ax->GetBinUpEdge(binx), cd.EtaMin(), cd.EtaMax())
                      * TEveUtil::GetFraction(ay->GetBinLowEdge(biny), ay->GetBinUpEdge(biny), cd.PhiMin(), cd.PhiMax());
 
-      val[(*it).fSlice] += cd.Value(et)*ratio;
+      val[id.fSlice] += cd.Value(et)*ratio;
    }
 }
 

@@ -135,9 +135,9 @@ void TEveGeoNode::ExpandIntoListTree(TGListTree* ltree,
 
 void TEveGeoNode::ExpandIntoListTrees()
 {
-   for (sLTI_i i = fItems.begin(); i != fItems.end(); ++i)
+   for (const auto & fItem : fItems)
    {
-      ExpandIntoListTree(i->fTree, i->fItem);
+      ExpandIntoListTree(fItem.fTree, fItem.fItem);
    }
 }
 
@@ -148,9 +148,9 @@ void TEveGeoNode::ExpandIntoListTrees()
 void TEveGeoNode::ExpandIntoListTreesRecursively()
 {
    ExpandIntoListTrees();
-   for (List_i i=fChildren.begin(); i!=fChildren.end(); ++i)
+   for (auto & i : fChildren)
    {
-      TEveGeoNode *egn = dynamic_cast<TEveGeoNode*>(*i);
+      TEveGeoNode *egn = dynamic_cast<TEveGeoNode*>(i);
       if (egn)
          egn->ExpandIntoListTreesRecursively();
    }
@@ -229,8 +229,8 @@ void TEveGeoNode::UpdateNode(TGeoNode* node)
    if (fNode == node)
       StampColorSelection();
 
-   for (List_i i=fChildren.begin(); i!=fChildren.end(); ++i) {
-      ((TEveGeoNode*)(*i))->UpdateNode(node);
+   for (auto & i : fChildren) {
+      ((TEveGeoNode*)i)->UpdateNode(node);
    }
 }
 
@@ -251,8 +251,8 @@ void TEveGeoNode::UpdateVolume(TGeoVolume* volume)
    if(fNode->GetVolume() == volume)
       StampColorSelection();
 
-   for(List_i i=fChildren.begin(); i!=fChildren.end(); ++i) {
-      ((TEveGeoNode*)(*i))->UpdateVolume(volume);
+   for(auto & i : fChildren) {
+      ((TEveGeoNode*)i)->UpdateVolume(volume);
    }
 }
 
@@ -290,8 +290,8 @@ void TEveGeoNode::SaveExtract(const char* file, const char* name, Bool_t leafs_o
       f.Close();
    }
 
-   for (std::list<TGeoShape*>::iterator i = fgTemporaryStore.begin(); i != fgTemporaryStore.end(); ++i)
-      delete *i;
+   for (auto & i : fgTemporaryStore)
+      delete i;
    fgTemporaryStore.clear();
 }
 

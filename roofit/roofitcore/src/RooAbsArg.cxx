@@ -2205,8 +2205,8 @@ void RooAbsArg::wireAllCaches()
   RooAbsArg* arg ;
   while((arg=iter.next())) {
 //     cout << "wiring caches on node " << arg->GetName() << endl ;
-    for (deque<RooAbsCache*>::iterator iter2 = arg->_cacheList.begin() ; iter2 != arg->_cacheList.end() ; ++iter2) {
-      (*iter2)->wireCache() ;
+    for (auto & iter2 : arg->_cacheList) {
+      iter2->wireCache() ;
     }
   }
 }

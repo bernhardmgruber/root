@@ -129,7 +129,7 @@ std::vector< RooStats::HistFactory::Measurement > ConfigParser::GetMeasurementsF
     else {
       std::ostringstream msg;
       msg << "Found Channels: ";
-      for( unsigned int i=0; i < xml_channel_files.size(); ++i )   msg << " " << xml_channel_files.at(i);
+      for(auto & xml_channel_file : xml_channel_files)   msg << " " << xml_channel_file;
       cxcoutIHF << msg.str();
     }
 
@@ -206,7 +206,7 @@ std::vector< RooStats::HistFactory::Measurement > ConfigParser::GetMeasurementsF
     else {
       std::ostringstream msg;
       msg << "Found Measurements: ";
-      for( unsigned int i=0; i < measurement_list.size(); ++i )   msg << " " << measurement_list.at(i).GetName();
+      for(auto & i : measurement_list)   msg << " " << i.GetName();
       msg << std::endl;
       cxcoutIHF << msg.str();
     }
@@ -216,8 +216,8 @@ std::vector< RooStats::HistFactory::Measurement > ConfigParser::GetMeasurementsF
     //   measurement_list.at(i).SetPreprocessFunctions( preprocessFunctions );
     // }
     // Add the preprocessed functions to each measurement
-    for( unsigned int i = 0; i < measurement_list.size(); ++i) {
-      measurement_list.at(i).SetFunctionObjects( functionObjects );
+    for(auto & i : measurement_list) {
+      i.SetFunctionObjects( functionObjects );
     }
 
     // Create an instance of the class
@@ -230,8 +230,7 @@ std::vector< RooStats::HistFactory::Measurement > ConfigParser::GetMeasurementsF
     std::vector< HistFactory::Channel > channel_list;
 
     // Fill the list of channels
-    for( unsigned int i = 0; i < xml_channel_files.size(); ++i ) {
-      std::string channel_xml = xml_channel_files.at(i);
+    for(auto channel_xml : xml_channel_files) {
       cxcoutIHF << "Parsing Channel: " << channel_xml << std::endl;
       HistFactory::Channel channel =  ParseChannelXMLFile( channel_xml );
 
@@ -242,12 +241,10 @@ std::vector< RooStats::HistFactory::Measurement > ConfigParser::GetMeasurementsF
     }
 
     // Finally, add the channels to the measurements:
-    for( unsigned int i = 0; i < measurement_list.size(); ++i) {
+    for(auto & measurement : measurement_list) {
 
-      HistFactory::Measurement& measurement = measurement_list.at(i);
-
-      for( unsigned int j = 0; j < channel_list.size(); ++j ) {
-	measurement.GetChannels().push_back( channel_list.at(j) );
+      for(auto & j : channel_list) {
+	measurement.GetChannels().push_back( j );
       }
     }
   }
@@ -366,8 +363,8 @@ HistFactory::Measurement ConfigParser::CreateMeasurementFromDriverNode( TXMLNode
 	    throw hf_exc();
 	  }
 	  std::vector<std::string> child_nodes = GetChildrenFromString(child->GetText());
-	  for(unsigned int i = 0; i < child_nodes.size(); ++i) {
-	    measurement.SetParamValue( child_nodes.at(i), val);
+	  for(auto & child_node : child_nodes) {
+	    measurement.SetParamValue( child_node, val);
 	  }
 	  // AddStringValPairToMap( measurement.GetParamValues(), val, child->GetText() );
 	}
@@ -486,30 +483,30 @@ HistFactory::Measurement ConfigParser::CreateMeasurementFromDriverNode( TXMLNode
       }
 
       if (type=="Gamma" && rel!=0) {
-	for (vector<string>::const_iterator it=syst.begin(); it!=syst.end(); ++it) {
+	for (const auto & it : syst) {
 	  // Fix Here...?
-	  measurement.GetGammaSyst()[(*it).c_str()] = rel;
+	  measurement.GetGammaSyst()[it.c_str()] = rel;
 	}
       }
 	
       if (type=="Uniform" && rel!=0) {
-	for (vector<string>::const_iterator it=syst.begin(); it!=syst.end(); ++it) {
+	for (const auto & it : syst) {
 	  // Fix Here...?
-	  measurement.GetUniformSyst()[(*it).c_str()] = rel;
+	  measurement.GetUniformSyst()[it.c_str()] = rel;
 	}
       }
 	
       if (type=="LogNormal" && rel!=0) {
-	for (vector<string>::const_iterator it=syst.begin(); it!=syst.end(); ++it) {
+	for (const auto & it : syst) {
 	  // Fix Here...?
-	  measurement.GetLogNormSyst()[(*it).c_str()] = rel;
+	  measurement.GetLogNormSyst()[it.c_str()] = rel;
 	}
       }
 	
       if (type=="NoConstraint") {
-	for (vector<string>::const_iterator it=syst.begin(); it!=syst.end(); ++it) {
+	for (const auto & it : syst) {
 	  // Fix Here...?
-	  measurement.GetNoSyst()[(*it).c_str()] = 1.0; // MB : dummy value
+	  measurement.GetNoSyst()[it.c_str()] = 1.0; // MB : dummy value
 	}
       }
     } // End adding of Constraint terms

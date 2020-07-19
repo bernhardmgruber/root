@@ -100,9 +100,9 @@ void RooStudyPackage::driver(Int_t nExperiments)
 
 void RooStudyPackage::initialize() 
 {
-  for (list<RooAbsStudy*>::iterator iter=_studies.begin() ; iter!=_studies.end() ; ++iter) {
-    (*iter)->attach(*_ws) ;
-    (*iter)->initialize() ;
+  for (auto & _studie : _studies) {
+    _studie->attach(*_ws) ;
+    _studie->initialize() ;
   }
 
 }
@@ -128,8 +128,8 @@ void RooStudyPackage::run(Int_t nExperiments)
 
 void RooStudyPackage::runOne() 
 {
-  for (list<RooAbsStudy*>::iterator iter=_studies.begin() ; iter!=_studies.end() ; ++iter) {
-    (*iter)->execute() ;
+  for (auto & _studie : _studies) {
+    _studie->execute() ;
   }    
 }
 
@@ -141,8 +141,8 @@ void RooStudyPackage::runOne()
 
 void RooStudyPackage::finalize() 
 {   
-  for (list<RooAbsStudy*>::iterator iter=_studies.begin() ; iter!=_studies.end() ; ++iter) {
-    (*iter)->finalize() ;
+  for (auto & _studie : _studies) {
+    _studie->finalize() ;
   }
 }
 
@@ -153,18 +153,18 @@ void RooStudyPackage::finalize()
 
 void RooStudyPackage::exportData(TList* olist, Int_t seqno)
 {
-  for (list<RooAbsStudy*>::iterator iter=_studies.begin() ; iter!=_studies.end() ; ++iter) {
+  for (auto & _studie : _studies) {
 
-    (*iter)->finalize() ;
+    _studie->finalize() ;
 
-    RooDataSet* summaryData = (*iter)->summaryData() ;
+    RooDataSet* summaryData = _studie->summaryData() ;
     if (summaryData) {
       summaryData->SetName(Form("%s_%d",summaryData->GetName(),seqno)) ;
       cout << "registering summary dataset: " ; summaryData->Print() ;
       olist->Add(summaryData) ;
     }
 
-    RooLinkedList* detailedData = (*iter)->detailedData() ;
+    RooLinkedList* detailedData = _studie->detailedData() ;
     if (detailedData && detailedData->GetSize()>0) {
 
       detailedData->SetName(Form("%s_%d",detailedData->GetName(),seqno)) ;
@@ -177,7 +177,7 @@ void RooStudyPackage::exportData(TList* olist, Int_t seqno)
       }
       delete diter ;
       olist->Add(detailedData) ;
-      (*iter)->releaseDetailData() ;
+      _studie->releaseDetailData() ;
     }
   }        
 }

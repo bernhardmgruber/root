@@ -87,12 +87,12 @@ void TEvePolygonSetProjectedGL::DrawOutline() const
       }
 
       glBegin(GL_LINES);
-      for (std::map<Edge_t, Int_t>::iterator i = edges.begin(); i != edges.end(); ++i)
+      for (auto & edge : edges)
       {
-         if (i->second == 1)
+         if (edge.second == 1)
          {
-            glVertex3fv(fM->fPnts[i->first.fI].Arr());
-            glVertex3fv(fM->fPnts[i->first.fJ].Arr());
+            glVertex3fv(fM->fPnts[edge.first.fI].Arr());
+            glVertex3fv(fM->fPnts[edge.first.fJ].Arr());
             done_p = kTRUE;
          }
       }

@@ -559,12 +559,12 @@ void TEveCalo2D::SetProjection(TEveProjectionManager* mng, TEveProjectable* mode
 void TEveCalo2D::BuildCellIdCache()
 {
    // clear old cache
-   for (vBinCells_i it = fCellLists.begin(); it != fCellLists.end(); it++)
+   for (auto & fCellList : fCellLists)
    {
-      if (*it)
+      if (fCellList)
       {
-         (*it)->clear();
-         delete *it;
+         fCellList->clear();
+         delete fCellList;
       }
    }
    fCellLists.clear();
@@ -630,9 +630,9 @@ void TEveCalo2D::BuildCellIdCache()
          if (cids)
          {
             sumE = 0; sumEt = 0;
-            for (TEveCaloData::vCellId_i it = cids->begin(); it != cids->end(); it++)
+            for (auto & cid : *cids)
             {
-               fData->GetCellData(*it, cellData);
+               fData->GetCellData(cid, cellData);
                sumE  += cellData.Value(kFALSE);
                sumEt += cellData.Value(kTRUE);
             }
@@ -664,12 +664,12 @@ void TEveCalo2D::CellSelectionChangedInternal(TEveCaloData::vCellId_t& inputCell
    const TAxis* axis = isRPhi ? fData->GetPhiBins() :  fData->GetEtaBins();
 
    // clear old cache
-   for (vBinCells_i it = outputCellLists.begin(); it != outputCellLists.end(); it++)
+   for (auto & outputCellList : outputCellLists)
    {
-      if (*it)
+      if (outputCellList)
       {
-         (*it)->clear();
-         delete *it;
+         outputCellList->clear();
+         delete outputCellList;
       }
    }
    outputCellLists.clear();
@@ -684,16 +684,16 @@ void TEveCalo2D::CellSelectionChangedInternal(TEveCaloData::vCellId_t& inputCell
       if (!idsInBin)
          continue;
 
-      for (TEveCaloData::vCellId_i i = idsInBin->begin(); i != idsInBin->end(); i++)
+      for (auto & i : *idsInBin)
       {
-         for (TEveCaloData::vCellId_i j = inputCells.begin(); j != inputCells.end(); j++)
+         for (auto & inputCell : inputCells)
          {
-            if( (*i).fTower == (*j).fTower && (*i).fSlice == (*j).fSlice)
+            if( i.fTower == inputCell.fTower && i.fSlice == inputCell.fSlice)
             {
                if (!outputCellLists[bin])
                   outputCellLists[bin] = new TEveCaloData::vCellId_t();
 
-               outputCellLists[bin]->push_back(TEveCaloData::CellId_t((*i).fTower, (*i).fSlice, (*i).fFraction));
+               outputCellLists[bin]->push_back(TEveCaloData::CellId_t(i.fTower, i.fSlice, i.fFraction));
             }
          }
       }

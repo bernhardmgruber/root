@@ -68,10 +68,9 @@ namespace GenAlgoOptUtil {
 
    void GenAlgoOptions::PrintAllDefault(std::ostream & os) {
       const OptionsMap & gOpts = GenAlgoOptUtil::gAlgoOptions;
-      for (  OptionsMap::const_iterator pos = gOpts.begin();
-          pos != gOpts.end(); ++pos) {
-            os << "Default specific options for algorithm "  << pos->first << " : " << std::endl;
-            (pos->second).Print(os);
+      for (const auto & gOpt : gOpts) {
+            os << "Default specific options for algorithm "  << gOpt.first << " : " << std::endl;
+            (gOpt.second).Print(os);
       }
    }
 

@@ -208,7 +208,7 @@ TStreamerElement::TStreamerElement()
    fFactor      = 0;
    fXmin        = 0;
    fXmax        = 0;
-   for (Int_t i=0;i<5;i++) fMaxIndex[i] = 0;
+   for (int & i : fMaxIndex) i = 0;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -238,7 +238,7 @@ TStreamerElement::TStreamerElement(const char *name, const char *title, Int_t of
    fFactor      = 0;
    fXmin        = 0;
    fXmax        = 0;
-   for (Int_t i=0;i<5;i++) fMaxIndex[i] = 0;
+   for (int & i : fMaxIndex) i = 0;
    if (fTypeName == "Float16_t" || fTypeName == "Float16_t*") {
       GetRange(title,fXmin,fXmax,fFactor);
       if (fFactor > 0 || fXmin > 0) SetBit(kHasRange);

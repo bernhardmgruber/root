@@ -297,8 +297,8 @@ void TGLFormat::InitAvailableSamples()
 #endif
 
    fgAvailableSamples.reserve(ns_set.size());
-   for (std::set<Int_t>::iterator i = ns_set.begin(); i != ns_set.end(); ++i)
+   for (int i : ns_set)
    {
-      fgAvailableSamples.push_back(*i);
+      fgAvailableSamples.push_back(i);
    }
 }

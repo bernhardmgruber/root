@@ -2006,8 +2006,8 @@ void TGX11::SetClipOFF(int wid)
    gTws       = &fWindows[wid];
    gTws->fClip = 0;
 
-   for (int i = 0; i < kMAXGC; i++)
-      XSetClipMask( (Display*)fDisplay, gGClist[i], None );
+   for (auto & i : gGClist)
+      XSetClipMask( (Display*)fDisplay, i, None );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -2032,8 +2032,8 @@ void TGX11::SetClipRegion(int wid, int x, int y, unsigned int w, unsigned int h)
       region.y      = gTws->fYclip;
       region.width  = gTws->fWclip;
       region.height = gTws->fHclip;
-      for (int i = 0; i < kMAXGC; i++)
-         XSetClipRectangles((Display*)fDisplay, gGClist[i], 0, 0, &region, 1, YXBanded);
+      for (auto & i : gGClist)
+         XSetClipRectangles((Display*)fDisplay, i, 0, 0, &region, 1, YXBanded);
    }
 }
 
@@ -2141,7 +2141,7 @@ void TGX11::SetDoubleBufferON()
       XFillRectangle((Display*)fDisplay, gTws->fBuffer, *gGCpxmp, 0, 0, gTws->fWidth, gTws->fHeight);
       SetColor(gGCpxmp, 1);
    }
-   for (int i = 0; i < kMAXGC; i++) XSetClipMask((Display*)fDisplay, gGClist[i], None);
+   for (auto & i : gGClist) XSetClipMask((Display*)fDisplay, i, None);
    gTws->fDoubleBuffer  = 1;
    gTws->fDrawing       = gTws->fBuffer;
 }

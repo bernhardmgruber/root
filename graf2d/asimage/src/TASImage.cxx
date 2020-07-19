@@ -1893,8 +1893,8 @@ void TASImage::SetPalette(const TImagePalette *palette)
    colorize_asimage_vector(fgVisual, fImage, &asPalette, ASA_ASImage, GetImageQuality());
 
    delete [] asPalette.points;
-   for (Int_t col = 0; col < 4; col++)
-      delete [] asPalette.channels[col];
+   for (auto & channel : asPalette.channels)
+      delete [] channel;
 
 
    delete fScaledImage;

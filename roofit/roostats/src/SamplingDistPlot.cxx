@@ -114,12 +114,12 @@ Double_t SamplingDistPlot::AddSamplingDistribution(const SamplingDistribution *s
 
    Double_t xmin(TMath::Infinity()), xmax(-TMath::Infinity());
    // remove cases where xmin and xmax are +/- inf
-   for( unsigned int i=0; i < fSamplingDistr.size(); i++ ) {
-      if( fSamplingDistr[i] < xmin  &&  fSamplingDistr[i] != -TMath::Infinity() ) {
-         xmin = fSamplingDistr[i];
+   for(double i : fSamplingDistr) {
+      if( i < xmin  &&  i != -TMath::Infinity() ) {
+         xmin = i;
       }
-      if( fSamplingDistr[i] > xmax  &&  fSamplingDistr[i] != TMath::Infinity() ) {
-         xmax = fSamplingDistr[i];
+      if( i > xmax  &&  i != TMath::Infinity() ) {
+         xmax = i;
       }
    }
    if( xmin >= xmax ) {

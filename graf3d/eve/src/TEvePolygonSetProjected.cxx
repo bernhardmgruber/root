@@ -190,9 +190,8 @@ Float_t TEvePolygonSetProjected::AddPolygon(std::list<Int_t>& pp, vpPolygon_t& p
    if (pp.size() <= 2) return 0;
 
    Float_t bbox[4] = { 1e6, -1e6, 1e6, -1e6 };
-   for (std::list<Int_t>::iterator u = pp.begin(); u != pp.end(); ++u)
+   for (int idx : pp)
    {
-      Int_t idx = *u;
       if (fPnts[idx].fX < bbox[0]) bbox[0] = fPnts[idx].fX;
       if (fPnts[idx].fX > bbox[1]) bbox[1] = fPnts[idx].fX;
 
@@ -203,10 +202,8 @@ Float_t TEvePolygonSetProjected::AddPolygon(std::list<Int_t>& pp, vpPolygon_t& p
    if ((bbox[1]-bbox[0]) < eps || (bbox[3]-bbox[2]) < eps) return 0;
 
    // Duplication
-   for (vpPolygon_i poi = pols.begin(); poi != pols.end(); ++poi)
+   for (auto & refP : pols)
    {
-      Polygon_t& refP = *poi;
-
       if ((Int_t) pp.size() != refP.fNPnts)
          continue;
 
@@ -245,9 +242,9 @@ Float_t TEvePolygonSetProjected::AddPolygon(std::list<Int_t>& pp, vpPolygon_t& p
 
    Int_t *pv    = new Int_t[pp.size()];
    Int_t  count = 0;
-   for (std::list<Int_t>::iterator u = pp.begin(); u != pp.end(); ++u)
+   for (int & u : pp)
    {
-      pv[count] = *u;
+      pv[count] = u;
       ++count;
    }
 
@@ -289,10 +286,10 @@ Float_t TEvePolygonSetProjected::MakePolygonsFromBP(Int_t* idxMap)
       for (UInt_t s = 1; s < segN; ++s)
          segs.push_back(Seg_t(fBuff->fSegs[3*seg[s] + 1],fBuff->fSegs[3*seg[s] + 2]));
 
-      for (LSegIt_t it = segs.begin(); it != segs.end(); ++it)
+      for (auto & seg : segs)
       {
-         Int_t mv1 = idxMap[(*it).fV1];
-         Int_t mv2 = idxMap[(*it).fV2];
+         Int_t mv1 = idxMap[seg.fV1];
+         Int_t mv2 = idxMap[seg.fV2];
 
          if ( ! projection->AcceptSegment(fPnts[mv1], fPnts[mv2], TEveProjection::fgEps))
          {
@@ -454,15 +451,15 @@ void TEvePolygonSetProjected::DumpPolys() const
 {
    printf("TEvePolygonSetProjected %d polygons\n", (Int_t)fPols.size());
    Int_t cnt = 0;
-   for (vpPolygon_ci i = fPols.begin(); i!= fPols.end(); i++)
+   for (const auto & fPol : fPols)
    {
-      Int_t nPnts = (*i).fNPnts;
+      Int_t nPnts = fPol.fNPnts;
       printf("Points of polygon %d [Np = %d]:\n", ++cnt, nPnts);
       for (Int_t vi = 0; vi<nPnts; ++vi) {
-         Int_t pi = (*i).fPnts[vi];
+         Int_t pi = fPol.fPnts[vi];
          printf("  (%f, %f, %f)", fPnts[pi].fX, fPnts[pi].fY, fPnts[pi].fZ);
       }
-      printf(", surf=%f\n", PolygonSurfaceXY(*i));
+      printf(", surf=%f\n", PolygonSurfaceXY(fPol));
    }
 }
 

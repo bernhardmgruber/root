@@ -124,8 +124,8 @@ RooWorkspace* RooStats::HistFactory::MakeModelAndMeasurementFast( RooStats::Hist
     std::ostringstream parameterMessage;
     parameterMessage << "fixing the following parameters:"  << std::endl;
 
-    for(std::vector<std::string>::iterator itr=measurement.GetConstantParams().begin(); itr!=measurement.GetConstantParams().end(); ++itr){
-      parameterMessage << "   " << *itr << '\n';
+    for(auto & itr : measurement.GetConstantParams()){
+      parameterMessage << "   " << itr << '\n';
     }
     cxcoutIHF << parameterMessage.str();
 

@@ -315,21 +315,21 @@ static int BuildScopeProxyDict(Cppyy::TCppScope_t scope, PyObject* pyclass, cons
 
 // add the methods to the class dictionary
     PyObject* dct = PyObject_GetAttr(pyclass, PyStrings::gDict);
-    for (CallableCache_t::iterator imd = cache.begin(); imd != cache.end(); ++imd) {
+    for (auto & imd : cache) {
     // in order to prevent removing templated editions of this method (which were set earlier,
     // above, as a different proxy object), we'll check and add this method flagged as a generic
     // one (to be picked up by the templated one as appropriate) if a template exists
-        PyObject* pyname = CPyCppyy_PyText_FromString(const_cast<char*>(imd->first.c_str()));
+        PyObject* pyname = CPyCppyy_PyText_FromString(const_cast<char*>(imd.first.c_str()));
         PyObject* attr = PyObject_GetItem(dct, pyname);
         Py_DECREF(pyname);
         if (TemplateProxy_Check(attr)) {
         // template exists, supply it with the non-templated method overloads
-            for (auto cit : imd->second)
+            for (auto cit : imd.second)
                 ((TemplateProxy*)attr)->AdoptMethod(cit);
         } else {
             if (!attr) PyErr_Clear();
         // normal case, add a new method
-            CPPOverload* method = CPPOverload_New(imd->first, imd->second);
+            CPPOverload* method = CPPOverload_New(imd.first, imd.second);
             PyObject* pymname = CPyCppyy_PyText_InternFromString(const_cast<char*>(method->GetName().c_str()));
             PyType_Type.tp_setattro(pyclass, pymname, (PyObject*)method);
             Py_DECREF(pymname);

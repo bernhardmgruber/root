@@ -1740,7 +1740,7 @@ void TPostScript::Initialize()
    rpxmin = rpymin = width = heigth = 0;
    Int_t format;
    fNpages=1;
-   for (Int_t i=0;i<32;i++) fPatterns[i]=0;
+   for (char & fPattern : fPatterns) fPattern=0;
 
    // Mode is last digit of PostScript Workstation type
    //    mode=1,2 for portrait/landscape black and white

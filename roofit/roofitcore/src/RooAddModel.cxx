@@ -275,13 +275,11 @@ RooResolutionModel* RooAddModel::convolution(RooFormulaVar* inBasis, RooAbsArg* 
   }
     
   RooAddModel* convSum = new RooAddModel(newName,newTitle,modelList,theCoefList,kTRUE) ;
-  for (std::set<std::string>::const_iterator attrIt = _boolAttrib.begin();
-      attrIt != _boolAttrib.end(); ++attrIt) {
-    convSum->setAttribute((*attrIt).c_str()) ;
+  for (const auto & attrIt : _boolAttrib) {
+    convSum->setAttribute(attrIt.c_str()) ;
   }
-  for (std::map<std::string,std::string>::const_iterator attrIt = _stringAttrib.begin();
-      attrIt != _stringAttrib.end(); ++attrIt) {
-    convSum->setStringAttribute((attrIt->first).c_str(), (attrIt->second).c_str()) ;
+  for (const auto & attrIt : _stringAttrib) {
+    convSum->setStringAttribute((attrIt.first).c_str(), (attrIt.second).c_str()) ;
   }
   convSum->changeBasis(inBasis) ;
   return convSum ;

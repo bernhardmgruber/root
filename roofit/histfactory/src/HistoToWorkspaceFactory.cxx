@@ -251,23 +251,23 @@ namespace HistFactory{
     string prodNames;
     vector<EstimateSummary::NormFactor> norm=es.normFactor;
     if(norm.size()){
-      for(vector<EstimateSummary::NormFactor>::iterator itr=norm.begin(); itr!=norm.end(); ++itr){
-        cout << "making normFactor: " << itr->name << endl;
+      for(auto & itr : norm){
+        cout << "making normFactor: " << itr.name << endl;
         // remove "doRatio" and name can be changed when ws gets imported to the combined model.
         std::stringstream range;
-        range<<"["<<itr->val<<","<<itr->low<<","<<itr->high<<"]";
+        range<<"["<<itr.val<<","<<itr.low<<","<<itr.high<<"]";
         //RooRealVar* var = 0;
 
         string varname;
         if(!prodNames.empty()) prodNames+=",";
         if(doRatio) {
-          varname=itr->name+"_"+channel;
+          varname=itr.name+"_"+channel;
         }
         else {
-          varname=itr->name;
+          varname=itr.name;
         }
 	proto->factory((varname+range.str()).c_str());
-	if(itr->constant){
+	if(itr.constant){
 	  //	  proto->var(varname.c_str())->setConstant();
 	  //	  cout <<"setting " << varname << " constant"<<endl;
 	  cout <<"WARNING: Const attribute to <NormFactor> tag is deprecated, will ignore."<<
@@ -299,25 +299,25 @@ namespace HistFactory{
     //bool first=true;
     RooArgSet params(prefix.c_str());
     vector<double> lowVec, highVec;
-    for(map<string,pair<double,double> >::iterator it=systMap.begin(); it!=systMap.end(); ++it){
+    for(auto & it : systMap){
       // add efficiency term
-      RooRealVar* temp = (RooRealVar*) proto->var((prefix+ it->first).c_str());
+      RooRealVar* temp = (RooRealVar*) proto->var((prefix+ it.first).c_str());
       if(!temp){
-        temp = (RooRealVar*) proto->factory((prefix+ it->first +range).c_str());
+        temp = (RooRealVar*) proto->factory((prefix+ it.first +range).c_str());
 
-        string command=("Gaussian::"+prefix+it->first+"Constraint("+prefix+it->first+",nom_"+prefix+it->first+"[0.,-10,10],1.)");
+        string command=("Gaussian::"+prefix+it.first+"Constraint("+prefix+it.first+",nom_"+prefix+it.first+"[0.,-10,10],1.)");
         cout << command << endl;
         likelihoodTermNames.push_back(  proto->factory( command.c_str() )->GetName() );
-	proto->var(("nom_"+prefix+it->first).c_str())->setConstant();
-	const_cast<RooArgSet*>(proto->set("globalObservables"))->add(*proto->var(("nom_"+prefix+it->first).c_str()));
+	proto->var(("nom_"+prefix+it.first).c_str())->setConstant();
+	const_cast<RooArgSet*>(proto->set("globalObservables"))->add(*proto->var(("nom_"+prefix+it.first).c_str()));
 
       } 
       params.add(*temp);
 
       // add constraint in terms of bifrucated gauss with low/high as sigmas
       std::stringstream lowhigh;
-      double low = it->second.first; 
-      double high = it->second.second;
+      double low = it.second.first; 
+      double high = it.second.second;
       lowVec.push_back(low);
       highVec.push_back(high);
       
@@ -817,17 +817,17 @@ namespace HistFactory{
 
     //////////////////////////////////////
     // fix specified parameters
-    for(unsigned int i=0; i<systToFix.size(); ++i){
-      RooRealVar* temp = proto->var((systToFix.at(i)).c_str());
+    for(auto & i : systToFix){
+      RooRealVar* temp = proto->var(i.c_str());
       if(temp) temp->setConstant();
-      else cout << "could not find variable " << systToFix.at(i) << " could not set it to constant" << endl;
+      else cout << "could not find variable " << i << " could not set it to constant" << endl;
     }
 
     //////////////////////////////////////
     // final proto model
-    for(unsigned int i=0; i<likelihoodTermNames.size(); ++i){
+    for(auto & likelihoodTermName : likelihoodTermNames){
       //    cout << likelihoodTermNames[i] << endl;
-      likelihoodTerms.add(* (proto->arg(likelihoodTermNames[i].c_str())) );
+      likelihoodTerms.add(* (proto->arg(likelihoodTermName.c_str())) );
     }
     //  likelihoodTerms.Print();
 
@@ -933,14 +933,14 @@ namespace HistFactory{
     //combined->import(*simPdf, RenameVariable("SigXsecOverSM","SigXsecOverSM_comb"));
     cout << "check pointer " << simPdf << endl;
 
-    for(unsigned int i=0; i<fSystToFix.size(); ++i){
+    for(auto & i : fSystToFix){
       // make sure they are fixed
-      RooRealVar* temp = combined->var((fSystToFix.at(i)).c_str());
+      RooRealVar* temp = combined->var(i.c_str());
       if(temp) {
         temp->setConstant();
-        cout <<"setting " << fSystToFix.at(i) << " constant" << endl;
+        cout <<"setting " << i << " constant" << endl;
       }
-      else cout << "could not find variable " << fSystToFix.at(i) << " could not set it to constant" << endl;
+      else cout << "could not find variable " << i << " could not set it to constant" << endl;
     }
 
     ///
@@ -1116,11 +1116,11 @@ void HistoToWorkspaceFactory::FormatFrameForLikelihood(RooPlot* frame, string /*
     if(! file) return file;
     string path="";
     TDirectory* ptr=0;
-    for(vector<string>::iterator itr=names.begin(); itr != names.end(); ++itr){
+    for(auto & name : names){
       if( ! path.empty() ) path+="/";
-      path+=(*itr);
+      path+=name;
       ptr=file->GetDirectory(path.c_str());
-      if( ! ptr ) ptr=file->mkdir((*itr).c_str());
+      if( ! ptr ) ptr=file->mkdir(name.c_str());
       file=file->GetDirectory(path.c_str());
     }
     return ptr;

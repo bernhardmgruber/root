@@ -222,11 +222,11 @@ BatchData::Map_t::const_iterator BatchData::findEnclosingBatch(std::size_t evt,
 /// \return RooSpan pointing inside an existing batch or an empty span if no such batch.
 RooSpan<const double> BatchData::createSpanInsideExistingBatch(std::size_t begin, std::size_t batchSize,
     const RooArgSet* const normSet, Tag_t ownerTag) const {
-  for (auto it = _ownedBatches.cbegin(); it != _ownedBatches.cend(); ++it) {
-    if (normSet == std::get<1>(it->first)
-        && ownerTag == std::get<2>(it->first)
-        && it->second.inBatch(begin))
-      return it->second.makeSpan(begin, batchSize);
+  for (const auto & _ownedBatche : _ownedBatches) {
+    if (normSet == std::get<1>(_ownedBatche.first)
+        && ownerTag == std::get<2>(_ownedBatche.first)
+        && _ownedBatche.second.inBatch(begin))
+      return _ownedBatche.second.makeSpan(begin, batchSize);
   }
 
   return {};

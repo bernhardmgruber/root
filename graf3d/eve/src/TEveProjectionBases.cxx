@@ -64,10 +64,10 @@ TEveProjectable::~TEveProjectable()
 
 void TEveProjectable::AnnihilateProjecteds()
 {
-   for (ProjList_i i=fProjectedList.begin(); i!=fProjectedList.end(); ++i)
+   for (auto & i : fProjectedList)
    {
-      (*i)->UnRefProjectable(this, kFALSE);
-      (*i)->GetProjectedAsElement()->Annihilate();
+      i->UnRefProjectable(this, kFALSE);
+      i->GetProjectedAsElement()->Annihilate();
    }
    fProjectedList.clear();
 }
@@ -85,9 +85,9 @@ void TEveProjectable::ClearProjectedList()
 
 void TEveProjectable::AddProjectedsToSet(std::set<TEveElement*>& set)
 {
-   for (ProjList_i i=fProjectedList.begin(); i!=fProjectedList.end(); ++i)
+   for (auto & i : fProjectedList)
    {
-      set.insert((*i)->GetProjectedAsElement());
+      set.insert(i->GetProjectedAsElement());
    }
 }
 
@@ -101,9 +101,9 @@ void TEveProjectable::PropagateVizParams(TEveElement* el)
    if (el == 0)
       el = dynamic_cast<TEveElement*>(this);
 
-   for (ProjList_i i=fProjectedList.begin(); i!=fProjectedList.end(); ++i)
+   for (auto & i : fProjectedList)
    {
-      (*i)->GetProjectedAsElement()->CopyVizParams(el);
+      i->GetProjectedAsElement()->CopyVizParams(el);
    }
 }
 
@@ -112,10 +112,10 @@ void TEveProjectable::PropagateVizParams(TEveElement* el)
 
 void TEveProjectable::PropagateRenderState(Bool_t rnr_self, Bool_t rnr_children)
 {
-   for (ProjList_i i=fProjectedList.begin(); i!=fProjectedList.end(); ++i)
+   for (auto & i : fProjectedList)
    {
-      if ((*i)->GetProjectedAsElement()->SetRnrSelfChildren(rnr_self, rnr_children))
-         (*i)->GetProjectedAsElement()->ElementChanged();
+      if (i->GetProjectedAsElement()->SetRnrSelfChildren(rnr_self, rnr_children))
+         i->GetProjectedAsElement()->ElementChanged();
    }
 }
 
@@ -124,10 +124,10 @@ void TEveProjectable::PropagateRenderState(Bool_t rnr_self, Bool_t rnr_children)
 
 void TEveProjectable::PropagateMainColor(Color_t color, Color_t old_color)
 {
-   for (ProjList_i i=fProjectedList.begin(); i!=fProjectedList.end(); ++i)
+   for (auto & i : fProjectedList)
    {
-      if ((*i)->GetProjectedAsElement()->GetMainColor() == old_color)
-         (*i)->GetProjectedAsElement()->SetMainColor(color);
+      if (i->GetProjectedAsElement()->GetMainColor() == old_color)
+         i->GetProjectedAsElement()->SetMainColor(color);
    }
 }
 
@@ -137,10 +137,10 @@ void TEveProjectable::PropagateMainColor(Color_t color, Color_t old_color)
 
 void TEveProjectable::PropagateMainTransparency(Char_t t, Char_t old_t)
 {
-   for (ProjList_i i=fProjectedList.begin(); i!=fProjectedList.end(); ++i)
+   for (auto & i : fProjectedList)
    {
-      if ((*i)->GetProjectedAsElement()->GetMainTransparency() == old_t)
-         (*i)->GetProjectedAsElement()->SetMainTransparency(t);
+      if (i->GetProjectedAsElement()->GetMainTransparency() == old_t)
+         i->GetProjectedAsElement()->SetMainTransparency(t);
    }
 }
 

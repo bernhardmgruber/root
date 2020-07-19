@@ -730,9 +730,9 @@ void TPerfStats::Setup(TList *input)
    const char *tags[ntags] = {"StatsHist", "StatsTrace", "SlaveStatsTrace"};
 
    TString varname, parname;
-   for (Int_t i=0; i<ntags; i++) {
-      varname.Form("Proof.%s", tags[i]);
-      parname.Form("PROOF_%s", tags[i]);
+   for (auto & tag : tags) {
+      varname.Form("Proof.%s", tag);
+      parname.Form("PROOF_%s", tag);
       if (!input->FindObject(parname))
          if (gEnv->GetValue(varname, 0)) input->Add(new TNamed(parname.Data(),""));
    }

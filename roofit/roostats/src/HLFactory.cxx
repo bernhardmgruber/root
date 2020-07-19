@@ -493,8 +493,8 @@ int HLFactory::fReadFile(const char*fileName, bool is_included){
             }
 
         // Spaces and tabs at this point are not needed.
-        for (int i=0;i<nNeutrals;++i)
-            line.ReplaceAll(neutrals[i],"");
+        for (const auto & neutral : neutrals)
+            line.ReplaceAll(neutral,"");
 
 
         if (fVerbose) Info("fReadFile","Reading --> %s <--", line.Data());

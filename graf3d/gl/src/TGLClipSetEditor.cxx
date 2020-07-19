@@ -90,11 +90,11 @@ TGLClipSetSubEditor::TGLClipSetSubEditor(const TGWindow *p) :
    fClipEdit->Connect("Clicked()", "TGLClipSetSubEditor", this, "UpdateViewerClip()");
    fClipShow->Connect("Clicked()", "TGLClipSetSubEditor", this, "UpdateViewerClip()");
 
-   for (Int_t i = 0; i < 4; ++i)
-      fPlaneProp[i]->Connect("ValueSet(Long_t)", "TGLClipSetSubEditor", this, "ClipValueChanged()");
+   for (auto & i : fPlaneProp)
+      i->Connect("ValueSet(Long_t)", "TGLClipSetSubEditor", this, "ClipValueChanged()");
 
-   for (Int_t i = 0; i < 6; ++i)
-      fBoxProp[i]->Connect("ValueSet(Long_t)", "TGLClipSetSubEditor", this, "ClipValueChanged()");
+   for (auto & i : fBoxProp)
+      i->Connect("ValueSet(Long_t)", "TGLClipSetSubEditor", this, "ClipValueChanged()");
 
    fApplyButton->Connect("Pressed()", "TGLClipSetSubEditor", this, "UpdateViewerClip()");
    fResetButton->Connect("Pressed()", "TGLClipSetSubEditor", this, "ResetViewerClip()");

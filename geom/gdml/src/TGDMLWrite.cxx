@@ -811,13 +811,13 @@ XMLNodePointer_t TGDMLWrite::CreateElementN(TGeoElement * element, XMLNodePointe
          fGdmlE->AddChild(materials, isoNode);
       }
       //loop through asoc array of isotopes
-      for (NameListI::iterator itr = wCounter.begin(); itr != wCounter.end(); ++itr) {
-         if (itr->second > 1) {
+      for (auto & itr : wCounter) {
+         if (itr.second > 1) {
             Info("CreateMixtureN", "WARNING! 2 equal isotopes in one element. Check: %s isotope of %s element",
-                 itr->first.Data(), name);
+                 itr.first.Data(), name);
          }
          //add fraction child to element with reference to isotope
-         fGdmlE->AddChild(mainN, CreateFractionN(wPercentage[itr->first], itr->first.Data()));
+         fGdmlE->AddChild(mainN, CreateFractionN(wPercentage[itr.first], itr.first.Data()));
       }
    } else {
       fGdmlE->NewAttr(mainN, nullptr, "formula", element->GetName());
@@ -872,13 +872,13 @@ XMLNodePointer_t TGDMLWrite::CreateMixtureN(TGeoMixture * mixture, XMLNodePointe
       fGdmlE->AddChild(materials, elmNode);
    }
    //loop through asoc array
-   for (NameListI::iterator itr = wCounter.begin(); itr != wCounter.end(); ++itr) {
-      if (itr->second > 1) {
+   for (auto & itr : wCounter) {
+      if (itr.second > 1) {
          Info("CreateMixtureN", "WARNING! 2 equal elements in one material. Check: %s element of %s material",
-              itr->first.Data(), mname.Data());
+              itr.first.Data(), mname.Data());
       }
       //add fraction child to material with reference to element
-      fGdmlE->AddChild(mainN, CreateFractionN(wPercentage[itr->first], itr->first.Data()));
+      fGdmlE->AddChild(mainN, CreateFractionN(wPercentage[itr.first], itr.first.Data()));
    }
 
    // Write properties

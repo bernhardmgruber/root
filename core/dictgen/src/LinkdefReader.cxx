@@ -705,8 +705,8 @@ public:
             }
             std::string verStr(number.getLiteralData(), number.getLength());
             bool noDigit       = false;
-            for (std::string::size_type i = 0; i < verStr.size(); ++i)
-               if (!isdigit(verStr[i])) noDigit = true;
+            for (char i : verStr)
+               if (!isdigit(i)) noDigit = true;
 
             if (noDigit) {
                std::cerr << "Error: Malformed version option! \"" << verStr << "\" is not a non-negative number!";

@@ -151,8 +151,8 @@ void TMVA::HuberLossFunction::SetTransitionPoint(std::vector<LossFunctionEventIn
    // the quantile was chosen too low. Let's use the first nonzero residual as the transition point instead.
    if(fTransitionPoint == 0){
       // evs should already be sorted according to the magnitude of the residuals, since CalculateQuantile does this
-      for(UInt_t i=0; i<evs.size(); i++){
-         Double_t residual = TMath::Abs(evs[i].trueValue - evs[i].predictedValue);
+      for(auto & ev : evs){
+         Double_t residual = TMath::Abs(ev.trueValue - ev.predictedValue);
          if(residual != 0){
             fTransitionPoint = residual;
             break;
@@ -207,8 +207,8 @@ Double_t TMVA::HuberLossFunction::CalculateNetLoss(std::vector<LossFunctionEvent
    SetTransitionPoint(evs);
 
    Double_t netloss = 0;
-   for(UInt_t i=0; i<evs.size(); i++)
-       netloss+=CalculateLoss(evs[i]);
+   for(auto & ev : evs)
+       netloss+=CalculateLoss(ev);
    return netloss;
    // should get a function to return the average loss as well
    // return netloss/fSumOfWeights
@@ -225,8 +225,8 @@ Double_t TMVA::HuberLossFunction::CalculateMeanLoss(std::vector<LossFunctionEven
    SetTransitionPoint(evs);
 
    Double_t netloss = 0;
-   for(UInt_t i=0; i<evs.size(); i++)
-       netloss+=CalculateLoss(evs[i]);
+   for(auto & ev : evs)
+       netloss+=CalculateLoss(ev);
    return netloss/fSumOfWeights;
 }
 
@@ -377,8 +377,8 @@ Double_t TMVA::LeastSquaresLossFunction::CalculateLoss(LossFunctionEventInfo& e)
 
 Double_t TMVA::LeastSquaresLossFunction::CalculateNetLoss(std::vector<LossFunctionEventInfo>& evs){
    Double_t netloss = 0;
-   for(UInt_t i=0; i<evs.size(); i++)
-       netloss+=CalculateLoss(evs[i]);
+   for(auto & ev : evs)
+       netloss+=CalculateLoss(ev);
    return netloss;
    // should get a function to return the average loss as well
    // return netloss/fSumOfWeights
@@ -390,9 +390,9 @@ Double_t TMVA::LeastSquaresLossFunction::CalculateNetLoss(std::vector<LossFuncti
 Double_t TMVA::LeastSquaresLossFunction::CalculateMeanLoss(std::vector<LossFunctionEventInfo>& evs){
    Double_t netloss = 0;
    Double_t sumOfWeights = 0;
-   for(UInt_t i=0; i<evs.size(); i++){
-       sumOfWeights+=evs[i].weight;
-       netloss+=CalculateLoss(evs[i]);
+   for(auto & ev : evs){
+       sumOfWeights+=ev.weight;
+       netloss+=CalculateLoss(ev);
    }
    // return the weighted mean
    return netloss/sumOfWeights;
@@ -471,10 +471,10 @@ Double_t TMVA::LeastSquaresLossFunctionBDT::Fit(std::vector<LossFunctionEventInf
 // The fit in the terminal node for least squares is the weighted average of the residuals.
    Double_t sumOfWeights = 0;
    Double_t weightedResidualSum = 0;
-   for(UInt_t j=0;j<evs.size();j++){
-      sumOfWeights += evs[j].weight;
-      Double_t residual = evs[j].trueValue - evs[j].predictedValue;
-      weightedResidualSum += evs[j].weight*residual;
+   for(auto & ev : evs){
+      sumOfWeights += ev.weight;
+      Double_t residual = ev.trueValue - ev.predictedValue;
+      weightedResidualSum += ev.weight*residual;
    }
    Double_t weightedMean = weightedResidualSum/sumOfWeights;
 
@@ -505,8 +505,8 @@ Double_t TMVA::AbsoluteDeviationLossFunction::CalculateLoss(LossFunctionEventInf
 Double_t TMVA::AbsoluteDeviationLossFunction::CalculateNetLoss(std::vector<LossFunctionEventInfo>& evs){
 
    Double_t netloss = 0;
-   for(UInt_t i=0; i<evs.size(); i++)
-       netloss+=CalculateLoss(evs[i]);
+   for(auto & ev : evs)
+       netloss+=CalculateLoss(ev);
    return netloss;
 }
 
@@ -516,9 +516,9 @@ Double_t TMVA::AbsoluteDeviationLossFunction::CalculateNetLoss(std::vector<LossF
 Double_t TMVA::AbsoluteDeviationLossFunction::CalculateMeanLoss(std::vector<LossFunctionEventInfo>& evs){
    Double_t sumOfWeights = 0;
    Double_t netloss = 0;
-   for(UInt_t i=0; i<evs.size(); i++){
-       sumOfWeights+=evs[i].weight;
-       netloss+=CalculateLoss(evs[i]);
+   for(auto & ev : evs){
+       sumOfWeights+=ev.weight;
+       netloss+=CalculateLoss(ev);
    }
    return netloss/sumOfWeights;
 }
@@ -598,8 +598,8 @@ Double_t TMVA::AbsoluteDeviationLossFunctionBDT::Fit(std::vector<LossFunctionEve
 
    // calculate the sum of weights, used in the weighted median calculation
    Double_t sumOfWeights = 0;
-   for(UInt_t j=0; j<evs.size(); j++)
-      sumOfWeights+=evs[j].weight;
+   for(auto & ev : evs)
+      sumOfWeights+=ev.weight;
 
    // get the index of the weighted median
    UInt_t i = 0;

@@ -51,11 +51,10 @@ void RooStats::HistFactory::Asimov::ConfigureWorkspace(RooWorkspace* wspace) {
   //
 
 
-  for( std::map< std::string, double >::iterator itr = fParamValsToSet.begin(); 
-       itr != fParamValsToSet.end(); ++itr) {
+  for(auto & itr : fParamValsToSet) {
 
-    std::string param = itr->first;
-    double val  = itr->second;
+    std::string param = itr.first;
+    double val  = itr.second;
 
     // Try to get the variable in the workspace
     RooRealVar* var = wspace->var(param.c_str());
@@ -89,11 +88,10 @@ void RooStats::HistFactory::Asimov::ConfigureWorkspace(RooWorkspace* wspace) {
   // Then, we set any variables to constant
   //
   
-  for( std::map< std::string, bool >::iterator itr = fParamsToFix.begin(); 
-       itr != fParamsToFix.end(); ++itr) {
+  for(auto & itr : fParamsToFix) {
 
-    std::string param = itr->first;
-    bool isConstant  = itr->second;
+    std::string param = itr.first;
+    bool isConstant  = itr.second;
 
     // Try to get the variable in the workspace
     RooRealVar* var = wspace->var(param.c_str());

@@ -57,9 +57,9 @@ void TEveTrackProjected::SetDepthLocal(Float_t d)
       *p = fDepth;
    }
 
-   for (vPathMark_i pm = fPathMarks.begin(); pm != fPathMarks.end(); ++pm)
+   for (auto & fPathMark : fPathMarks)
    {
-      pm->fV.fZ = fDepth;
+      fPathMark.fV.fZ = fDepth;
    }
 }
 
@@ -194,19 +194,19 @@ void TEveTrackProjected::MakeTrack(Bool_t recurse)
    }
 
    Reset((Int_t)vvec.size());
-   for (std::vector<TEveVector>::iterator i=vvec.begin(); i!=vvec.end(); ++i)
+   for (auto & i : vvec)
    {
       if (fix_y)
-         SetNextPoint((*i).fX, TMath::Sign((*i).fY, sign_y), (*i).fZ);
+         SetNextPoint(i.fX, TMath::Sign(i.fY, sign_y), i.fZ);
       else
-         SetNextPoint((*i).fX, (*i).fY, (*i).fZ);
+         SetNextPoint(i.fX, i.fY, i.fZ);
    }
    delete [] fOrigPnts; fOrigPnts = 0;
 
    // Project path-marks
-   for (vPathMark_i pm = fPathMarks.begin(); pm != fPathMarks.end(); ++pm)
+   for (auto & fPathMark : fPathMarks)
    {
-      projection->ProjectPointdv(trans, pm->fV.Arr(), pm->fV.Arr(), fDepth);
+      projection->ProjectPointdv(trans, fPathMark.fV.Arr(), fPathMark.fV.Arr(), fDepth);
    }
 }
 
@@ -220,13 +220,12 @@ void TEveTrackProjected::PrintLineSegments()
    Int_t segment = 0;
    TEveVector sVec;
    TEveVector bPnt;
-   for (std::vector<Int_t>::iterator bpi = fBreakPoints.begin();
-        bpi != fBreakPoints.end(); ++bpi)
+   for (int & fBreakPoint : fBreakPoints)
    {
-      Int_t size = *bpi - start;
+      Int_t size = fBreakPoint - start;
 
       GetPoint(start, sVec.fX, sVec.fY, sVec.fZ);
-      GetPoint((*bpi)-1, bPnt.fX, bPnt.fY, bPnt.fZ);
+      GetPoint(fBreakPoint-1, bPnt.fX, bPnt.fY, bPnt.fZ);
       printf("seg %d size %d start %d ::(%f, %f, %f) (%f, %f, %f)\n",
              segment, size, start, sVec.fX, sVec.fY, sVec.fZ,
              bPnt.fX, bPnt.fY, bPnt.fZ);

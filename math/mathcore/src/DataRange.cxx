@@ -148,9 +148,9 @@ bool DataRange::IsInside(double x, unsigned int icoord ) const {
 
    if (Size(icoord) == 0) return true;  // no range existing (is like -inf, +inf)
    const RangeSet & ranges = fRanges[icoord];
-   for (RangeSet::const_iterator itr = ranges.begin(); itr != ranges.end(); ++itr) {
-      if ( x < (*itr).first ) return false;
-      if ( x <= (*itr).second) return true;
+   for (const auto & range : ranges) {
+      if ( x < range.first ) return false;
+      if ( x <= range.second) return true;
    }
    return false; // point is larger than last xmax
 }

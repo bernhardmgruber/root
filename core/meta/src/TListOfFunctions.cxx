@@ -212,9 +212,8 @@ TList* TListOfFunctions::GetListForObjectNonConst(const char* name)
    std::vector<DeclId_t> overloadDecls;
    ClassInfo_t* ci = fClass ? fClass->GetClassInfo() : 0;
    gInterpreter->GetFunctionOverloads(ci, name, overloadDecls);
-   for (std::vector<DeclId_t>::const_iterator iD = overloadDecls.begin(),
-           eD = overloadDecls.end(); iD != eD; ++iD) {
-      TFunction* over = Get(*iD);
+   for (auto overloadDecl : overloadDecls) {
+      TFunction* over = Get(overloadDecl);
       if (wasEmpty || !overloadsSet.GetValue((Long64_t)(ULong64_t)over->GetDeclId())) {
           overloads->Add(over);
       }

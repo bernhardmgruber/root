@@ -46,8 +46,8 @@ public:
       fFixedParFlag[ipar] = fix;
       fValues[ipar] = value;
       // count number of fixed params
-      for (unsigned int i = 0; i < fFixedParFlag.size(); ++i)
-         if (!fFixedParFlag[i] ) fNFree++;
+      for (int i : fFixedParFlag)
+         if (!i ) fNFree++;
 
    }
 
@@ -289,8 +289,8 @@ bool GeneticMinimizer::Minimize()
          if (genes) {
             std::vector<Double_t> gvec;
             gvec = genes->GetFactors();
-            for (unsigned int i = 0; i < gvec.size(); ++i) {
-               std::cout << gvec[i] << "    ";
+            for (double i : gvec) {
+               std::cout << i << "    ";
             }
             std::cout << std::endl;
             std::cout << "\tFitness function value = " <<  static_cast<MultiGenFunctionFitness*>(fFitness)->Evaluate(gvec) << std::endl;

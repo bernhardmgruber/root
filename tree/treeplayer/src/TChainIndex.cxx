@@ -166,13 +166,13 @@ void TChainIndex::Append(const TVirtualIndex *index, Bool_t delaySort )
 
 void TChainIndex::DeleteIndices()
 {
-   for (unsigned int i = 0; i < fEntries.size(); i++) {
-      if (fEntries[i].fTreeIndex) {
-         if (fTree->GetTree() && fTree->GetTree()->GetTreeIndex() == fEntries[i].fTreeIndex) {
+   for (auto & fEntrie : fEntries) {
+      if (fEntrie.fTreeIndex) {
+         if (fTree->GetTree() && fTree->GetTree()->GetTreeIndex() == fEntrie.fTreeIndex) {
             fTree->GetTree()->SetTreeIndex(0);
-            SafeDelete(fEntries[i].fTreeIndex);
+            SafeDelete(fEntrie.fTreeIndex);
          }
-         SafeDelete(fEntries[i].fTreeIndex);
+         SafeDelete(fEntrie.fTreeIndex);
       }
    }
 }

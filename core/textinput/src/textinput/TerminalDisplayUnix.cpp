@@ -73,12 +73,12 @@ namespace {
     // 6 intensity RGB
     static const int intensities[] = {0, 0x5f, 0x87, 0xaf, 0xd7, 0xff};
     int idx = 16;
-    for (int r = 0; r < 6; ++r) {
-      for (int g = 0; g < 6; ++g) {
-        for (int b = 0; b < 6; ++b) {
-          rgb256[idx][0] = intensities[r];
-          rgb256[idx][1] = intensities[g];
-          rgb256[idx][2] = intensities[b];
+    for (int intensitie : intensities) {
+      for (int g : intensities) {
+        for (int b : intensities) {
+          rgb256[idx][0] = intensitie;
+          rgb256[idx][1] = g;
+          rgb256[idx][2] = b;
           ++idx;
         }
       }

@@ -262,8 +262,8 @@ Davix_fd *TDavixFileInternal::Open()
        try {
            DavFile file(*davixContext, Davix::Uri(fUrl.GetUrl()));
            std::vector<DavFile> replicasLocal = file.getReplicas(NULL, &davixErr2);
-           for(size_t i = 0; i < replicasLocal.size(); i++) {
-             replicas.push_back(replicasLocal[i].getUri().getString());
+           for(auto & i : replicasLocal) {
+             replicas.push_back(i.getUri().getString());
            }
        }
        catch(...) {}

@@ -303,9 +303,9 @@ TGLViewer::~TGLViewer()
 void TGLViewer::PadPaint(TVirtualPad* pad)
 {
    TGLScenePad* scenepad = 0;
-   for (SceneInfoList_i si = fScenes.begin(); si != fScenes.end(); ++si)
+   for (auto & fScene : fScenes)
    {
-      scenepad = dynamic_cast<TGLScenePad*>((*si)->GetScene());
+      scenepad = dynamic_cast<TGLScenePad*>(fScene->GetScene());
       if (scenepad && scenepad->GetPad() == pad)
          break;
       scenepad = 0;
@@ -337,9 +337,9 @@ void TGLViewer::UpdateScene(Bool_t redraw)
    // Cancel any pending redraw timer.
    fRedrawTimer->Stop();
 
-   for (SceneInfoList_i si = fScenes.begin(); si != fScenes.end(); ++si)
+   for (auto & fScene : fScenes)
    {
-      TGLScenePad* scenepad = dynamic_cast<TGLScenePad*>((*si)->GetScene());
+      TGLScenePad* scenepad = dynamic_cast<TGLScenePad*>(fScene->GetScene());
       if (scenepad)
          scenepad->PadPaintFromViewer(this);
    }

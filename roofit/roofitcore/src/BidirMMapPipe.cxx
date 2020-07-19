@@ -892,8 +892,8 @@ BidirMMapPipe::BidirMMapPipe(bool useExceptions, bool useSocketpair) :
         // all done
     } catch (BidirMMapPipe::Exception&) {
         if (0 != m_childPid) kill(m_childPid, SIGTERM);
-        for (int i = 0; i < 4; ++i)
-            if (-1 != fds[i] && 0 != fds[i]) ::close(fds[i]);
+        for (int fd : fds)
+            if (-1 != fd && 0 != fd) ::close(fd);
         {
             // free resources associated with mmapped pages
             BidirMMapPipe_impl::Pages p; p.swap(m_pages);

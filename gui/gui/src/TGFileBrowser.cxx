@@ -976,8 +976,8 @@ Bool_t TGFileBrowser::CheckSorted(TGListTreeItem *item, Bool_t but)
       itm = item;
    else
       itm = item->GetParent();
-   for (sLTI_i p=fSortedItems.begin(); p!=fSortedItems.end(); ++p) {
-      i = (TGListTreeItem *)(*p);
+   for (auto & fSortedItem : fSortedItems) {
+      i = (TGListTreeItem *)fSortedItem;
       if (itm == i) {
          found = kTRUE;
          break;

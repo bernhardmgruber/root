@@ -82,9 +82,8 @@ namespace textinput {
     if (!fActive) {
       GrabInputOutput();
     }
-    for (std::vector<Reader*>::const_iterator iR = fContext->GetReaders().begin(),
-         iE = fContext->GetReaders().end(); iR != iE; ++iR) {
-      if ((*iR)->HavePendingInput(false))
+    for (auto iR : fContext->GetReaders()) {
+      if (iR->HavePendingInput(false))
         return true;
     }
     return false;
@@ -325,9 +324,8 @@ namespace textinput {
 
     // foreach fails to build the reference in GCC 4.1.
     // Iterate manually instead.
-    for (std::vector<Display*>::const_iterator i = fContext->GetDisplays().begin(),
-         e = fContext->GetDisplays().end(); i != e; ++i) {
-      (*i)->DisplayInfo(lines);
+    for (auto i : fContext->GetDisplays()) {
+      i->DisplayInfo(lines);
     }
   }
 

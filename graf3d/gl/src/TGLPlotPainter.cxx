@@ -478,9 +478,9 @@ void TGLPlotPainter::DrawSections()const
 
          glColor3d(0., 0., 0.);
          glBegin(GL_LINES);
-         for (UInt_t i = 0; i < fZLevels.size(); ++i) {
-            glVertex3d(fBackBox.Get3DBox()[1].X(), fXOZSectionPos, fZLevels[i]);
-            glVertex3d(fBackBox.Get3DBox()[0].X(), fXOZSectionPos, fZLevels[i]);
+         for (double fZLevel : fZLevels) {
+            glVertex3d(fBackBox.Get3DBox()[1].X(), fXOZSectionPos, fZLevel);
+            glVertex3d(fBackBox.Get3DBox()[0].X(), fXOZSectionPos, fZLevel);
          }
          glEnd();
          glDepthMask(GL_TRUE);
@@ -520,9 +520,9 @@ void TGLPlotPainter::DrawSections()const
 
          glColor3d(0., 0., 0.);
          glBegin(GL_LINES);
-         for (UInt_t i = 0; i < fZLevels.size(); ++i) {
-            glVertex3d(fYOZSectionPos, fBackBox.Get3DBox()[3].Y(), fZLevels[i]);
-            glVertex3d(fYOZSectionPos, fBackBox.Get3DBox()[0].Y(), fZLevels[i]);
+         for (double fZLevel : fZLevels) {
+            glVertex3d(fYOZSectionPos, fBackBox.Get3DBox()[3].Y(), fZLevel);
+            glVertex3d(fYOZSectionPos, fBackBox.Get3DBox()[0].Y(), fZLevel);
          }
          glEnd();
          glDepthMask(GL_TRUE);

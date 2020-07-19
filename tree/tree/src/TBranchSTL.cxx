@@ -502,9 +502,9 @@ Int_t TBranchSTL::GetEntry( Long64_t entry, Int_t getall )
    //---------------------------------------------------------------------------
    // Cleanup
    //---------------------------------------------------------------------------
-   for( UInt_t i = 0; i < fBranchVector.size(); ++i ) {
-      delete fBranchVector[i].fPointers;
-      fBranchVector[i].fPointers = 0;
+   for(auto & i : fBranchVector) {
+      delete i.fPointers;
+      i.fPointers = 0;
    }
 
    return totalBytes;

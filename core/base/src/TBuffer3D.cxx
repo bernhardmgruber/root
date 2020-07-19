@@ -253,9 +253,9 @@ void TBuffer3D::Init()
    SetLocalMasterIdentity();
 
    // Reset bounding box
-   for (UInt_t v=0; v<8; v++) {
+   for (auto & v : fBBVertex) {
       for (UInt_t i=0; i<3; i++) {
-         fBBVertex[v][i] = 0.0;
+         v[i] = 0.0;
       }
    }
    // Set fLocalMaster in section kCore to identity

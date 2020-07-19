@@ -74,9 +74,9 @@ TGLSceneBase::TGLSceneBase() :
 
 TGLSceneBase::~TGLSceneBase()
 {
-   for (ViewerList_i i=fViewers.begin(); i!=fViewers.end(); ++i)
+   for (auto & fViewer : fViewers)
    {
-      (*i)->SceneDestructing(this);
+      fViewer->SceneDestructing(this);
    }
 }
 
@@ -117,9 +117,9 @@ void TGLSceneBase::RemoveViewer(TGLViewerBase* viewer)
 
 void TGLSceneBase::TagViewersChanged()
 {
-   for (ViewerList_i i=fViewers.begin(); i!=fViewers.end(); ++i)
+   for (auto & fViewer : fViewers)
    {
-      (*i)->Changed();
+      fViewer->Changed();
    }
 }
 

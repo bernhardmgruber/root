@@ -276,10 +276,10 @@ Int_t TGLPlotBox::FindFrontPoint()const
    TGLUtil::InitializeIfNeeded();
    const Float_t scale = TGLUtil::GetScreenScalingFactor();
    if (scale) {
-      for (Int_t i = 0; i < 8; ++i) {
+      for (auto & i : f2DBoxU) {
          //downscale:
-         f2DBoxU[i].X() /= scale;
-         f2DBoxU[i].Y() /= scale;
+         i.X() /= scale;
+         i.Y() /= scale;
       }
    }
 
@@ -344,10 +344,10 @@ void TGLPlotBox::DrawBackPlane(Int_t plane, Bool_t selectionPass,
          {f3DBox[0].X(), f3DBox[3].Y(), f3DBox[0].X(), f3DBox[0].Y()}
       };
 
-      for (UInt_t i = 0; i < zLevels.size(); ++i) {
+      for (double zLevel : zLevels) {
          glBegin(GL_LINES);
-         glVertex3d(lineCaps[plane][0], lineCaps[plane][1], zLevels[i]);
-         glVertex3d(lineCaps[plane][2], lineCaps[plane][3], zLevels[i]);
+         glVertex3d(lineCaps[plane][0], lineCaps[plane][1], zLevel);
+         glVertex3d(lineCaps[plane][2], lineCaps[plane][3], zLevel);
          glEnd();
       }
 

@@ -825,12 +825,12 @@ void RooCurve::calcBandInterval(const vector<RooCurve*>& plusVar, const vector<R
 {
   vector<double> y_plus(plusVar.size()), y_minus(minusVar.size()) ;
   Int_t j(0) ;
-  for (vector<RooCurve*>::const_iterator iter=plusVar.begin() ; iter!=plusVar.end() ; ++iter) {
-    y_plus[j++] = (*iter)->interpolate(GetX()[i]) ;    
+  for (auto iter : plusVar) {
+    y_plus[j++] = iter->interpolate(GetX()[i]) ;    
   }
   j=0 ;
-  for (vector<RooCurve*>::const_iterator iter=minusVar.begin() ; iter!=minusVar.end() ; ++iter) {
-    y_minus[j++] = (*iter)->interpolate(GetX()[i]) ;
+  for (auto iter : minusVar) {
+    y_minus[j++] = iter->interpolate(GetX()[i]) ;
   }
   Double_t y_cen = GetY()[i] ;
   Int_t n = j ;
@@ -856,8 +856,8 @@ void RooCurve::calcBandInterval(const vector<RooCurve*>& variations,Int_t i,Doub
 {
   vector<double> y(variations.size()) ;
   Int_t j(0) ;
-  for (vector<RooCurve*>::const_iterator iter=variations.begin() ; iter!=variations.end() ; ++iter) {
-    y[j++] = (*iter)->interpolate(GetX()[i]) ;
+  for (auto variation : variations) {
+    y[j++] = variation->interpolate(GetX()[i]) ;
 }
 
   if (!approxGauss) {
@@ -870,9 +870,9 @@ void RooCurve::calcBandInterval(const vector<RooCurve*>& variations,Int_t i,Doub
   } else {
     // Estimate R.M.S of variations at each point and use that as Gaussian sigma
     Double_t sum_y(0), sum_ysq(0) ;
-    for (unsigned int k=0 ; k<y.size() ; k++) {
-      sum_y   += y[k] ;
-      sum_ysq += y[k]*y[k] ;
+    for (double k : y) {
+      sum_y   += k ;
+      sum_ysq += k*k ;
     }
     sum_y /= y.size() ;
     sum_ysq /= y.size() ;

@@ -4541,8 +4541,8 @@ void TStreamerInfo::InsertArtificialElements(std::vector<const ROOT::TSchemaRule
          }
       }
       if (loc == -1) {
-         for(vec_t::iterator iter = toAdd.begin(); iter != toAdd.end(); ++iter) {
-            fElements->Add(*iter);
+         for(auto & iter : toAdd) {
+            fElements->Add(iter);
          }
       } else {
          R__TObjArray_InsertAt(fElements, toAdd, loc);

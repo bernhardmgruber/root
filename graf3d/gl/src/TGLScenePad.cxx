@@ -514,7 +514,7 @@ void TGLScenePad::CloseComposite()
       RootCsg::TBaseMesh *resultMesh = BuildComposite();
       fComposite->SetFromMesh(resultMesh);
       delete resultMesh;
-      for (UInt_t i = 0; i < fCSTokens.size(); ++i) delete fCSTokens[i].second;
+      for (auto & fCSToken : fCSTokens) delete fCSToken.second;
       fCSTokens.clear();
       fComposite = 0;
    }

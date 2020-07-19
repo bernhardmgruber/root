@@ -159,8 +159,8 @@ RooAbsIntegrator* RooBinIntegrator::clone(const RooAbsFunc& function, const RooN
 RooBinIntegrator::~RooBinIntegrator()
 {
   if(_x) delete[] _x;
-  for (vector<list<Double_t>*>::iterator iter = _binb.begin() ; iter!=_binb.end() ; ++iter) {
-    delete (*iter) ;
+  for (auto & iter : _binb) {
+    delete iter ;
   }
 
 }

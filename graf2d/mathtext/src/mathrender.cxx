@@ -332,13 +332,13 @@ namespace mathtext {
       std::vector<math_token_t> token =
       math_tokenize(math_symbol, style, height);
 
-      for (std::vector<math_token_t>::const_iterator iterator = token.begin(); iterator != token.end(); ++iterator)
+      for (const auto & iterator : token)
          math_text(origin +
                    transform_pixel_to_logical().linear() *
-                   iterator->_offset,
-                   iterator->_extensible._glyph,
-                   iterator->_extensible._family,
-                   iterator->_extensible._size, render_structure);
+                   iterator._offset,
+                   iterator._extensible._glyph,
+                   iterator._extensible._family,
+                   iterator._extensible._size, render_structure);
    }
 
 

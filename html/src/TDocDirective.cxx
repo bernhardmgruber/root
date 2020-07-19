@@ -784,9 +784,8 @@ void TDocLatexDirective::CreateLatex(const char* filename)
    padImg->Print(filename);
 
    // delete the latex objects
-   for (std::list<TLatexLine>::iterator iLine = latexLines.begin();
-      iLine != latexLines.end(); ++iLine) {
-      iLine->Delete();
+   for (auto & latexLine : latexLines) {
+      latexLine.Delete();
    }
 
    delete padImg;

@@ -46,12 +46,12 @@ void TEveCompound::SetMainColor(Color_t color)
    Bool_t color_all      = TestCSCBits(kCSCBApplyMainColorToAllChildren);
    Bool_t color_matching = TestCSCBits(kCSCBApplyMainColorToMatchingChildren);
 
-   for (List_i i=fChildren.begin(); i!=fChildren.end(); ++i)
+   for (auto & i : fChildren)
    {
-      if (color_all || (color_matching && (*i)->GetMainColor() == old_color) ||
-          ((*i)->GetCompound() == this && (*i)->GetMainColor() == old_color))
+      if (color_all || (color_matching && i->GetMainColor() == old_color) ||
+          (i->GetCompound() == this && i->GetMainColor() == old_color))
       {
-         (*i)->SetMainColor(color);
+         i->SetMainColor(color);
       }
    }
 }
@@ -75,12 +75,12 @@ void TEveCompound::SetMainTransparency(Char_t t)
    Bool_t chg_all      = TestCSCBits(kCSCBApplyMainTransparencyToAllChildren);
    Bool_t chg_matching = TestCSCBits(kCSCBApplyMainTransparencyToMatchingChildren);
 
-   for (List_i i=fChildren.begin(); i!=fChildren.end(); ++i)
+   for (auto & i : fChildren)
    {
-      if (chg_all || (chg_matching && (*i)->GetMainTransparency() == old_t) ||
-          ((*i)->GetCompound() == this && (*i)->GetMainTransparency() == old_t))
+      if (chg_all || (chg_matching && i->GetMainTransparency() == old_t) ||
+          (i->GetCompound() == this && i->GetMainTransparency() == old_t))
       {
-         (*i)->SetMainTransparency(t);
+         i->SetMainTransparency(t);
       }
    }
 }
@@ -114,10 +114,10 @@ void TEveCompound::RemoveElementLocal(TEveElement* el)
 
 void TEveCompound::RemoveElementsLocal()
 {
-   for (List_i i=fChildren.begin(); i!=fChildren.end(); ++i)
+   for (auto & i : fChildren)
    {
-      if ((*i)->GetCompound() == this)
-         (*i)->SetCompound(0);
+      if (i->GetCompound() == this)
+         i->SetCompound(0);
    }
 
    TEveElementList::RemoveElementsLocal();
@@ -136,12 +136,12 @@ void TEveCompound::FillImpliedSelectedSet(Set_t& impSelSet)
 {
    Bool_t select_all = TestCSCBits(kCSCBImplySelectAllChildren);
 
-   for (List_i i = fChildren.begin(); i != fChildren.end(); ++i)
+   for (auto & i : fChildren)
    {
-      if (select_all || (*i)->GetCompound() == this)
+      if (select_all || i->GetCompound() == this)
       {
-         if (impSelSet.insert(*i).second)
-            (*i)->FillImpliedSelectedSet(impSelSet);
+         if (impSelSet.insert(i).second)
+            i->FillImpliedSelectedSet(impSelSet);
       }
    }
 

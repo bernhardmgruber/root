@@ -162,12 +162,12 @@ void TEveGeoPolyShape::FillBuffer3D(TBuffer3D& b, Int_t reqSections, Bool_t) con
       memcpy(b.fPnts, &fVertices[0], sizeof(Double_t)*fVertices.size());
 
       Int_t si = 0, scnt = 0;
-      for (std::map<Edge_t, Int_t>::iterator i = edges.begin(); i != edges.end(); ++i)
+      for (auto & edge : edges)
       {
          b.fSegs[si++] = 0;
-         b.fSegs[si++] = i->first.fI;
-         b.fSegs[si++] = i->first.fJ;
-         i->second = scnt++;
+         b.fSegs[si++] = edge.first.fI;
+         b.fSegs[si++] = edge.first.fJ;
+         edge.second = scnt++;
       }
 
       Int_t pi = 0;

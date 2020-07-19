@@ -879,8 +879,8 @@ UInt_t TMVA::DecisionTree::BuildTree( const std::vector<const TMVA::Event*> & ev
 
 void TMVA::DecisionTree::FillTree( const std::vector<TMVA::Event*> & eventSample )
 {
-   for (UInt_t i=0; i<eventSample.size(); i++) {
-      this->FillEvent(*(eventSample[i]),NULL);
+   for (auto i : eventSample) {
+      this->FillEvent(*i,NULL);
    }
 }
 
@@ -1005,9 +1005,9 @@ Double_t TMVA::DecisionTree::PruneTree( const EventConstList* validationSample )
       //           << " has quality index " << info->QualityIndex << Endl;
 
 
-      for (UInt_t i = 0; i < info->PruneSequence.size(); ++i) {
+      for (auto & i : info->PruneSequence) {
 
-         PruneNode(info->PruneSequence[i]);
+         PruneNode(i);
       }
       // update the number of nodes after the pruning
       this->CountNodes();
@@ -1029,8 +1029,8 @@ Double_t TMVA::DecisionTree::PruneTree( const EventConstList* validationSample )
 void TMVA::DecisionTree::ApplyValidationSample( const EventConstList* validationSample ) const
 {
    GetRoot()->ResetValidationData();
-   for (UInt_t ievt=0; ievt < validationSample->size(); ievt++) {
-      CheckEventWithPrunedTree((*validationSample)[ievt]);
+   for (auto ievt : *validationSample) {
+      CheckEventWithPrunedTree(ievt);
    }
 }
 
@@ -1118,9 +1118,8 @@ void TMVA::DecisionTree::CheckEventWithPrunedTree( const Event* e ) const
 Double_t TMVA::DecisionTree::GetSumWeights( const EventConstList* validationSample ) const
 {
    Double_t sumWeights = 0.0;
-   for( EventConstList::const_iterator it = validationSample->begin();
-        it != validationSample->end(); ++it ) {
-      sumWeights += (*it)->GetWeight();
+   for(auto it : *validationSample) {
+      sumWeights += it->GetWeight();
    }
    return sumWeights;
 }
@@ -1658,14 +1657,14 @@ Double_t TMVA::DecisionTree::TrainNodeFast( const EventConstList & eventSample,
 
       auto fvarFillNodeInfo = [this, &nodeInfo, &eventSample, &fisherCoeff, &useVariable, &invBinWidth, &nBins, &xmin](UInt_t ivar = 0){
 
-         for(UInt_t iev=0; iev<eventSample.size(); iev++) {
+         for(auto iev : eventSample) {
 
             Int_t iBin=-1;
-            Double_t eventWeight =  eventSample[iev]->GetWeight(); 
+            Double_t eventWeight =  iev->GetWeight(); 
 
             // Only count the net signal and background once
             if(ivar==0){
-                if (eventSample[iev]->GetClass() == fSigClass) {
+                if (iev->GetClass() == fSigClass) {
                    nodeInfo.nTotS+=eventWeight;
                    nodeInfo.nTotS_unWeighted++;    }
                 else {
@@ -1677,17 +1676,17 @@ Double_t TMVA::DecisionTree::TrainNodeFast( const EventConstList & eventSample,
             // Figure out which bin the event belongs in and increment the bin in each histogram vector appropriately
             if ( useVariable[ivar] ) {
                Double_t eventData;
-               if (ivar < fNvars) eventData = eventSample[iev]->GetValueFast(ivar); 
+               if (ivar < fNvars) eventData = iev->GetValueFast(ivar); 
                else { // the fisher variable
                   eventData = fisherCoeff[fNvars];
                   for (UInt_t jvar=0; jvar<fNvars; jvar++)
-                     eventData += fisherCoeff[jvar]*(eventSample[iev])->GetValueFast(jvar);
+                     eventData += fisherCoeff[jvar]*iev->GetValueFast(jvar);
                   
                }
                // #### figure out which bin it belongs in ...
                // "maximum" is nbins-1 (the "-1" because we start counting from 0 !!
                iBin = TMath::Min(Int_t(nBins[ivar]-1),TMath::Max(0,int (invBinWidth[ivar]*(eventData-xmin[ivar]) ) ));
-               if (eventSample[iev]->GetClass() == fSigClass) {
+               if (iev->GetClass() == fSigClass) {
                   nodeInfo.nSelS[ivar][iBin]+=eventWeight;
                   nodeInfo.nSelS_unWeighted[ivar][iBin]++;
                } 
@@ -1696,8 +1695,8 @@ Double_t TMVA::DecisionTree::TrainNodeFast( const EventConstList & eventSample,
                   nodeInfo.nSelB_unWeighted[ivar][iBin]++;
                }
                if (DoRegression()) {
-                  nodeInfo.target[ivar][iBin] +=eventWeight*eventSample[iev]->GetTarget(0);
-                  nodeInfo.target2[ivar][iBin]+=eventWeight*eventSample[iev]->GetTarget(0)*eventSample[iev]->GetTarget(0);
+                  nodeInfo.target[ivar][iBin] +=eventWeight*iev->GetTarget(0);
+                  nodeInfo.target2[ivar][iBin]+=eventWeight*iev->GetTarget(0)*iev->GetTarget(0);
                }
             }
          }
@@ -2550,16 +2549,16 @@ Double_t TMVA::DecisionTree::TrainNodeFull( const EventConstList & eventSample,
 
    // Initialize (un)weighted counters for signal & background
    // Construct a list of event wrappers that point to the original data
-   for( std::vector<const TMVA::Event*>::const_iterator it = eventSample.begin(); it != eventSample.end(); ++it ) {
-      if((*it)->GetClass() == fSigClass) { // signal or background event
-         nTotS += (*it)->GetWeight();
+   for(auto it : eventSample) {
+      if(it->GetClass() == fSigClass) { // signal or background event
+         nTotS += it->GetWeight();
          ++nTotS_unWeighted;
       }
       else {
-         nTotB += (*it)->GetWeight();
+         nTotB += it->GetWeight();
          ++nTotB_unWeighted;
       }
-      bdtEventSample.push_back(TMVA::BDTEventWrapper(*it));
+      bdtEventSample.push_back(TMVA::BDTEventWrapper(it));
    }
 
    std::vector<Char_t> useVariable(fNvars); // <----- bool is stored (for performance reasons, no std::vector<bool>  has been taken)
@@ -2722,10 +2721,10 @@ Double_t TMVA::DecisionTree::CheckEvent( const TMVA::Event * e, Bool_t UseYesNoL
 Double_t  TMVA::DecisionTree::SamplePurity( std::vector<TMVA::Event*> eventSample )
 {
    Double_t sumsig=0, sumbkg=0, sumtot=0;
-   for (UInt_t ievt=0; ievt<eventSample.size(); ievt++) {
-      if (eventSample[ievt]->GetClass() != fSigClass) sumbkg+=eventSample[ievt]->GetWeight();
-      else sumsig+=eventSample[ievt]->GetWeight();
-      sumtot+=eventSample[ievt]->GetWeight();
+   for (auto & ievt : eventSample) {
+      if (ievt->GetClass() != fSigClass) sumbkg+=ievt->GetWeight();
+      else sumsig+=ievt->GetWeight();
+      sumtot+=ievt->GetWeight();
    }
    // sanity check
    if (sumtot!= (sumsig+sumbkg)){

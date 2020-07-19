@@ -170,8 +170,8 @@ RooSimGenContext::~RooSimGenContext()
 {
   delete[] _fracThresh ;
   delete _idxCatSet ;
-  for (vector<RooAbsGenContext*>::iterator iter = _gcList.begin() ; iter!=_gcList.end() ; ++iter) {
-    delete (*iter) ;
+  for (auto & iter : _gcList) {
+    delete iter ;
   }
   delete _proxyIter ;
   if (_protoData) delete _protoData ;
@@ -189,8 +189,8 @@ void RooSimGenContext::attach(const RooArgSet& args)
   }
 
   // Forward initGenerator call to all components
-  for (vector<RooAbsGenContext*>::iterator iter = _gcList.begin() ; iter!=_gcList.end() ; ++iter) {
-    (*iter)->attach(args) ;
+  for (auto & iter : _gcList) {
+    iter->attach(args) ;
   }
   
 }
@@ -212,8 +212,8 @@ void RooSimGenContext::initGenerator(const RooArgSet &theEvent)
   updateFractions() ;
 
   // Forward initGenerator call to all components
-  for (vector<RooAbsGenContext*>::iterator iter = _gcList.begin() ; iter!=_gcList.end() ; ++iter) {
-    (*iter)->initGenerator(theEvent) ;
+  for (auto & iter : _gcList) {
+    iter->initGenerator(theEvent) ;
   }
 
 }
@@ -334,8 +334,8 @@ void RooSimGenContext::setProtoDataOrder(Int_t* lut)
 {
   RooAbsGenContext::setProtoDataOrder(lut) ;
 
-  for (vector<RooAbsGenContext*>::iterator iter = _gcList.begin() ; iter!=_gcList.end() ; ++iter) {
-    (*iter)->setProtoDataOrder(lut) ;
+  for (auto & iter : _gcList) {
+    iter->setProtoDataOrder(lut) ;
   }
 }
 
@@ -354,7 +354,7 @@ void RooSimGenContext::printMultiline(ostream &os, Int_t content, Bool_t verbose
   TString indent2(indent) ;
   indent2.Append("    ") ;
 
-  for (vector<RooAbsGenContext*>::const_iterator iter = _gcList.begin() ; iter!=_gcList.end() ; ++iter) {
-    (*iter)->printMultiline(os,content,verbose,indent2);
+  for (auto iter : _gcList) {
+    iter->printMultiline(os,content,verbose,indent2);
   }
 }

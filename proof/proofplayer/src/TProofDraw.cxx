@@ -294,8 +294,8 @@ void TProofDraw::Terminate(void)
 void TProofDraw::ClearFormula()
 {
    ResetBit(kWarn);
-   for (Int_t i = 0; i < 4; i++)
-      SafeDelete(fVar[i]);
+   for (auto & i : fVar)
+      SafeDelete(i);
    SafeDelete(fSelect);
    fManager = 0;  // This is intentional. The manager is deleted when the last formula it manages
                   // is deleted. This is unusual but was usefull for backward compatibility.

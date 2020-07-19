@@ -175,10 +175,10 @@ public:
       gRootColors = new Int_t[216];
 
       int i = 0;
-      for (int r = 0; r < 6; r++) {
-         for (int g = 0; g < 6; g++) {
-            for (int b = 0; b < 6; b++) {
-               gRootColors[i] = TColor::GetColor(gWebBase[r], gWebBase[g], gWebBase[b]);
+      for (unsigned short r : gWebBase) {
+         for (unsigned short g : gWebBase) {
+            for (unsigned short b : gWebBase) {
+               gRootColors[i] = TColor::GetColor(r, g, b);
                i++;
             }
          }

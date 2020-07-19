@@ -225,14 +225,14 @@ namespace RooStats {
 
          BranchStore(const vector <TString> &params = vector <TString>(), double _inval = -999.) : fTree(0) {
             fInval = _inval;
-            for(unsigned int i = 0;i<params.size();i++)
-               fVarVals[params[i]] = _inval;
+            for(const auto & param : params)
+               fVarVals[param] = _inval;
          }
 
          ~BranchStore() {
             if (fTree) {
-               for(std::map<TString, Double_t>::iterator it = fVarVals.begin();it!=fVarVals.end();++it) {
-                  TBranch *br = fTree->GetBranch( it->first );
+               for(auto & fVarVal : fVarVals) {
+                  TBranch *br = fTree->GetBranch( fVarVal.first );
                   if (br) br->ResetAddress();
                }
             }
@@ -240,14 +240,14 @@ namespace RooStats {
 
          void AssignToTTree(TTree &myTree) {
             fTree = &myTree;
-            for(std::map<TString, Double_t>::iterator it = fVarVals.begin();it!=fVarVals.end();++it) {
-               const TString& name = it->first;
+            for(auto & fVarVal : fVarVals) {
+               const TString& name = fVarVal.first;
                myTree.Branch( name, &fVarVals[name], TString::Format("%s/D", name.Data()));
             }
          }
          void ResetValues() {
-            for(std::map<TString, Double_t>::iterator it = fVarVals.begin();it!=fVarVals.end();++it) {
-               const TString& name = it->first;
+            for(auto & fVarVal : fVarVals) {
+               const TString& name = fVarVal.first;
                fVarVals[name] = fInval;
             }
          }

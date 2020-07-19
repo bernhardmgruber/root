@@ -59,10 +59,9 @@ void TEveTrackProjectedGL::DirectDraw(TGLRnrCtx& rnrCtx) const
       Int_t start = 0;
       Float_t* p  = fM->GetP();
       TGLUtil::LockColor(); // Keep color from TGLPhysicalShape.
-      for (std::vector<Int_t>::iterator bpi = fM->fBreakPoints.begin();
-           bpi != fM->fBreakPoints.end(); ++bpi)
+      for (int & fBreakPoint : fM->fBreakPoints)
       {
-         Int_t size = *bpi - start;
+         Int_t size = fBreakPoint - start;
          TGLUtil::RenderPolyLine(*fM, fM->GetMainTransparency(), p, size);
          p     += 3*size;
          start +=   size;

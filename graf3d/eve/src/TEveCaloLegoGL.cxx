@@ -102,8 +102,8 @@ void TEveCaloLegoGL::SetBBox()
 void TEveCaloLegoGL::DLCacheDrop()
 {
    fDLCacheOK = kFALSE;
-   for (SliceDLMap_i i = fDLMap.begin(); i != fDLMap.end(); ++i)
-      i->second = 0;
+   for (auto & i : fDLMap)
+      i.second = 0;
 
    TGLObject::DLCacheDrop();
 }
@@ -116,10 +116,10 @@ void TEveCaloLegoGL::DLCachePurge()
    // all lego cells
    fDLCacheOK = kFALSE;
    if (! fDLMap.empty()) {
-      for (SliceDLMap_i i = fDLMap.begin(); i != fDLMap.end(); ++i) {
-         if (i->second) {
-            PurgeDLRange(i->second, 1);
-            i->second = 0;
+      for (auto & i : fDLMap) {
+         if (i.second) {
+            PurgeDLRange(i.second, 1);
+            i.second = 0;
          }
       }
    }
@@ -813,11 +813,11 @@ void TEveCaloLegoGL::DrawCells3D(TGLRnrCtx & rnrCtx) const
 {
    // quads
    {
-      for (SliceDLMap_i i = fDLMap.begin(); i != fDLMap.end(); ++i) {
-         TGLUtil::ColorTransparency(fM->GetDataSliceColor(i->first), fM->GetData()->GetSliceTransparency(i->first));
-         glLoadName(i->first);
+      for (auto & i : fDLMap) {
+         TGLUtil::ColorTransparency(fM->GetDataSliceColor(i.first), fM->GetData()->GetSliceTransparency(i.first));
+         glLoadName(i.first);
          glPushName(0);
-         glCallList(i->second);
+         glCallList(i.second);
          glPopName();
       }
    }
@@ -827,8 +827,8 @@ void TEveCaloLegoGL::DrawCells3D(TGLRnrCtx & rnrCtx) const
          glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
          glDisable(GL_POLYGON_OFFSET_FILL);
          TGLUtil::Color(1);
-         for (SliceDLMap_i i = fDLMap.begin(); i != fDLMap.end(); ++i)
-            glCallList(i->second);
+         for (auto & i : fDLMap)
+            glCallList(i.second);
       }
    }
 }
@@ -945,18 +945,18 @@ void TEveCaloLegoGL::DrawCells2D(TGLRnrCtx &rnrCtx, vCell2D_t& cells2D) const
       fM->AssertPalette();
       UChar_t col[4];
 
-      for (vCell2D_i i = cells2D.begin(); i != cells2D.end(); ++i)
+      for (auto & i : cells2D)
       {
-         if (rnrCtx.SecSelection()) glLoadName(i->fId);
+         if (rnrCtx.SecSelection()) glLoadName(i.fId);
          glBegin(GL_POLYGON);
-         fM->fPalette->ColorFromValue(TMath::FloorNint(i->fSumVal), col);
-         col[3] = fM->GetData()->GetSliceTransparency(i->fMaxSlice);
+         fM->fPalette->ColorFromValue(TMath::FloorNint(i.fSumVal), col);
+         col[3] = fM->GetData()->GetSliceTransparency(i.fMaxSlice);
          TGLUtil::Color4ubv(col);
-         Float_t z = fM->GetHasFixedHeightIn2DMode() ? baseOffset : i->fSumVal;
-         glVertex3f(i->fX0, i->fY0, z);
-         glVertex3f(i->fX1, i->fY0, z);
-         glVertex3f(i->fX1, i->fY1, z);
-         glVertex3f(i->fX0, i->fY1, z);
+         Float_t z = fM->GetHasFixedHeightIn2DMode() ? baseOffset : i.fSumVal;
+         glVertex3f(i.fX0, i.fY0, z);
+         glVertex3f(i.fX1, i.fY0, z);
+         glVertex3f(i.fX1, i.fY1, z);
+         glVertex3f(i.fX0, i.fY1, z);
          glEnd();
       }
    }
@@ -964,10 +964,10 @@ void TEveCaloLegoGL::DrawCells2D(TGLRnrCtx &rnrCtx, vCell2D_t& cells2D) const
    {
       Float_t maxv = 0;
       bws = 1e5;
-      for (vCell2D_i i = fCells2D.begin(); i != fCells2D.end(); ++i)
+      for (auto & i : fCells2D)
       {
-         if (i->MinSize() < bws)   bws  = i->MinSize();
-         if (i->fSumVal   > maxv)  maxv = i->fSumVal;
+         if (i.MinSize() < bws)   bws  = i.MinSize();
+         if (i.fSumVal   > maxv)  maxv = i.fSumVal;
       }
       bws   *= 0.5f;
       logMax = TMath::Log10(maxv + 1);
@@ -977,17 +977,17 @@ void TEveCaloLegoGL::DrawCells2D(TGLRnrCtx &rnrCtx, vCell2D_t& cells2D) const
       {
          // Special draw for name stack.
 
-         for (vCell2D_i i = cells2D.begin(); i != cells2D.end(); ++i)
+         for (auto & i : cells2D)
          {
-            glLoadName(i->fMaxSlice);
-            glPushName(i->fId);
+            glLoadName(i.fMaxSlice);
+            glPushName(i.fId);
 
             glBegin(GL_QUADS);
-            Float_t z = fM->GetHasFixedHeightIn2DMode() ? baseOffset : i->fSumVal;
-            glVertex3f(i->fX0, i->fY0, z);
-            glVertex3f(i->fX1, i->fY0, z);
-            glVertex3f(i->fX1, i->fY1, z);
-            glVertex3f(i->fX0, i->fY1, z);
+            Float_t z = fM->GetHasFixedHeightIn2DMode() ? baseOffset : i.fSumVal;
+            glVertex3f(i.fX0, i.fY0, z);
+            glVertex3f(i.fX1, i.fY0, z);
+            glVertex3f(i.fX1, i.fY1, z);
+            glVertex3f(i.fX0, i.fY1, z);
             glEnd();
 
             glPopName();
@@ -1000,23 +1000,23 @@ void TEveCaloLegoGL::DrawCells2D(TGLRnrCtx &rnrCtx, vCell2D_t& cells2D) const
          if ( ! rnrCtx.Highlight())
          {
             glBegin(GL_POINTS);
-            for (vCell2D_i i = cells2D.begin(); i != cells2D.end(); ++i)
+            for (auto & i : cells2D)
             {
-               TGLUtil::ColorTransparency(fM->fData->GetSliceColor(i->fMaxSlice), fM->fData->GetSliceTransparency(i->fMaxSlice));
-               Float_t z = fM->GetHasFixedHeightIn2DMode() ? baseOffset : i->fSumVal;
-               glVertex3f(i->X(), i->Y() , z);
+               TGLUtil::ColorTransparency(fM->fData->GetSliceColor(i.fMaxSlice), fM->fData->GetSliceTransparency(i.fMaxSlice));
+               Float_t z = fM->GetHasFixedHeightIn2DMode() ? baseOffset : i.fSumVal;
+               glVertex3f(i.X(), i.Y() , z);
             }
             glEnd();
          }
 
          glBegin(GL_QUADS);
-         for (vCell2D_i i = cells2D.begin(); i != cells2D.end(); ++i)
+         for (auto & i : cells2D)
          {
-            TGLUtil::ColorTransparency(fM->fData->GetSliceColor(i->fMaxSlice), fM->fData->GetSliceTransparency(i->fMaxSlice));
-            Float_t bw = fValToPixel*TMath::Log10(i->fSumVal+1);
-            Float_t x = i->X();
-            Float_t y = i->Y();
-            Float_t z = fM->GetHasFixedHeightIn2DMode() ? baseOffset : i->fSumVal;
+            TGLUtil::ColorTransparency(fM->fData->GetSliceColor(i.fMaxSlice), fM->fData->GetSliceTransparency(i.fMaxSlice));
+            Float_t bw = fValToPixel*TMath::Log10(i.fSumVal+1);
+            Float_t x = i.X();
+            Float_t y = i.Y();
+            Float_t z = fM->GetHasFixedHeightIn2DMode() ? baseOffset : i.fSumVal;
             glVertex3f(x - bw, y - bw, z);
             glVertex3f(x + bw, y - bw, z);
             glVertex3f(x + bw, y + bw, z);
@@ -1030,28 +1030,28 @@ void TEveCaloLegoGL::DrawCells2D(TGLRnrCtx &rnrCtx, vCell2D_t& cells2D) const
             Float_t z    = 0;
             Float_t zOff = fMaxVal*0.001 ; // avoid polygon stipling
             glBegin(GL_QUADS);
-            for ( vCell2D_i i = cells2D.begin(); i != cells2D.end(); ++i) {
-               Char_t transp = TMath::Min(100, 80 + fM->fData->GetSliceTransparency(i->fMaxSlice) / 5);
-               TGLUtil::ColorTransparency(fM->fData->GetSliceColor(i->fMaxSlice), transp);
-               z = fM->GetHasFixedHeightIn2DMode() ? baseOffset : i->fSumVal;
+            for (auto & i : cells2D) {
+               Char_t transp = TMath::Min(100, 80 + fM->fData->GetSliceTransparency(i.fMaxSlice) / 5);
+               TGLUtil::ColorTransparency(fM->fData->GetSliceColor(i.fMaxSlice), transp);
+               z = fM->GetHasFixedHeightIn2DMode() ? baseOffset : i.fSumVal;
                z -=  zOff;
-               glVertex3f(i->fX0, i->fY0, z);
-               glVertex3f(i->fX1, i->fY0, z);
-               glVertex3f(i->fX1, i->fY1, z);
-               glVertex3f(i->fX0, i->fY1, z);
+               glVertex3f(i.fX0, i.fY0, z);
+               glVertex3f(i.fX1, i.fY0, z);
+               glVertex3f(i.fX1, i.fY1, z);
+               glVertex3f(i.fX0, i.fY1, z);
             }
             glEnd();
 
             glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
             glBegin(GL_QUADS);
-            for ( vCell2D_i i = cells2D.begin(); i != cells2D.end(); ++i) {
-               TGLUtil::ColorTransparency(fM->fData->GetSliceColor(i->fMaxSlice), 60);
-               z = fM->GetHasFixedHeightIn2DMode() ? baseOffset : i->fSumVal;
+            for (auto & i : cells2D) {
+               TGLUtil::ColorTransparency(fM->fData->GetSliceColor(i.fMaxSlice), 60);
+               z = fM->GetHasFixedHeightIn2DMode() ? baseOffset : i.fSumVal;
                z +=  zOff;
-               glVertex3f(i->fX0, i->fY0, z);
-               glVertex3f(i->fX1, i->fY0, z);
-               glVertex3f(i->fX1, i->fY1, z);
-               glVertex3f(i->fX0, i->fY1, z);
+               glVertex3f(i.fX0, i.fY0, z);
+               glVertex3f(i.fX1, i.fY0, z);
+               glVertex3f(i.fX1, i.fY1, z);
+               glVertex3f(i.fX0, i.fY1, z);
             }
             glEnd();
             glPopAttrib();
@@ -1067,9 +1067,9 @@ void TEveCaloLegoGL::DrawCells2D(TGLRnrCtx &rnrCtx, vCell2D_t& cells2D) const
       TGLFont font;
       rnrCtx.RegisterFontNoScale(fM->fCellPixelFontSize, "arial", TGLFont::kPixmap, font);
       const char* txt;
-      for (vCell2D_i i = cells2D.begin(); i != cells2D.end(); ++i) {
+      for (auto & i : cells2D) {
 
-         Float_t val = i->fSumVal;
+         Float_t val = i.fSumVal;
          if (val > 10)
             txt = Form("%d", TMath::Nint(val));
          else if (val > 1 )
@@ -1079,7 +1079,7 @@ void TEveCaloLegoGL::DrawCells2D(TGLRnrCtx &rnrCtx, vCell2D_t& cells2D) const
          else
             txt = Form("~1e%d", TMath::Nint(TMath::Log10(val)));
 
-         font.Render(txt, i->X(), i->Y(), val*1.2, TGLFont::kCenterH, TGLFont::kCenterV);
+         font.Render(txt, i.X(), i.Y(), val*1.2, TGLFont::kCenterH, TGLFont::kCenterV);
       }
    }
 }
@@ -1140,11 +1140,11 @@ void TEveCaloLegoGL::DrawSelectedCells(TGLRnrCtx & rnrCtx, TEveCaloData::vCellId
    // check eta&phi range of selected cells
    TEveCaloData::vCellId_t  cellsSelected;
    TEveCaloData::CellData_t cellData;
-   for (TEveCaloData::vCellId_i i = cellsSelectedInput.begin(); i != cellsSelectedInput.end(); ++i)
+   for (auto & i : cellsSelectedInput)
    {
-      fM->fData->GetCellData((*i), cellData);
+      fM->fData->GetCellData(i, cellData);
       if (fM->CellInEtaPhiRng(cellData))
-         cellsSelected.push_back(*i);
+         cellsSelected.push_back(i);
    }
 
    // prepare rebin for 2D or 3D if necessary
@@ -1154,9 +1154,8 @@ void TEveCaloLegoGL::DrawSelectedCells(TGLRnrCtx & rnrCtx, TEveCaloData::vCellId
       fM->fData->Rebin(fEtaAxis, fPhiAxis, cellsSelected, fM->fPlotEt, rebinDataSelected);
       if (fM->fNormalizeRebin) {
          Float_t scale = 1.f / (fBinStep * fBinStep);
-         for (std::vector<Float_t>::iterator it = rebinDataSelected.fSliceData.begin();
-              it != rebinDataSelected.fSliceData.end(); ++it)
-            (*it) *= scale;
+         for (float & it : rebinDataSelected.fSliceData)
+            it *= scale;
       }
    }
 
@@ -1165,20 +1164,20 @@ void TEveCaloLegoGL::DrawSelectedCells(TGLRnrCtx & rnrCtx, TEveCaloData::vCellId
       Float_t offset =  0;
       if (fBinStep == 1)
       {
-         for (TEveCaloData::vCellId_i j = cellsSelected.begin(); j != cellsSelected.end(); ++j)
+         for (auto & j : cellsSelected)
          {
             offset = 0;
             {
-               Int_t   orig_slice = j->fSlice;
+               Int_t   orig_slice = j.fSlice;
                for (Int_t s = 0; s < orig_slice; ++s)
                {
-                  j->fSlice = s;
-                  fM->fData->GetCellData(*j, cellData);
+                  j.fSlice = s;
+                  fM->fData->GetCellData(j, cellData);
                   offset += cellData.Value(fM->fPlotEt);
                }
-               j->fSlice = orig_slice;
+               j.fSlice = orig_slice;
             }
-            fM->fData->GetCellData(*j, cellData);
+            fM->fData->GetCellData(j, cellData);
             WrapTwoPi(cellData.fPhiMin, cellData.fPhiMax);
             MakeQuad(cellData.EtaMin(), cellData.PhiMin(), offset,
                      cellData.EtaDelta(), cellData.PhiDelta(), cellData.Value(fM->fPlotEt));
@@ -1231,13 +1230,13 @@ void TEveCaloLegoGL::DrawSelectedCells(TGLRnrCtx & rnrCtx, TEveCaloData::vCellId
             towers.insert(j->fTower);
             ++j;
          }
-         for (vCell2D_i i = fCells2D.begin(); i != fCells2D.end(); ++i)
+         for (auto & i : fCells2D)
          {
-            TEveCaloData::CellId_t cell = fM->fCellList[i->fId];
+            TEveCaloData::CellId_t cell = fM->fCellList[i.fId];
             // std::set<Int_t>::iterator ti = towers.find(cell.fTower);
             if (towers.find(cell.fTower) != towers.end())
             {
-               cells2DSelected.push_back(*i);
+               cells2DSelected.push_back(i);
             }
          }
       }
@@ -1296,9 +1295,8 @@ void TEveCaloLegoGL::DirectDraw(TGLRnrCtx & rnrCtx) const
          if (fM->fNormalizeRebin)
          {
             Float_t scale = 1.f / (fBinStep * fBinStep);
-            for (std::vector<Float_t>::iterator it = fRebinData.fSliceData.begin(); it != fRebinData.fSliceData.end();
-                 ++it) {
-               (*it) *= scale;
+            for (float & it : fRebinData.fSliceData) {
+               it *= scale;
             }
             fMaxVal *= scale;
          }
@@ -1434,12 +1432,12 @@ void TEveCaloLegoGL::ProcessSelection(TGLRnrCtx & /*rnrCtx*/, TGLSelectRecord & 
                                    fPhiAxis->GetBinCenter(phiBin), fPhiAxis->GetBinWidth(phiBin),
                                    sl);
 
-            for (TEveCaloData::vCellId_i it = sl.begin(); it != sl.end(); ++it)
+            for (auto & it : sl)
             {
                if (fCells3D) {
-                  if ((*it).fSlice == slice ) sel.push_back(*it);
+                  if (it.fSlice == slice ) sel.push_back(it);
                } else {
-                  if ((*it).fSlice <= slice ) sel.push_back(*it);
+                  if (it.fSlice <= slice ) sel.push_back(it);
                }
             }
          }

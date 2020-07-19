@@ -162,8 +162,8 @@ namespace mathtext {
                str[1] = static_cast<char>(dword % 85 + '!');
                dword /= 85;
                str[0] = static_cast<char>(dword % 85 + '!');
-               for (size_t j = 0; j < 5; j++) {
-                  ascii.append(1, str[j]);
+               for (char j : str) {
+                  ascii.append(1, j);
                   column++;
                   if(column == width) {
                      ascii.append(1, '\n');

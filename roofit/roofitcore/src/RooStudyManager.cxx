@@ -224,9 +224,9 @@ void RooStudyManager::processBatchOutput(const char* filePat)
 
   TList olist ;
 
-  for (list<string>::iterator iter = flist.begin() ; iter!=flist.end() ; ++iter) {
-    coutP(DataHandling) << "RooStudyManager::processBatchOutput() now reading file " << *iter << endl ;
-    TFile f(iter->c_str()) ;
+  for (auto & iter : flist) {
+    coutP(DataHandling) << "RooStudyManager::processBatchOutput() now reading file " << iter << endl ;
+    TFile f(iter.c_str()) ;
 
     TList* list = f.GetListOfKeys() ;
     TIterator* kiter = list->MakeIterator();
@@ -249,8 +249,8 @@ void RooStudyManager::processBatchOutput(const char* filePat)
 
 void RooStudyManager::aggregateData(TList* olist)
 {
-  for (list<RooAbsStudy*>::iterator iter=_pkg->studies().begin() ; iter!=_pkg->studies().end() ; ++iter) {
-    (*iter)->aggregateSummaryOutput(olist) ;
+  for (auto & iter : _pkg->studies()) {
+    iter->aggregateSummaryOutput(olist) ;
   }
 }
 

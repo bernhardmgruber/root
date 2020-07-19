@@ -313,8 +313,8 @@ namespace Math {
 
       Double_t sigmaN = 0.0, h = 0.0, H = 0.0, g = 0.0, a, b, c, d, k = ns.size();
 
-      for (UInt_t i = 0; i < ns.size(); ++i) {
-         H += 1.0 /  double( ns[i] );
+      for (unsigned int n : ns) {
+         H += 1.0 /  double( n );
       }
 
       // use approximate formulas for large N

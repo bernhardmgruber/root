@@ -396,8 +396,8 @@ void TMVA::MethodFDA::Train( void )
 
    // starting values (not used by all fitters)
    fBestPars.clear();
-   for (std::vector<Interval*>::const_iterator parIt = fParRange.begin(); parIt != fParRange.end(); ++parIt) {
-      fBestPars.push_back( (*parIt)->GetMean() );
+   for (auto parIt : fParRange) {
+      fBestPars.push_back( parIt->GetMean() );
    }
 
    // execute the fit

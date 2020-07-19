@@ -148,9 +148,8 @@ namespace mathtext {
    bool math_text_t::field_t::generalized_fraction(void) const
    {
       if(_type == TYPE_MATH_LIST)
-         for (std::vector<item_t>::const_iterator iterator = _math_list.begin(); iterator != _math_list.end();
-              ++iterator)
-            if(iterator->_type ==
+         for (const auto & iterator : _math_list)
+            if(iterator._type ==
                item_t::TYPE_GENERALIZED_FRACTION)
                return true;
       return false;
@@ -221,8 +220,8 @@ namespace mathtext {
    {
       std::wstring wstring;
 
-      for (std::string::const_iterator iterator = string.begin(); iterator != string.end(); ++iterator) {
-         wstring.push_back(*iterator);
+      for (char iterator : string) {
+         wstring.push_back(iterator);
       }
 
       return wstring;

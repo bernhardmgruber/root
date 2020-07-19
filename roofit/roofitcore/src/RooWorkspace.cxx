@@ -201,10 +201,10 @@ RooWorkspace::RooWorkspace(const RooWorkspace& other) :
   delete iter2 ;
 
   // Copy named sets
-  for (map<string,RooArgSet>::const_iterator iter3 = other._namedSets.begin() ; iter3 != other._namedSets.end() ; ++iter3) {
+  for (const auto & _namedSet : other._namedSets) {
     // Make RooArgSet with equivalent content of this workspace
-    RooArgSet* tmp = (RooArgSet*) _allOwnedNodes.selectCommon(iter3->second) ;
-    _namedSets[iter3->first].add(*tmp) ;
+    RooArgSet* tmp = (RooArgSet*) _allOwnedNodes.selectCommon(_namedSet.second) ;
+    _namedSets[_namedSet.first].add(*tmp) ;
     delete tmp ;
   }
 
@@ -2418,9 +2418,9 @@ void RooWorkspace::Print(Option_t* opts) const
   if (_namedSets.size()>0) {
     cout << "named sets" << endl ;
     cout << "----------" << endl ;
-    for (map<string,RooArgSet>::const_iterator it = _namedSets.begin() ; it != _namedSets.end() ; ++it) {
-       if (verbose || !TString(it->first.c_str()).BeginsWith("CACHE_")) {
-          cout << it->first << ":" << it->second << endl;
+    for (const auto & _namedSet : _namedSets) {
+       if (verbose || !TString(_namedSet.first.c_str()).BeginsWith("CACHE_")) {
+          cout << _namedSet.first << ":" << _namedSet.second << endl;
        }
     }
 
@@ -3117,8 +3117,7 @@ Bool_t RooWorkspace::isValidCPPID(const char* name)
   if (isdigit(oname[0])) {
     return kFALSE ;
   } else {
-    for (UInt_t i=0 ; i<oname.size() ; i++) {
-      char c = oname[i] ;
+    for (char c : oname) {
       if (!isalnum(c) && (c!='_')) {
 	return kFALSE ;
       }

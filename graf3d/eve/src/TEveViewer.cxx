@@ -375,9 +375,9 @@ void TEveViewerList::RemoveElementLocal(TEveElement* el)
 
 void TEveViewerList::RemoveElementsLocal()
 {
-   for (List_i i=fChildren.begin(); i!=fChildren.end(); ++i)
+   for (auto & i : fChildren)
    {
-      (*i)->DecParentIgnoreCnt();
+      i->DecParentIgnoreCnt();
    }
 
    TEveElementList::RemoveElementsLocal();
@@ -436,9 +436,9 @@ void TEveViewerList::Disconnect()
 
 void TEveViewerList::RepaintChangedViewers(Bool_t resetCameras, Bool_t dropLogicals)
 {
-   for (List_i i=fChildren.begin(); i!=fChildren.end(); ++i)
+   for (auto & i : fChildren)
    {
-      TGLViewer* glv = ((TEveViewer*)*i)->GetGLViewer();
+      TGLViewer* glv = ((TEveViewer*)i)->GetGLViewer();
       if (glv->IsChanged())
       {
          if (resetCameras) glv->PostSceneBuildSetup(kTRUE);
@@ -456,9 +456,9 @@ void TEveViewerList::RepaintChangedViewers(Bool_t resetCameras, Bool_t dropLogic
 
 void TEveViewerList::RepaintAllViewers(Bool_t resetCameras, Bool_t dropLogicals)
 {
-   for (List_i i=fChildren.begin(); i!=fChildren.end(); ++i)
+   for (auto & i : fChildren)
    {
-      TGLViewer* glv = ((TEveViewer*)*i)->GetGLViewer();
+      TGLViewer* glv = ((TEveViewer*)i)->GetGLViewer();
 
       if (resetCameras) glv->PostSceneBuildSetup(kTRUE);
       if (dropLogicals) glv->SetSmartRefresh(kFALSE);
@@ -474,9 +474,9 @@ void TEveViewerList::RepaintAllViewers(Bool_t resetCameras, Bool_t dropLogicals)
 
 void TEveViewerList::DeleteAnnotations()
 {
-   for (List_i i=fChildren.begin(); i!=fChildren.end(); ++i)
+   for (auto & i : fChildren)
    {
-      TGLViewer* glv = ((TEveViewer*)*i)->GetGLViewer();
+      TGLViewer* glv = ((TEveViewer*)i)->GetGLViewer();
       glv->DeleteOverlayAnnotations();
    }
 }
@@ -487,9 +487,9 @@ void TEveViewerList::DeleteAnnotations()
 
 void TEveViewerList::SceneDestructing(TEveScene* scene)
 {
-   for (List_i i=fChildren.begin(); i!=fChildren.end(); ++i)
+   for (auto & i : fChildren)
    {
-      TEveViewer* viewer = (TEveViewer*) *i;
+      TEveViewer* viewer = (TEveViewer*) i;
       List_i j = viewer->BeginChildren();
       while (j != viewer->EndChildren())
       {
@@ -658,9 +658,9 @@ void TEveViewerList::SetColorBrightness(Float_t b)
 void TEveViewerList::SwitchColorSet()
 {
    fUseLightColorSet = ! fUseLightColorSet;
-   for (List_i i=fChildren.begin(); i!=fChildren.end(); ++i)
+   for (auto & i : fChildren)
    {
-      TGLViewer* glv = ((TEveViewer*)*i)->GetGLViewer();
+      TGLViewer* glv = ((TEveViewer*)i)->GetGLViewer();
       if ( fUseLightColorSet)
          glv->UseLightColorSet();
       else

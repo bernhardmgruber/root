@@ -93,8 +93,8 @@ namespace textinput {
        infoColIdx = GetContext()->GetColorizer()->GetInfoColor();
     }
     WriteRawString("\n", 1);
-    for (size_t i = 0, n = Options.size(); i < n; ++i) {
-      Text t(Options[i], infoColIdx);
+    for (const auto & Option : Options) {
+      Text t(Option, infoColIdx);
       WriteWrappedTextPart(t, 0, 0, (size_t) -1);
       WriteRawString("\n", 1);
     }

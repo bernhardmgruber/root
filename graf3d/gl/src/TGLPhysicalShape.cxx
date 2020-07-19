@@ -475,9 +475,9 @@ void TGLPhysicalShape::CalculateShapeLOD(TGLRnrCtx& rnrCtx, Float_t& pixSize, Sh
 
    // Find largest of the projected diagonals
    Double_t largestDiagonal = 0.0;
-   for (UInt_t i = 0; i < boxViewportDiags.size(); i++) {
-      if (boxViewportDiags[i] > largestDiagonal) {
-         largestDiagonal = boxViewportDiags[i];
+   for (double boxViewportDiag : boxViewportDiags) {
+      if (boxViewportDiag > largestDiagonal) {
+         largestDiagonal = boxViewportDiag;
       }
    }
    pixSize = largestDiagonal;

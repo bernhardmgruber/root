@@ -1760,10 +1760,9 @@ void TDSetElement::Streamer(TBuffer &R__b)
             // Convert friends to a TList (to be written)
             fFriends = new TList();
             fFriends->SetOwner();
-            for (FriendsList_t::iterator i = friends->begin();
-                 i != friends->end(); ++i) {
-               TDSetElement *dse = (TDSetElement *) i->first->Clone();
-               fFriends->Add(new TPair(dse, new TObjString(i->second.Data())));
+            for (auto & i : *friends) {
+               TDSetElement *dse = (TDSetElement *) i.first->Clone();
+               fFriends->Add(new TPair(dse, new TObjString(i.second.Data())));
             }
          }
          // the value for fIsTree (only older versions are sending it)

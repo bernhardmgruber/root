@@ -82,9 +82,9 @@ void TEveBox::ComputeBBox()
    TEveShape::CheckAndFixBoxOrientationFv(fVertices);
 
    BBoxInit();
-   for (Int_t i=0; i<8; ++i)
+   for (auto & fVertice : fVertices)
    {
-      BBoxCheckPoint(fVertices[i]);
+      BBoxCheckPoint(fVertice);
    }
 }
 
@@ -128,9 +128,9 @@ TEveBoxProjected::~TEveBoxProjected()
 void TEveBoxProjected::ComputeBBox()
 {
    BBoxInit();
-   for (vVector2_i i = fPoints.begin(); i != fPoints.end(); ++i)
+   for (auto & fPoint : fPoints)
    {
-      BBoxCheckPoint(i->fX, i->fY, fDepth);
+      BBoxCheckPoint(fPoint.fX, fPoint.fY, fDepth);
    }
 }
 
@@ -178,9 +178,9 @@ void TEveBoxProjected::UpdateProjection()
 
          TEveVector2 p(pbuf);
          Bool_t      overlap = kFALSE;
-         for (vVector2_i j = ppv.begin(); j != ppv.end(); ++j)
+         for (auto & j : ppv)
          {
-            if (p.SquareDistance(*j) < TEveProjection::fgEpsSqr)
+            if (p.SquareDistance(j) < TEveProjection::fgEpsSqr)
             {
                overlap = kTRUE;
                break;

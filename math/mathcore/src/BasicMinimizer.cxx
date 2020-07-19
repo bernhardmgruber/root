@@ -356,8 +356,8 @@ const MinimTransformFunction * BasicMinimizer::TransformFunction() const {
 unsigned int BasicMinimizer::NFree() const {
    // number of free variables
    unsigned int nfree = fValues.size();
-   for (unsigned int i = 0; i < fVarTypes.size(); ++i)
-      if (fVarTypes[i] == kFix) nfree--;
+   for (auto fVarType : fVarTypes)
+      if (fVarType == kFix) nfree--;
    return nfree;
 }
 

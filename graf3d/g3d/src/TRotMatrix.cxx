@@ -26,7 +26,7 @@ Manages a detector rotation matrix. See class TGeometry.
 
 TRotMatrix::TRotMatrix()
 {
-   for (int i=0;i<9;i++) fMatrix[i] = 0;
+   for (double & i : fMatrix) i = 0;
    fNumber = 0;
    fPhi    = 0;
    fPsi    = 0;

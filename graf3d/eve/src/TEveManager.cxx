@@ -457,8 +457,8 @@ void TEveManager::ElementChanged(TEveElement* element, Bool_t update_scenes, Boo
 
 void TEveManager::ScenesChanged(TEveElement::List_t& scenes)
 {
-   for (TEveElement::List_i s=scenes.begin(); s!=scenes.end(); ++s)
-      ((TEveScene*)*s)->Changed();
+   for (auto & scene : scenes)
+      ((TEveScene*)scene)->Changed();
 }
 
 ////////////////////////////////////////////////////////////////////////////////

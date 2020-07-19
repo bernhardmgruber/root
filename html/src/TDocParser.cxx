@@ -164,8 +164,8 @@ TDocParser::TDocParser(TClassDocOutput& docOutput, TClass* cl):
 
    TMethodWrapperImpl::SetClass(cl);
 
-   for (int ia = 0; ia < 3; ++ia) {
-      fMethods[ia].Rehash(101);
+   for (auto & fMethod : fMethods) {
+      fMethod.Rehash(101);
    }
 
    AddClassMethodsRecursively(0);
@@ -292,9 +292,9 @@ void TDocParser::AddClassMethodsRecursively(TBaseClass* bc)
       AddClassMethodsRecursively(base);
 
    if (!bc)
-      for (Int_t access = 0; access < 3; ++access) {
-         fMethods[access].SetOwner();
-         fMethods[access].Sort();
+      for (auto & fMethod : fMethods) {
+         fMethod.SetOwner();
+         fMethod.Sort();
       }
 }
 
@@ -2262,8 +2262,8 @@ void TDocParser::WriteMethod(std::ostream& out, TString& ret,
 
    // Collect overload candidates
    TList candidates;
-   for (int access = 0; access < 3; ++access) {
-      const TList* methList = fMethods[access].GetListForObject(name);
+   for (const auto & fMethod : fMethods) {
+      const TList* methList = fMethod.GetListForObject(name);
       if (!methList) continue;
 
       TIter nextMethod(methList);

@@ -289,8 +289,7 @@ bool THtml::TFileDefinition::GetImplFileName(const TClass* cl, TString& out_file
 void THtml::TFileDefinition::NormalizePath(TString& filename) const
 {
    static const char* delim[] = {"/", "\\\\"};
-   for (int i = 0; i < 2; ++i) {
-      const char* d = delim[i];
+   for (auto d : delim) {
       filename = filename.ReplaceAll(TString::Format("%c.%c", d[0], d[0]), TString(d[0]));
       TPRegexp reg(TString::Format("%s[^%s]+%s\\.\\.%s", d, d, d, d));
       while (reg.Substitute(filename, TString(d[0]), "", 0, 1)) {}
@@ -441,8 +440,8 @@ bool THtml::TFileDefinition::GetFileName(const TClass* cl, bool decl,
       // it out, so it can take the class doc from the header even though a source exists.
       static const char* vetoClasses[] = {"math/mathcore/", "math/mathmore/", "math/genvector/",
                                           "math/minuit2/", "math/smatrix/"};
-      for (unsigned int i = 0; i < sizeof(vetoClasses) / sizeof(char*); ++i) {
-         if (clfile.Contains(vetoClasses[i])) {
+      for (auto & vetoClasse : vetoClasses) {
+         if (clfile.Contains(vetoClasse)) {
             // of course there are exceptions from the exceptions:
             // TComplex and TRandom, TRandom1,...
             if (strcmp(cl->GetName(), "TComplex")

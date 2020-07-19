@@ -885,7 +885,7 @@ Double_t TGeoTube::SafetyS(const Double_t *point, Bool_t in, Double_t rmin, Doub
    saf[2] = rmax-r;
 //   printf("saf0=%g saf1=%g saf2=%g in=%d skipz=%d\n", saf[0],saf[1],saf[2],in,skipz);
    if (in) return saf[TMath::LocMin(3,saf)];
-   for (Int_t i=0; i<3; i++) saf[i]=-saf[i];
+   for (double & i : saf) i=-i;
    return saf[TMath::LocMax(3,saf)];
 }
 
@@ -3019,7 +3019,7 @@ Double_t TGeoCtub::Safety(const Double_t *point, Bool_t in) const
       safe = saf[TMath::LocMin(4,saf)];
       return TMath::Min(safe, safphi);
    }
-   for (Int_t i=0; i<4; i++) saf[i]=-saf[i];
+   for (double & i : saf) i=-i;
    safe = saf[TMath::LocMax(4,saf)];
    if (isseg) return TMath::Max(safe, safphi);
    return safe;

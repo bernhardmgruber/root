@@ -117,11 +117,11 @@ namespace RooStats {
           } 
         } else {
           cout << "mismatch in systSourceForHist : " << systSourceForHist.size() << " vs " << other.systSourceForHist.size() << endl;
-          for( vector<string>::const_iterator itr_this=systSourceForHist.begin(); itr_this!=systSourceForHist.end(); ++itr_this){
-            cout << "  this contains: " << *itr_this << endl;
+          for(const auto & itr_this : systSourceForHist){
+            cout << "  this contains: " << itr_this << endl;
           }
-          for( vector<string>::const_iterator itr_other=other.systSourceForHist.begin(); itr_other!=other.systSourceForHist.end(); ++itr_other){
-            cout << "  other contains: " << *itr_other << endl;
+          for(const auto & itr_other : other.systSourceForHist){
+            cout << "  other contains: " << itr_other << endl;
           }
           return false;
         }
@@ -132,14 +132,14 @@ namespace RooStats {
         cout << "mismatch in overallSyst : " << overallSyst.size() << " vs " << other.overallSyst.size() << endl;
         return false;
       }
-      for( map<string, pair<double, double> >::const_iterator itr=overallSyst.begin(); itr!=overallSyst.end(); ++itr){
-        map<string, pair<double, double> >::const_iterator found=other.overallSyst.find(itr->first);
+      for(const auto & itr : overallSyst){
+        map<string, pair<double, double> >::const_iterator found=other.overallSyst.find(itr.first);
         if(found==other.overallSyst.end()){
-          cout << "mismatch in overallSyst, didn't find " << itr->first << endl;
+          cout << "mismatch in overallSyst, didn't find " << itr.first << endl;
           return false;
         }
-        if(! (itr->second.first==found->second.first && itr->second.second==found->second.second)){
-          cout << "mismatch in overall Syst value of " << itr->first << endl;
+        if(! (itr.second.first==found->second.first && itr.second.second==found->second.second)){
+          cout << "mismatch in overall Syst value of " << itr.first << endl;
           return false;
         }
       }

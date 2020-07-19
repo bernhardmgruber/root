@@ -138,8 +138,8 @@ RooHistConstraint::RooHistConstraint(const char *name, const char *title,
       RooRealVar* var = new RooRealVar(vname,vname,0,1000) ;
 
       Double_t sumVal2(0) ;
-      for (vector<RooParamHistFunc*>::iterator iter = phvec.begin() ; iter != phvec.end() ; ++iter) {
-        sumVal2 += (*iter)->getNominal(i) ;
+      for (auto & iter : phvec) {
+        sumVal2 += iter->getNominal(i) ;
       }
       var->setVal(sumVal2) ;
       var->setConstant(kTRUE) ;
@@ -148,8 +148,8 @@ RooHistConstraint::RooHistConstraint(const char *name, const char *title,
       RooRealVar* vare = new RooRealVar(vname,vname,0,1000) ;
 
       Double_t sumErr2(0) ;
-      for (vector<RooParamHistFunc*>::iterator iter = phvec.begin() ; iter != phvec.end() ; ++iter) {
-        sumErr2 += pow((*iter)->getNominalError(i),2) ;
+      for (auto & iter : phvec) {
+        sumErr2 += pow(iter->getNominalError(i),2) ;
       }
       vare->setVal(sqrt(sumErr2)) ;
       vare->setConstant(kTRUE) ;

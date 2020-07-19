@@ -190,18 +190,18 @@ TEveElement::~TEveElement()
       fDestructing = kStandard;
       RemoveElementsInternal();
 
-      for (List_i p=fParents.begin(); p!=fParents.end(); ++p)
+      for (auto & fParent : fParents)
       {
-         (*p)->RemoveElementLocal(this);
-         (*p)->fChildren.remove(this);
-         --((*p)->fNumChildren);
+         fParent->RemoveElementLocal(this);
+         fParent->fChildren.remove(this);
+         --(fParent->fNumChildren);
       }
    }
 
    fParents.clear();
 
-   for (sLTI_i i=fItems.begin(); i!=fItems.end(); ++i)
-      i->fTree->DeleteItem(i->fItem);
+   for (const auto & fItem : fItems)
+      fItem.fTree->DeleteItem(fItem.fItem);
 
    delete fMainTrans;
 }
@@ -248,9 +248,9 @@ TEveElement* TEveElement::CloneElementRecurse(Int_t level) const
 
 void TEveElement::CloneChildrenRecurse(TEveElement* dest, Int_t level) const
 {
-   for (List_ci i=fChildren.begin(); i!=fChildren.end(); ++i)
+   for (auto i : fChildren)
    {
-      dest->AddElement((*i)->CloneElementRecurse(level));
+      dest->AddElement(i->CloneElementRecurse(level));
    }
 }
 
@@ -445,9 +445,9 @@ void TEveElement::PropagateVizParamsToElements(TEveElement* el)
    if (el == 0)
       el = this;
 
-   for (List_i i=fChildren.begin(); i!=fChildren.end(); ++i)
+   for (auto & i : fChildren)
    {
-      (*i)->CopyVizParams(el);
+      i->CopyVizParams(el);
    }
 }
 
@@ -619,9 +619,9 @@ TEveElement* TEveElement::GetMaster()
    }
    if (TestCSCBits(kCSCBTakeAnyParentAsMaster))
    {
-      for (List_i i = fParents.begin(); i != fParents.end(); ++i)
-         if (dynamic_cast<TEveCompound*>(*i))
-            return (*i)->GetMaster();
+      for (auto & fParent : fParents)
+         if (dynamic_cast<TEveCompound*>(fParent))
+            return fParent->GetMaster();
    }
    return this;
 }
@@ -691,8 +691,8 @@ void TEveElement::CheckReferenceCount(const TEveException& eh)
 
 void TEveElement::CollectSceneParents(List_t& scenes)
 {
-   for (List_i p=fParents.begin(); p!=fParents.end(); ++p)
-      (*p)->CollectSceneParents(scenes);
+   for (auto & fParent : fParents)
+      fParent->CollectSceneParents(scenes);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -705,14 +705,14 @@ void TEveElement::CollectSceneParents(List_t& scenes)
 void TEveElement::CollectSceneParentsFromChildren(List_t&      scenes,
                                                   TEveElement* parent)
 {
-   for (List_i p=fParents.begin(); p!=fParents.end(); ++p)
+   for (auto & fParent : fParents)
    {
-      if (*p != parent) (*p)->CollectSceneParents(scenes);
+      if (fParent != parent) fParent->CollectSceneParents(scenes);
    }
 
-   for (List_i c=fChildren.begin(); c!=fChildren.end(); ++c)
+   for (auto & c : fChildren)
    {
-      (*c)->CollectSceneParentsFromChildren(scenes, this);
+      c->CollectSceneParentsFromChildren(scenes, this);
    }
 }
 
@@ -731,8 +731,8 @@ void TEveElement::ExpandIntoListTree(TGListTree* ltree,
 {
    if (parent->GetFirstChild() != 0)
       return;
-   for (List_i i=fChildren.begin(); i!=fChildren.end(); ++i) {
-      (*i)->AddIntoListTree(ltree, parent);
+   for (auto & i : fChildren) {
+      i->AddIntoListTree(ltree, parent);
    }
 }
 
@@ -768,9 +768,9 @@ TGListTreeItem* TEveElement::AddIntoListTree(TGListTree* ltree,
    if (parent_lti == 0)
       ++fTopItemCnt;
 
-   for (List_i i=fChildren.begin(); i!=fChildren.end(); ++i)
+   for (auto & i : fChildren)
    {
-      (*i)->AddIntoListTree(ltree, item);
+      i->AddIntoListTree(ltree, item);
    }
 
    ltree->ClearViewPort();
@@ -908,9 +908,9 @@ TEveElement::sLTI_i TEveElement::FindItem(TGListTree* ltree,
 
 TGListTreeItem* TEveElement::FindListTreeItem(TGListTree* ltree)
 {
-   for (sLTI_i i = fItems.begin(); i != fItems.end(); ++i)
-      if (i->fTree == ltree)
-         return i->fItem;
+   for (const auto & fItem : fItems)
+      if (fItem.fTree == ltree)
+         return fItem.fItem;
    return 0;
 }
 
@@ -921,9 +921,9 @@ TGListTreeItem* TEveElement::FindListTreeItem(TGListTree* ltree)
 TGListTreeItem* TEveElement::FindListTreeItem(TGListTree* ltree,
                                               TGListTreeItem* parent_lti)
 {
-   for (sLTI_i i = fItems.begin(); i != fItems.end(); ++i)
-      if (i->fTree == ltree && i->fItem->GetParent() == parent_lti)
-         return i->fItem;
+   for (const auto & fItem : fItems)
+      if (fItem.fTree == ltree && fItem.fItem->GetParent() == parent_lti)
+         return fItem.fItem;
    return 0;
 }
 
@@ -1369,14 +1369,14 @@ void TEveElement::RemoveElementLocal(TEveElement* /*el*/)
 
 void TEveElement::RemoveElementsInternal()
 {
-   for (sLTI_i i=fItems.begin(); i!=fItems.end(); ++i)
+   for (const auto & fItem : fItems)
    {
-      DestroyListSubTree(i->fTree, i->fItem);
+      DestroyListSubTree(fItem.fTree, fItem.fItem);
    }
    RemoveElementsLocal();
-   for (List_i i=fChildren.begin(); i!=fChildren.end(); ++i)
+   for (auto & i : fChildren)
    {
-      (*i)->RemoveParent(this);
+      i->RemoveParent(this);
    }
    fChildren.clear(); fNumChildren = 0;
 }
@@ -1479,12 +1479,12 @@ Bool_t TEveElement::HasChild(TEveElement* el)
 
 TEveElement* TEveElement::FindChild(const TString&  name, const TClass* cls)
 {
-   for (List_i i=fChildren.begin(); i!=fChildren.end(); ++i)
+   for (auto & i : fChildren)
    {
-      if (name.CompareTo((*i)->GetElementName()) == 0)
+      if (name.CompareTo(i->GetElementName()) == 0)
       {
-         if (!cls || (cls && (*i)->IsA()->InheritsFrom(cls)))
-            return *i;
+         if (!cls || (cls && i->IsA()->InheritsFrom(cls)))
+            return i;
       }
    }
    return 0;
@@ -1498,12 +1498,12 @@ TEveElement* TEveElement::FindChild(const TString&  name, const TClass* cls)
 
 TEveElement* TEveElement::FindChild(TPRegexp& regexp, const TClass* cls)
 {
-   for (List_i i=fChildren.begin(); i!=fChildren.end(); ++i)
+   for (auto & i : fChildren)
    {
-      if (regexp.MatchB((*i)->GetElementName()))
+      if (regexp.MatchB(i->GetElementName()))
       {
-         if (!cls || (cls && (*i)->IsA()->InheritsFrom(cls)))
-            return *i;
+         if (!cls || (cls && i->IsA()->InheritsFrom(cls)))
+            return i;
       }
    }
    return 0;
@@ -1519,13 +1519,13 @@ Int_t TEveElement::FindChildren(List_t& matches,
                                 const TString& name, const TClass* cls)
 {
    Int_t count = 0;
-   for (List_i i=fChildren.begin(); i!=fChildren.end(); ++i)
+   for (auto & i : fChildren)
    {
-      if (name.CompareTo((*i)->GetElementName()) == 0)
+      if (name.CompareTo(i->GetElementName()) == 0)
       {
-         if (!cls || (cls && (*i)->IsA()->InheritsFrom(cls)))
+         if (!cls || (cls && i->IsA()->InheritsFrom(cls)))
          {
-            matches.push_back(*i);
+            matches.push_back(i);
             ++count;
          }
       }
@@ -1543,13 +1543,13 @@ Int_t TEveElement::FindChildren(List_t& matches,
                                 TPRegexp& regexp, const TClass* cls)
 {
    Int_t count = 0;
-   for (List_i i=fChildren.begin(); i!=fChildren.end(); ++i)
+   for (auto & i : fChildren)
    {
-      if (regexp.MatchB((*i)->GetElementName()))
+      if (regexp.MatchB(i->GetElementName()))
       {
-         if (!cls || (cls && (*i)->IsA()->InheritsFrom(cls)))
+         if (!cls || (cls && i->IsA()->InheritsFrom(cls)))
          {
-            matches.push_back(*i);
+            matches.push_back(i);
             ++count;
          }
       }
@@ -1579,10 +1579,10 @@ TEveElement* TEveElement::LastChild () const
 
 void TEveElement::EnableListElements(Bool_t rnr_self,  Bool_t rnr_children)
 {
-   for (List_i i=fChildren.begin(); i!=fChildren.end(); ++i)
+   for (auto & i : fChildren)
    {
-      (*i)->SetRnrSelf(rnr_self);
-      (*i)->SetRnrChildren(rnr_children);
+      i->SetRnrSelf(rnr_self);
+      i->SetRnrChildren(rnr_children);
    }
 
    ElementChanged(kTRUE, kTRUE);
@@ -1597,10 +1597,10 @@ void TEveElement::EnableListElements(Bool_t rnr_self,  Bool_t rnr_children)
 
 void TEveElement::DisableListElements(Bool_t rnr_self,  Bool_t rnr_children)
 {
-   for (List_i i=fChildren.begin(); i!=fChildren.end(); ++i)
+   for (auto & i : fChildren)
    {
-      (*i)->SetRnrSelf(rnr_self);
-      (*i)->SetRnrChildren(rnr_children);
+      i->SetRnrSelf(rnr_self);
+      i->SetRnrChildren(rnr_children);
    }
 
    ElementChanged(kTRUE, kTRUE);
@@ -1621,14 +1621,14 @@ void TEveElement::AnnihilateRecursively()
    }
 
    // same as TEveElements::RemoveElementsInternal(), except parents are ignored
-   for (sLTI_i i=fItems.begin(); i!=fItems.end(); ++i)
+   for (const auto & fItem : fItems)
    {
-      DestroyListSubTree(i->fTree, i->fItem);
+      DestroyListSubTree(fItem.fTree, fItem.fItem);
    }
    RemoveElementsLocal();
-   for (List_i i=fChildren.begin(); i!=fChildren.end(); ++i)
+   for (auto & i : fChildren)
    {
-      (*i)->AnnihilateRecursively();
+      i->AnnihilateRecursively();
    }
 
    fChildren.clear();
@@ -1860,9 +1860,9 @@ void TEveElement::ElementChanged(Bool_t update_scenes, Bool_t redraw)
 void TEveElement::SetPickableRecursively(Bool_t p)
 {
    fPickable = p;
-   for (List_i i=fChildren.begin(); i!=fChildren.end(); ++i)
+   for (auto & i : fChildren)
    {
-      (*i)->SetPickableRecursively(p);
+      i->SetPickableRecursively(p);
    }
 }
 

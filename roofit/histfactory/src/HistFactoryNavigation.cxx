@@ -278,8 +278,8 @@ namespace RooStats {
 
     void HistFactoryNavigation::PrintState() {
       // Loop over channels and print their states, one after another
-      for(unsigned int i = 0; i < fChannelNameVec.size(); ++i) {
-	PrintState(fChannelNameVec.at(i));
+      for(auto & i : fChannelNameVec) {
+	PrintState(i);
       }
     }
 
@@ -290,9 +290,8 @@ namespace RooStats {
       std::map< std::string, RooAbsReal*> SampleFunctionMap = GetSampleFunctionMap(channel);      
 
       // Get the max of the samples
-      for( std::map< std::string, RooAbsReal*>::iterator itr = SampleFunctionMap.begin(); 
-	   itr != SampleFunctionMap.end(); ++itr) {
-	std::string sample_name = itr->first;
+      for(auto & itr : SampleFunctionMap) {
+	std::string sample_name = itr.first;
 	_label_print_width = TMath::Max(_label_print_width, (int)sample_name.size()+2);
       }
 
@@ -321,11 +320,9 @@ namespace RooStats {
       // int bin_print_width = 12;
 
       // Get the Data Histogram for this channel
-      for( unsigned int i_chan=0; i_chan < fChannelNameVec.size(); ++i_chan) {
+      for(auto channel_name : fChannelNameVec) {
 
-	std::string channel_name = fChannelNameVec.at(i_chan);
-
-	// If we pass a channel string, we only print that one channel
+		// If we pass a channel string, we only print that one channel
 	if( channel_to_print != "" && channel_name != channel_to_print) continue;
 
 	TH1* data_hist = GetDataHist(data, channel_name, channel_name+"_tmp");
@@ -343,9 +340,8 @@ namespace RooStats {
       // (including all samples) and compare
       // it to the supplied dataset
 
-      for( unsigned int i = 0; i < fChannelNameVec.size(); ++i) {
-	std::string channel = fChannelNameVec.at(i);
-	SetPrintWidths(channel);
+      for(auto channel : fChannelNameVec) {
+		SetPrintWidths(channel);
 	PrintState(channel);
 	PrintDataSet(data, channel);
       }
@@ -811,10 +807,9 @@ namespace RooStats {
       // and find their RooRealSumPdfs
       // std::map< std::string, RooRealSumPdf* > channelSumNodeMap;
 
-      for( unsigned int i = 0; i < fChannelNameVec.size(); ++i ) {
+      for(auto ChannelName : fChannelNameVec) {
 
-	std::string ChannelName = fChannelNameVec.at(i);
-	RooAbsPdf* pdf = fChannelPdfMap[ChannelName];
+		RooAbsPdf* pdf = fChannelPdfMap[ChannelName];
 	//std::string Name = fChannelNameMap[ChannelName];
 
 	// Loop over the pdf's components and find
@@ -835,10 +830,9 @@ namespace RooStats {
       
       // Okay, now we have all necessary
       // nodes filled for each channel.
-      for( unsigned int i = 0; i < fChannelNameVec.size(); ++i ) {
+      for(auto ChannelName : fChannelNameVec) {
 
-	std::string ChannelName = fChannelNameVec.at(i);
-	RooRealSumPdf* sumPdf = dynamic_cast<RooRealSumPdf*>(fChannelSumNodeMap[ChannelName]);
+		RooRealSumPdf* sumPdf = dynamic_cast<RooRealSumPdf*>(fChannelSumNodeMap[ChannelName]);
 	
 	// We now take the RooRealSumPdf and loop over
 	// its component functions.  The RooRealSumPdf turns

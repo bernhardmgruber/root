@@ -3649,7 +3649,7 @@ void TUnfold::ClearHistogram(TH1 *h,Double_t x) const
    nxyz[2]=h->GetNbinsZ()+1;
    for(int i=h->GetDimension();i<3;i++) nxyz[i]=0;
    Int_t ixyz[3];
-   for(int i=0;i<3;i++) ixyz[i]=0;
+   for(int & i : ixyz) i=0;
    while((ixyz[0]<=nxyz[0])&&
          (ixyz[1]<=nxyz[1])&&
          (ixyz[2]<=nxyz[2])){

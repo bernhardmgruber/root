@@ -982,8 +982,8 @@ std::string RooFactoryWSTool::processCompositeExpression(const char* token)
 
   string ret ;
   list<char>::iterator ic = separator.begin() ;
-  for (list<string>::iterator ii = singleExpr.begin() ; ii!=singleExpr.end() ; ++ii) {
-    ret += processSingleExpression(ii->c_str()) ;
+  for (auto & ii : singleExpr) {
+    ret += processSingleExpression(ii.c_str()) ;
     if (ic != separator.end()) {
       ret += *ic ;
       ++ic ;
@@ -1354,11 +1354,11 @@ string RooFactoryWSTool::processCreateVar(string& func, vector<string>& args)
 
     // Create a RooAbsCategory
     string allStates ;
-    for (vector<string>::iterator ai = args.begin() ; ai!=args.end() ; ++ai) {
+    for (auto & arg : args) {
       if (allStates.size()>0) {
 	allStates += "," ;
       }
-      allStates += *ai ;
+      allStates += arg ;
     }
     createCategory(func.c_str(),allStates.c_str()) ;
 

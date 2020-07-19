@@ -1133,9 +1133,9 @@ Bool_t TGuiBldDragManager::CheckDragResize(Event_t *event)
    Bool_t ret = kFALSE;
    fPimpl->fResizeType = kPointer;
 
-   for (int i = 0; i < 8; i++) {
-      if (fPimpl->fGrabRect[i]->GetId() == event->fWindow) {
-         fPimpl->fResizeType = fPimpl->fGrabRect[i]->GetType();
+   for (auto & i : fPimpl->fGrabRect) {
+      if (i->GetId() == event->fWindow) {
+         fPimpl->fResizeType = i->GetType();
          ret = kTRUE;
       }
    }
@@ -1548,7 +1548,7 @@ void TGuiBldDragManager::DrawGrabRectangles(TGWindow *win)
       fPimpl->fAroundFrame[3]->MoveResize(x-3, y-3, 2, frame->GetHeight()+6);
       fPimpl->fAroundFrame[3]->MapRaised();
    } else {
-      for (int i = 0; i < 4; i++) fPimpl->fAroundFrame[i]->UnmapWindow();
+      for (auto & i : fPimpl->fAroundFrame) i->UnmapWindow();
    }
 
    // draw rectangles

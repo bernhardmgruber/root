@@ -130,9 +130,8 @@ Double_t TMVA::PDEFoamTargetDensity::Density(std::vector<Double_t> &xev, Double_
 
    Double_t n_tar = 0;           // number of target events found
    // now sum over all nodes->GetTarget(0);
-   for (std::vector<const TMVA::BinarySearchTreeNode*>::const_iterator it = nodes.begin();
-        it != nodes.end(); ++it) {
-      n_tar += ((*it)->GetTargets()).at(fTarget) * ((*it)->GetWeight());
+   for (auto node : nodes) {
+      n_tar += (node->GetTargets()).at(fTarget) * (node->GetWeight());
    }
 
    // return:  (n_tar/n_total) / (cell_volume)

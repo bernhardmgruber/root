@@ -131,8 +131,8 @@ TG16ColorSelector::TG16ColorSelector(const TGWindow *p) :
    fCe[14] = new TGColorFrame(this, TColor::Number2Pixel(50), 14);
    fCe[15] = new TGColorFrame(this, TColor::Number2Pixel(51), 15);
 
-   for (Int_t i = 0; i < 16; i++)
-      AddFrame(fCe[i], new TGLayoutHints(kLHintsCenterX | kLHintsCenterY));
+   for (auto & i : fCe)
+      AddFrame(i, new TGLayoutHints(kLHintsCenterX | kLHintsCenterY));
 
    fMsgWindow  = p;
    fActive = -1;

@@ -1810,8 +1810,8 @@ void SearchCanvases(TSeqCollection* canvases, std::vector<TObject*>& objects)
                 || dynamic_cast<TTree*>(obj) ) {
          bool insertNew = true;
          // Be careful no to insert the same element twice.
-         for ( std::vector<TObject*>::iterator i = objects.begin(); i != objects.end(); ++i )
-            if ( (*i) == obj ) {
+         for (auto & object : objects)
+            if ( object == obj ) {
                insertNew = false;
                break;
             }
@@ -1865,10 +1865,10 @@ void TFitEditor::FillDataSetList()
    // Add the No selection.
    Int_t newid = kFP_NOSEL;
    fDataSet->AddEntry("No Selection", newid++);
-   for ( std::vector<TObject*>::iterator i = objects.begin(); i != objects.end(); ++i ) {
+   for (auto & object : objects) {
       // Insert the name as the class name followed by the name of the
       // object.
-      TString name = (*i)->ClassName(); name.Append("::"); name.Append((*i)->GetName());
+      TString name = object->ClassName(); name.Append("::"); name.Append(object->GetName());
       // Check whether the names are the same!
       if ( selEntryStr && name == selEntryStr )
          selected = newid;
@@ -3550,8 +3550,8 @@ void TFitEditor::GetFunctionsFromSystem()
       if ( TF1* func = dynamic_cast<TF1*>(obj) ) {
          bool addFunction = true;
          // And they are not already registered in fSystemFunc
-         for ( unsigned int i = 0; i < nfuncs; ++i ) {
-            if ( strcmp( func->GetName(), fnames[i] ) == 0 ) {
+         for (auto & fname : fnames) {
+            if ( strcmp( func->GetName(), fname ) == 0 ) {
                addFunction = false;
                break;
             }

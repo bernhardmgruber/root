@@ -159,10 +159,9 @@ namespace {
       sectionMarkersOut.clear();
       sectionMarkersOut.resize(sectionStarts.size());
       size_t idx = 0;
-      for (SectionStarts_t::iterator iSectionStart = sectionStarts.begin();
-         iSectionStart != sectionStarts.end(); ++iSectionStart)
+      for (auto & sectionStart : sectionStarts)
          sectionMarkersOut[idx++] =
-            iSectionStart->fStart->substr(0, iSectionStart->fChars);
+            sectionStart.fStart->substr(0, sectionStart.fChars);
    }
 
    static void GetIndexChars(const std::list<std::string>& wordsIn, UInt_t numSectionsIn,
@@ -171,8 +170,8 @@ namespace {
       // initialize word vector
       Words_t words(wordsIn.size());
       size_t idx = 0;
-      for (std::list<std::string>::const_iterator iWord = wordsIn.begin(); iWord != wordsIn.end(); ++iWord)
-         words[idx++] = *iWord;
+      for (const auto & iWord : wordsIn)
+         words[idx++] = iWord;
       GetIndexChars(words, numSectionsIn, sectionMarkersOut);
    }
 
@@ -1046,12 +1045,11 @@ void TDocOutput::CreateModuleIndex()
             sstrCluster << "Everything depends on ";
          sstrCluster << libinfo->GetName() << "\";" << std::endl;
 
-         for (std::set<std::string>::const_iterator iModule = modules.begin();
-              iModule != modules.end(); ++iModule) {
-            TString modURL(*iModule);
+         for (const auto & module : modules) {
+            TString modURL(module);
             modURL.ReplaceAll("/", "_");
             modURL.ToUpper();
-            sstrCluster << "\"" << *iModule << "\" [style=filled,color=white,URL=\""
+            sstrCluster << "\"" << module << "\" [style=filled,color=white,URL=\""
                         << modURL << "_Index.html\"];" << std::endl;
          }
          sstrCluster << std::endl
@@ -1076,11 +1074,10 @@ void TDocOutput::CreateModuleIndex()
 
       const std::string& mod = *(modules.begin());
       const std::set<std::string>& deps = libinfo->GetDependencies();
-      for (std::set<std::string>::const_iterator iDep = deps.begin();
-            iDep != deps.end(); ++iDep) {
+      for (const auto & dep : deps) {
          // cannot create dependency on iDep directly, use its first module instead.
          TLibraryDocInfo* depLibInfo = (TLibraryDocInfo*)
-            fHtml->GetLibraryDependencies()->FindObject(iDep->c_str());
+            fHtml->GetLibraryDependencies()->FindObject(dep.c_str());
          if (!depLibInfo || depLibInfo->GetModules().empty())
             continue; // ouch!
 
@@ -1329,18 +1326,17 @@ void TDocOutput::CreateTypeIndex()
    int idx = 0;
    UInt_t currentIndexEntry = 0;
 
-   for (std::vector<std::string>::iterator iTypeName = typeNames.begin();
-      iTypeName != typeNames.end(); ++iTypeName) {
-      TDataType* type = gROOT->GetType(iTypeName->c_str(), kFALSE);
+   for (auto & typeName : typeNames) {
+      TDataType* type = gROOT->GetType(typeName.c_str(), kFALSE);
       typesList << "<li class=\"idxl" << idx%2 << "\">";
       if (currentIndexEntry < indexChars.size()
-         && !strncmp(indexChars[currentIndexEntry].c_str(), iTypeName->c_str(),
+         && !strncmp(indexChars[currentIndexEntry].c_str(), typeName.c_str(),
                      indexChars[currentIndexEntry].length()))
          typesList << "<a name=\"idx" << currentIndexEntry++ << "\"></a>" << std::endl;
       typesList << "<a name=\"";
-      ReplaceSpecialChars(typesList, iTypeName->c_str());
+      ReplaceSpecialChars(typesList, typeName.c_str());
       typesList << "\"><span class=\"typename\">";
-      ReplaceSpecialChars(typesList, iTypeName->c_str());
+      ReplaceSpecialChars(typesList, typeName.c_str());
       typesList << "</span></a> ";
       ReplaceSpecialChars(typesList, type->GetTitle());
       typesList << "</li>" << std::endl;

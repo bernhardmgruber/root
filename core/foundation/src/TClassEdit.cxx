@@ -1861,8 +1861,8 @@ string TClassEdit::InsertStd(const char *tname)
    if (sSetSTLtypes.empty()) {
       // set up static set
       const size_t nSTLtypes = sizeof(sSTLtypes) / sizeof(const char*);
-      for (size_t i = 0; i < nSTLtypes; ++i)
-         sSetSTLtypes.insert(sSTLtypes[i]);
+      for (auto & sSTLtype : sSTLtypes)
+         sSetSTLtypes.insert(sSTLtype);
    }
 
    size_t b = 0;

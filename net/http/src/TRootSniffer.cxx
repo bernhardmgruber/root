@@ -1402,12 +1402,12 @@ Bool_t TRootSniffer::ProduceMulti(const std::string &path, const std::string &op
       str.append("]");
    } else {
       Int_t length = 0;
-      for (unsigned n = 0; n < mem.size(); n++)
-         length += 4 + mem[n].length();
+      for (auto & n : mem)
+         length += 4 + n.length();
       str.resize(length);
       char *curr = (char *)str.data();
-      for (unsigned n = 0; n < mem.size(); n++) {
-         Long_t l = mem[n].length();
+      for (auto & n : mem) {
+         Long_t l = n.length();
          *curr++ = (char)(l & 0xff);
          l = l >> 8;
          *curr++ = (char)(l & 0xff);
@@ -1415,9 +1415,9 @@ Bool_t TRootSniffer::ProduceMulti(const std::string &path, const std::string &op
          *curr++ = (char)(l & 0xff);
          l = l >> 8;
          *curr++ = (char)(l & 0xff);
-         if (!mem[n].empty())
-            memcpy(curr, mem[n].data(), mem[n].length());
-         curr += mem[n].length();
+         if (!n.empty())
+            memcpy(curr, n.data(), n.length());
+         curr += n.length();
       }
    }
 

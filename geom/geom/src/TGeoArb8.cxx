@@ -145,9 +145,9 @@ End_Macro
 TGeoArb8::TGeoArb8()
 {
    fDz = 0;
-   for (Int_t i=0; i<8; i++) {
-      fXY[i][0] = 0.0;
-      fXY[i][1] = 0.0;
+   for (auto & i : fXY) {
+      i[0] = 0.0;
+      i[1] = 0.0;
    }
    SetShapeBit(kGeoArb8);
 }
@@ -169,9 +169,9 @@ TGeoArb8::TGeoArb8(Double_t dz, Double_t *vertices)
       ComputeTwist();
       ComputeBBox();
    } else {
-      for (Int_t i=0; i<8; i++) {
-         fXY[i][0] = 0.0;
-         fXY[i][1] = 0.0;
+      for (auto & i : fXY) {
+         i[0] = 0.0;
+         i[1] = 0.0;
       }
    }
 }
@@ -193,9 +193,9 @@ TGeoArb8::TGeoArb8(const char *name, Double_t dz, Double_t *vertices)
       ComputeTwist();
       ComputeBBox();
    } else {
-      for (Int_t i=0; i<8; i++) {
-         fXY[i][0] = 0.0;
-         fXY[i][1] = 0.0;
+      for (auto & i : fXY) {
+         i[0] = 0.0;
+         i[1] = 0.0;
       }
    }
 }
@@ -1417,9 +1417,9 @@ TGeoTrap::TGeoTrap(const char *name, Double_t dz, Double_t theta, Double_t phi, 
    fTl2 = tl2;
    fAlpha1 = alpha1;
    fAlpha2 = alpha2;
-   for (Int_t i=0; i<8; i++) {
-      fXY[i][0] = 0.0;
-      fXY[i][1] = 0.0;
+   for (auto & i : fXY) {
+      i[0] = 0.0;
+      i[1] = 0.0;
    }
    Double_t tx = TMath::Tan(theta*TMath::DegToRad())*TMath::Cos(phi*TMath::DegToRad());
    Double_t ty = TMath::Tan(theta*TMath::DegToRad())*TMath::Sin(phi*TMath::DegToRad());

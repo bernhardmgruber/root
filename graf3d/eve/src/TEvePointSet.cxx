@@ -486,8 +486,8 @@ void TEvePointSetArray::SetMarkerColor(Color_t tcolor)
 {
    static const TEveException eh("TEvePointSetArray::SetMarkerColor ");
 
-   for (List_i i=fChildren.begin(); i!=fChildren.end(); ++i) {
-      TAttMarker* m = dynamic_cast<TAttMarker*>((*i)->GetObject(eh));
+   for (auto & i : fChildren) {
+      TAttMarker* m = dynamic_cast<TAttMarker*>(i->GetObject(eh));
       if (m && m->GetMarkerColor() == fMarkerColor)
          m->SetMarkerColor(tcolor);
    }
@@ -501,8 +501,8 @@ void TEvePointSetArray::SetMarkerStyle(Style_t mstyle)
 {
    static const TEveException eh("TEvePointSetArray::SetMarkerStyle ");
 
-   for (List_i i=fChildren.begin(); i!=fChildren.end(); ++i) {
-      TAttMarker* m = dynamic_cast<TAttMarker*>((*i)->GetObject(eh));
+   for (auto & i : fChildren) {
+      TAttMarker* m = dynamic_cast<TAttMarker*>(i->GetObject(eh));
       if (m && m->GetMarkerStyle() == fMarkerStyle)
          m->SetMarkerStyle(mstyle);
    }
@@ -516,8 +516,8 @@ void TEvePointSetArray::SetMarkerSize(Size_t msize)
 {
    static const TEveException eh("TEvePointSetArray::SetMarkerSize ");
 
-   for (List_i i=fChildren.begin(); i!=fChildren.end(); ++i) {
-      TAttMarker* m = dynamic_cast<TAttMarker*>((*i)->GetObject(eh));
+   for (auto & i : fChildren) {
+      TAttMarker* m = dynamic_cast<TAttMarker*>(i->GetObject(eh));
       if (m && m->GetMarkerSize() == fMarkerSize)
          m->SetMarkerSize(msize);
    }

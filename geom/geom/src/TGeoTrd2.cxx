@@ -230,7 +230,7 @@ Double_t TGeoTrd2::DistFromInside(const Double_t *point, const Double_t *dir, In
    //--- Compute distance to this shape
    // first check if Z facettes are crossed
    Double_t dist[3];
-   for (Int_t i=0; i<3; i++) dist[i]=TGeoShape::Big();
+   for (double & i : dist) i=TGeoShape::Big();
    if (dir[2]<0) {
       dist[0]=-(point[2]+fDz)/dir[2];
    } else if (dir[2]>0) {
@@ -661,7 +661,7 @@ Double_t TGeoTrd2::Safety(const Double_t *point, Bool_t in) const
    else         saf[2]=(distx-TMath::Abs(point[1]))*calf;
 
    if (in) return saf[TMath::LocMin(3,saf)];
-   for (Int_t i=0; i<3; i++) saf[i]=-saf[i];
+   for (double & i : saf) i=-i;
    return saf[TMath::LocMax(3,saf)];
 }
 

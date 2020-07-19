@@ -207,10 +207,9 @@ namespace RooStats {
       // and fill the map
       std::map<std::string, double> param_map;
 
-      for( unsigned int i=0; i < string_list.size(); ++i) {
+      for(auto param : string_list) {
 	
-	std::string param = string_list.at(i);
-	// Split the string
+		// Split the string
 	size_t eql_location = param.find("=");
 
 	// If there is no '=' deliminator, we only
@@ -304,9 +303,7 @@ namespace RooStats {
 	std::cout << "Setting the Histo Systs" << std::endl;
 
 	// Set the Histo Systs:
-	for( unsigned int histoItr = 0; histoItr < sample.GetHistoSysList().size(); ++histoItr ) {
-
-	  RooStats::HistFactory::HistoSys& histoSys = sample.GetHistoSysList().at( histoItr );
+	for(auto & histoSys : sample.GetHistoSysList()) {
 
 	  sample_es.systSourceForHist.push_back( histoSys.GetName() );
 	  sample_es.lowHists.push_back( (TH1*) histoSys.GetHistoLow()->Clone()  );
@@ -316,9 +313,7 @@ namespace RooStats {
 
 	std::cout << "Setting the NormFactors" << std::endl;
 
-	for( unsigned int normItr = 0; normItr < sample.GetNormFactorList().size(); ++normItr ) {
-
-	  RooStats::HistFactory::NormFactor& normFactor = sample.GetNormFactorList().at( normItr );
+	for(auto & normFactor : sample.GetNormFactorList()) {
 
 	  EstimateSummary::NormFactor normFactor_es;
 	  normFactor_es.name = normFactor.GetName();
@@ -333,9 +328,7 @@ namespace RooStats {
 
 	std::cout << "Setting the OverallSysList" << std::endl;
 
-	for( unsigned int sysItr = 0; sysItr < sample.GetOverallSysList().size(); ++sysItr ) {
-
-	  RooStats::HistFactory::OverallSys& overallSys = sample.GetOverallSysList().at( sysItr );
+	for(auto & overallSys : sample.GetOverallSysList()) {
 
 	  std::pair<double, double> DownUpPair( overallSys.GetLow(), overallSys.GetHigh() );
 	  sample_es.overallSyst[ overallSys.GetName() ]  = DownUpPair; //
@@ -388,9 +381,7 @@ namespace RooStats {
 	std::cout << "Setting the ShapeSysts" << std::endl;
 
 	// Get the shape systs:
-	for( unsigned int shapeItr=0; shapeItr < sample.GetShapeSysList().size(); ++shapeItr ) {
-
-	  RooStats::HistFactory::ShapeSys& shapeSys = sample.GetShapeSysList().at( shapeItr );
+	for(auto & shapeSys : sample.GetShapeSysList()) {
 
 	  EstimateSummary::ShapeSys shapeSys_es;
 	  shapeSys_es.name = shapeSys.GetName();

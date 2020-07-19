@@ -221,8 +221,8 @@ void TRandom3::SetSeed(ULong_t seed)
       // TRandom2 works fairly well  and has been tested against example
       // layout in https://savannah.cern.ch/bugs/?99516
       TRandom2 r(0);
-      for (Int_t i = 0; i< 624; i++) {
-         fMt[i]   = static_cast<UInt_t> (4294967296.*r.Rndm());
+      for (unsigned int & i : fMt) {
+         i   = static_cast<UInt_t> (4294967296.*r.Rndm());
       }
       // warm up the generator calling it 10 times
       for (Int_t i = 0; i < 10; ++i) Rndm();

@@ -133,14 +133,13 @@ namespace HistFactory{
 
     std::stringstream sstream;
     sstream << "Setting Parameter(s) of Interest as: ";
-    for(unsigned int i = 0; i < poi_list.size(); ++i) {
-      sstream << poi_list.at(i) << " ";
+    for(auto & i : poi_list) {
+      sstream << i << " ";
     }
     cxcoutIHF << sstream.str() << endl;
 
     RooArgSet params;
-    for( unsigned int i = 0; i < poi_list.size(); ++i ) {
-      std::string poi_name = poi_list.at(i);
+    for(auto poi_name : poi_list) {
       RooRealVar* poi = (RooRealVar*) ws_single->var( poi_name.c_str() );
       if(poi){
         params.add(*poi);
@@ -198,10 +197,9 @@ namespace HistFactory{
     std::string SnapShotName = "NominalParamValues";
     ws_single->saveSnapshot(SnapShotName.c_str(), ws_single->allVars());
 
-    for( unsigned int i=0; i<measurement.GetAsimovDatasets().size(); ++i) {
+    for(auto & asimov : measurement.GetAsimovDatasets()) {
 
       // Set the variable values and "const" ness with the workspace
-      RooStats::HistFactory::Asimov& asimov = measurement.GetAsimovDatasets().at(i);
       std::string AsimovName = asimov.GetName();
 
       cxcoutPHF << "Generating additional Asimov Dataset: " << AsimovName << std::endl;
@@ -314,8 +312,8 @@ namespace HistFactory{
     HistoToWorkspaceFactoryFast::ConfigureWorkspaceForMeasurement( "simPdf", ws, measurement );
 
     // Delete channel workspaces
-    for (vector<RooWorkspace*>::iterator iter = channel_workspaces.begin() ; iter != channel_workspaces.end() ; ++iter) {
-      delete *iter ;
+    for (auto & channel_workspace : channel_workspaces) {
+      delete channel_workspace ;
     }
 
     // Done.  Return the pointer
@@ -531,11 +529,9 @@ namespace HistFactory{
 
     if(normList.size() > 0){
 
-      for(vector<NormFactor>::iterator itr = normList.begin(); itr != normList.end(); ++itr){
+      for(auto & norm : normList){
 
-	NormFactor& norm = *itr;
-
-        string varname;
+	string varname;
         if(!prodNames.empty()) prodNames += ",";
         if(doRatio) {
           varname = norm.GetName() + "_" + channel;
@@ -605,9 +601,8 @@ namespace HistFactory{
     vector<double> lowVec, highVec;
 
     std::map<std::string, double>::iterator itconstr;
-    for(unsigned int i = 0; i < systList.size(); ++i) {
+    for(auto & sys : systList) {
 
-      OverallSys& sys = systList.at(i);
       std::string strname = sys.GetName();
       const char * name = strname.c_str();
 
@@ -1250,8 +1245,8 @@ namespace HistFactory{
     ///      since the data histogram may not be present
     if (fObsNameVec.empty()) { GuessObsNameVec(channel_hist_template); }
 
-    for ( unsigned int idx=0; idx<fObsNameVec.size(); ++idx ) {
-      fObsNameVec[idx] = "obs_" + fObsNameVec[idx] + "_" + channel_name ;
+    for (auto & idx : fObsNameVec) {
+      idx = "obs_" + idx + "_" + channel_name ;
     }
 
     if (fObsNameVec.empty()) {
@@ -1540,9 +1535,7 @@ namespace HistFactory{
 	  std::vector<ParamHistFunc*> paramHistFuncList;
 	  std::vector<std::string> shapeFactorNameList;
 
-	  for(unsigned int i=0; i < sample.GetShapeFactorList().size(); ++i) {
-
-	    ShapeFactor& shapeFactor = sample.GetShapeFactorList().at(i);
+	  for(auto & shapeFactor : sample.GetShapeFactorList()) {
 
 	    std::string funcName = channel_name + "_" + shapeFactor.GetName() + "_shapeFactor";
 	    ParamHistFunc* paramHist = (ParamHistFunc*) proto->function( funcName.c_str() );
@@ -1600,14 +1593,14 @@ namespace HistFactory{
 	  //std::string shapeFactorNodeName = syst_x_expectedPrefix + "_x_" + funcName;
 	  // Dynamically build the name as a long product
 	  std::string shapeFactorNodeName = syst_x_expectedPrefix;
-	  for( unsigned int i=0; i < shapeFactorNameList.size(); ++i) {
-	    shapeFactorNodeName += "_x_" + shapeFactorNameList.at(i);
+	  for(auto & i : shapeFactorNameList) {
+	    shapeFactorNodeName += "_x_" + i;
 	  }
 
 	  RooAbsReal* expFunc = (RooAbsReal*) proto->function( syst_x_expectedPrefix.c_str() );
 	  RooArgSet nodesForProduct(*expFunc);
-	  for( unsigned int i=0; i < paramHistFuncList.size(); ++i) {
-	    nodesForProduct.add( *paramHistFuncList.at(i) );
+	  for(auto & i : paramHistFuncList) {
+	    nodesForProduct.add( *i );
 	  }
 	  //RooProduct nodeWithShapeFactor(shapeFactorNodeName.c_str(), 
 	  //                               shapeFactorNodeName.c_str(),
@@ -1719,8 +1712,7 @@ namespace HistFactory{
 	  RooArgList ShapeSysForNode;
 	  RooAbsReal* expFunc = (RooAbsReal*) proto->function( syst_x_expectedPrefix.c_str() );
 	  ShapeSysForNode.add( *expFunc );
-	  for( unsigned int i = 0; i < ShapeSysNames.size(); ++i ) {
-	    std::string ShapeSysName = ShapeSysNames.at(i);
+	  for(auto ShapeSysName : ShapeSysNames) {
 	    ShapeSysForNode.add( *proto->function(ShapeSysName.c_str()) );
 	    NodeName = NodeName + "_x_" + ShapeSysName;
 	  }
@@ -1802,8 +1794,8 @@ namespace HistFactory{
 
 
       // clean stat hist pair (need to delete second histogram)
-      for (unsigned int i = 0; i < statHistPairs.size() ; ++i )  
-        delete statHistPairs[i].second;
+      for (auto & statHistPair : statHistPairs)  
+        delete statHistPair.second;
       
       statHistPairs.clear();
 
@@ -1820,15 +1812,15 @@ namespace HistFactory{
 
     //////////////////////////////////////
     // fix specified parameters
-    for(unsigned int i=0; i<systToFix.size(); ++i){
-      RooRealVar* temp = proto->var((systToFix.at(i)).c_str());
+    for(auto & i : systToFix){
+      RooRealVar* temp = proto->var(i.c_str());
       if(temp) {
 	// set the parameter constant
 	temp->setConstant();
 	
 	// remove the corresponding auxiliary observable from the global observables
 	RooRealVar* auxMeas = NULL;
-	if(systToFix.at(i)=="Lumi"){
+	if(i=="Lumi"){
 	  auxMeas = proto->var("nominalLumi");
 	} else {
 	  auxMeas = proto->var(TString::Format("nom_%s",temp->GetName()));
@@ -1841,27 +1833,27 @@ namespace HistFactory{
 	       << TString::Format("nom_%s",temp->GetName()) << endl;
 	}
       } else {
-        cxcoutE(HistFactory) << "could not find variable " << systToFix.at(i)
+        cxcoutE(HistFactory) << "could not find variable " << i
 	     << " could not set it to constant" << endl;
       }
     }
 
     //////////////////////////////////////
     // final proto model
-    for(unsigned int i=0; i<constraintTermNames.size(); ++i){
-      RooAbsArg* proto_arg = (proto->arg(constraintTermNames[i].c_str()));
+    for(auto & constraintTermName : constraintTermNames){
+      RooAbsArg* proto_arg = (proto->arg(constraintTermName.c_str()));
       if( proto_arg==NULL ) {
-        cxcoutF(HistFactory) << "Error: Cannot find arg set: " << constraintTermNames.at(i)
+        cxcoutF(HistFactory) << "Error: Cannot find arg set: " << constraintTermName
 		  << " in workspace: " << proto->GetName() << std::endl;
 	throw hf_exc();
       }
       constraintTerms.add( *proto_arg );
       //  constraintTerms.add(* proto_arg(proto->arg(constraintTermNames[i].c_str())) );
     }
-    for(unsigned int i=0; i<likelihoodTermNames.size(); ++i){
-      RooAbsArg* proto_arg = (proto->arg(likelihoodTermNames[i].c_str())); 
+    for(auto & likelihoodTermName : likelihoodTermNames){
+      RooAbsArg* proto_arg = (proto->arg(likelihoodTermName.c_str())); 
       if( proto_arg==NULL ) {
-        cxcoutF(HistFactory) << "Error: Cannot find arg set: " << likelihoodTermNames.at(i)
+        cxcoutF(HistFactory) << "Error: Cannot find arg set: " << likelihoodTermName
 		  << " in workspace: " << proto->GetName() << std::endl;
 	throw hf_exc();
       }
@@ -2309,14 +2301,14 @@ namespace HistFactory{
     }
 
 
-    for(unsigned int i=0; i<fSystToFix.size(); ++i){
+    for(auto & i : fSystToFix){
       // make sure they are fixed
-      RooRealVar* temp = combined->var((fSystToFix.at(i)).c_str());
+      RooRealVar* temp = combined->var(i.c_str());
       if(temp) {
         temp->setConstant();
-        cxcoutI(HistFactory) <<"setting " << fSystToFix.at(i) << " constant" << endl;
+        cxcoutI(HistFactory) <<"setting " << i << " constant" << endl;
       } else 
-        cxcoutE(HistFactory) << "could not find variable " << fSystToFix.at(i) << " could not set it to constant" << endl;
+        cxcoutE(HistFactory) << "could not find variable " << i << " could not set it to constant" << endl;
     }
 
     ///
@@ -2469,10 +2461,10 @@ namespace HistFactory{
 
   // Check that all histograms
   // have the same bins
-  for( unsigned int i = 0; i < HistVec.size(); ++i ) {
+  for(auto & i : HistVec) {
     
-    const TH1* nominal = HistVec.at(i).first;
-    const TH1* error   = HistVec.at(i).second;
+    const TH1* nominal = i.first;
+    const TH1* error   = i.second;
     
     if( nominal->GetNbinsX()*nominal->GetNbinsY()*nominal->GetNbinsZ() != numBins ) {
       cxcoutE(HistFactory) << "Error: Provided hists have unequal bins" << std::endl;

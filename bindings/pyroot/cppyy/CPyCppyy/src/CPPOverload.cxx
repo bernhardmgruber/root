@@ -962,8 +962,8 @@ void CPyCppyy::CPPOverload::MergeOverload(CPPOverload* meth)
 CPyCppyy::CPPOverload::MethodInfo_t::~MethodInfo_t()
 {
 // Destructor (this object is reference counted).
-    for (Methods_t::iterator it = fMethods.begin(); it != fMethods.end(); ++it) {
-        delete *it;
+    for (auto & fMethod : fMethods) {
+        delete fMethod;
     }
     fMethods.clear();
     delete fRefCount;

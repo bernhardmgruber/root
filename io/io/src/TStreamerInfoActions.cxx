@@ -4220,25 +4220,25 @@ void TStreamerInfoActions::TActionSequence::AddToSubSequence(TStreamerInfoAction
       Int_t offset,
       TStreamerInfoActions::TActionSequence::SequenceGetter_t create)
 {
-   for(UInt_t id = 0; id < element_ids.size(); ++id) {
-      if ( element_ids[id].fElemID < 0 ) {
-         if (element_ids[id].fNestedIDs) {
-            auto original = create(element_ids[id].fNestedIDs->fInfo,
+   for(const auto & element_id : element_ids) {
+      if ( element_id.fElemID < 0 ) {
+         if (element_id.fNestedIDs) {
+            auto original = create(element_id.fNestedIDs->fInfo,
                                    sequence->fLoopConfig ? sequence->fLoopConfig->GetCollectionProxy() : nullptr,
                                    nullptr);
-            if (element_ids[id].fNestedIDs->fOnfileObject) {
-               auto conf = new TConfigurationPushDataCache(element_ids[id].fNestedIDs->fInfo, element_ids[id].fNestedIDs->fOnfileObject, offset);
+            if (element_id.fNestedIDs->fOnfileObject) {
+               auto conf = new TConfigurationPushDataCache(element_id.fNestedIDs->fInfo, element_id.fNestedIDs->fOnfileObject, offset);
                if ( sequence->fLoopConfig )
                   sequence->AddAction( PushDataCacheGenericCollection, conf );
                else
                   sequence->AddAction( PushDataCache, conf );
             }
 
-            original->AddToSubSequence(sequence, element_ids[id].fNestedIDs->fIDs, element_ids[id].fNestedIDs->fOffset, create);
+            original->AddToSubSequence(sequence, element_id.fNestedIDs->fIDs, element_id.fNestedIDs->fOffset, create);
 
-            if (element_ids[id].fNestedIDs->fOnfileObject)
+            if (element_id.fNestedIDs->fOnfileObject)
                sequence->AddAction( PopDataCache,
-                  new TConfigurationPushDataCache(element_ids[id].fNestedIDs->fInfo, nullptr, element_ids[id].fNestedIDs->fOffset) );
+                  new TConfigurationPushDataCache(element_id.fNestedIDs->fInfo, nullptr, element_id.fNestedIDs->fOffset) );
          } else {
             TStreamerInfoActions::ActionContainer_t::iterator end = fActions.end();
             for(TStreamerInfoActions::ActionContainer_t::iterator iter = fActions.begin();
@@ -4266,7 +4266,7 @@ void TStreamerInfoActions::TActionSequence::AddToSubSequence(TStreamerInfoAction
             //         element_ids[id].fInfo,
             //         element_ids[id].fInfo ? element_ids[id].fInfo->GetName() : "nullptr" );
             ++localIndex;
-            if ( iter->fConfiguration->fElemId == (UInt_t)element_ids[id].fElemID ) {
+            if ( iter->fConfiguration->fElemId == (UInt_t)element_id.fElemID ) {
                TConfiguration *conf = iter->fConfiguration->Copy();
                if (!iter->fConfiguration->fInfo->GetElements()->At(iter->fConfiguration->fElemId)->TestBit(TStreamerElement::kCache))
                   conf->AddToOffset(offset);
@@ -4301,8 +4301,8 @@ TStreamerInfoActions::TActionSequence *TStreamerInfoActions::TActionSequence::Cr
 
    sequence->fLoopConfig = fLoopConfig ? fLoopConfig->Copy() : 0;
 
-   for(UInt_t id = 0; id < element_ids.size(); ++id) {
-      if ( element_ids[id] < 0 ) {
+   for(int element_id : element_ids) {
+      if ( element_id < 0 ) {
          TStreamerInfoActions::ActionContainer_t::iterator end = fActions.end();
          for(TStreamerInfoActions::ActionContainer_t::iterator iter = fActions.begin();
              iter != end;
@@ -4318,7 +4318,7 @@ TStreamerInfoActions::TActionSequence *TStreamerInfoActions::TActionSequence::Cr
          for(TStreamerInfoActions::ActionContainer_t::iterator iter = fActions.begin();
              iter != end;
              ++iter) {
-            if ( iter->fConfiguration->fElemId == (UInt_t)element_ids[id] ) {
+            if ( iter->fConfiguration->fElemId == (UInt_t)element_id ) {
                TConfiguration *conf = iter->fConfiguration->Copy();
                if (!iter->fConfiguration->fInfo->GetElements()->At(iter->fConfiguration->fElemId)->TestBit(TStreamerElement::kCache))
                   conf->AddToOffset(offset);

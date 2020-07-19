@@ -96,9 +96,8 @@ namespace {
     public:
       EKMHolder(): Watermark(kChunkSize) {}
       ~EKMHolder() {
-        for (std::list<ExtKeyMap*>::iterator i = Heap.begin(), e = Heap.end();
-             i != e; ++i) {
-          delete [] *i;
+        for (auto & i : Heap) {
+          delete [] i;
         }
       }
       ExtKeyMap& next() {

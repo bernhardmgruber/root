@@ -565,7 +565,7 @@ Double_t TGeoPara::Safety(const Double_t *point, Bool_t in) const
    saf[2] *= ctx;
    saf[1] *= cty;
    if (in) return saf[TMath::LocMin(3,saf)];
-   for (Int_t i=0; i<3; i++) saf[i]=-saf[i];
+   for (double & i : saf) i=-i;
    return saf[TMath::LocMax(3,saf)];
 }
 

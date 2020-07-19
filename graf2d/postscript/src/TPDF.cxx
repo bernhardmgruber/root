@@ -1919,8 +1919,8 @@ void TPDF::SetAlpha(Float_t a)
    if (fAlpha  <= 0.000001) fAlpha  = 0;
 
    Bool_t known = kFALSE;
-   for (int i=0; i<(int)fAlphas.size(); i++) {
-      if (fAlpha == fAlphas[i]) {
+   for (float fAlpha : fAlphas) {
+      if (fAlpha == fAlpha) {
          known = kTRUE;
          break;
       }

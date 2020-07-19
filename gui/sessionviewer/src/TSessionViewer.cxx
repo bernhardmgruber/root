@@ -864,7 +864,7 @@ TSessionFrame::TSessionFrame(TGWindow* p, Int_t w, Int_t h) :
    fTxtParallel(0), fLogLevel(0), fApplyLogLevel(0), fApplyParallel(0),
    fViewer(0)
 {
-   for (int i=0;i<19;++i) fInfoLine[i] = 0;
+   for (auto & i : fInfoLine) i = 0;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

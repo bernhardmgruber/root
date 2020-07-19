@@ -43,8 +43,8 @@ TEveProjectionManager::TEveProjectionManager(TEveProjection::EPType_e type):
    fCurrentDepth(0),
    fImportEmpty (kFALSE)
 {
-   for (Int_t i = 0; i < TEveProjection::kPT_End; ++i)
-      fProjections[i] = 0;
+   for (auto & fProjection : fProjections)
+      fProjection = 0;
 
    if (type != TEveProjection::kPT_Unknown)
       SetProjection(type);
@@ -56,9 +56,9 @@ TEveProjectionManager::TEveProjectionManager(TEveProjection::EPType_e type):
 
 TEveProjectionManager::~TEveProjectionManager()
 {
-   for (Int_t i = 0; i < TEveProjection::kPT_End; ++i)
+   for (auto & fProjection : fProjections)
    {
-      delete fProjections[i];
+      delete fProjection;
    }
    while ( ! fDependentEls.empty())
    {
@@ -182,9 +182,9 @@ Bool_t TEveProjectionManager::ShouldImport(TEveElement* el)
 
 void TEveProjectionManager::UpdateDependentElsAndScenes(TEveElement* root)
 {
-   for (List_i i=fDependentEls.begin(); i!=fDependentEls.end(); ++i)
+   for (auto & fDependentEl : fDependentEls)
    {
-      TAttBBox* bbox = dynamic_cast<TAttBBox*>(*i);
+      TAttBBox* bbox = dynamic_cast<TAttBBox*>(fDependentEl);
       if (bbox)
          bbox->ComputeBBox();
    }
@@ -330,9 +330,9 @@ Int_t TEveProjectionManager::SubImportChildren(TEveElement* el, TEveElement* pro
    if ( ! new_els.empty())
    {
       AssertBBox();
-      for (List_i i = new_els.begin(); i != new_els.end(); ++i)
+      for (auto & new_el : new_els)
       {
-         ProjectChildrenRecurse(*i);
+         ProjectChildrenRecurse(new_el);
       }
       AssertBBoxExtents(0.1);
       StampTransBBox();

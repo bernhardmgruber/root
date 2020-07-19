@@ -277,9 +277,8 @@ void RooMomentMorphND::initialize()
    // }
    // delete pdfItr ;
 
-   for (vector<RooAbsBinning *>::iterator itr = _referenceGrid._grid.begin(); itr != _referenceGrid._grid.end();
-        ++itr) {
-      _referenceGrid._nnuis.push_back((*itr)->numBins() + 1);
+   for (auto & itr : _referenceGrid._grid) {
+      _referenceGrid._nnuis.push_back(itr->numBins() + 1);
    }
 
    int nPar = _parList.getSize();

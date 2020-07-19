@@ -141,8 +141,8 @@ RooAddGenContext::RooAddGenContext(const RooAddModel &model, const RooArgSet &va
 RooAddGenContext::~RooAddGenContext()
 {
   delete[] _coefThresh ;
-  for (vector<RooAbsGenContext*>::iterator iter=_gcList.begin() ; iter!=_gcList.end() ; ++iter) {
-    delete *iter ;
+  for (auto & iter : _gcList) {
+    delete iter ;
   }
   delete _vars ;
   delete _pdfSet ;
@@ -158,8 +158,8 @@ void RooAddGenContext::attach(const RooArgSet& args)
   _pdf->recursiveRedirectServers(args) ;
 
   // Forward initGenerator call to all components
-  for (vector<RooAbsGenContext*>::iterator iter=_gcList.begin() ; iter!=_gcList.end() ; ++iter) {
-    (*iter)->attach(args) ;
+  for (auto & iter : _gcList) {
+    iter->attach(args) ;
   }
 }
 
@@ -183,8 +183,8 @@ void RooAddGenContext::initGenerator(const RooArgSet &theEvent)
   }
   
   // Forward initGenerator call to all components
-  for (vector<RooAbsGenContext*>::iterator iter=_gcList.begin() ; iter!=_gcList.end() ; ++iter) {
-    (*iter)->initGenerator(theEvent) ;
+  for (auto & iter : _gcList) {
+    iter->initGenerator(theEvent) ;
   }
 }
 
@@ -251,8 +251,8 @@ void RooAddGenContext::updateThresholds()
 void RooAddGenContext::setProtoDataOrder(Int_t* lut)
 {
   RooAbsGenContext::setProtoDataOrder(lut) ;
-  for (vector<RooAbsGenContext*>::iterator iter=_gcList.begin() ; iter!=_gcList.end() ; ++iter) {
-    (*iter)->setProtoDataOrder(lut) ;
+  for (auto & iter : _gcList) {
+    iter->setProtoDataOrder(lut) ;
   }
 }
 
@@ -271,7 +271,7 @@ void RooAddGenContext::printMultiline(ostream &os, Int_t content, Bool_t verbose
   os << indent << "List of component generators" << endl ;
   TString indent2(indent) ;
   indent2.Append("    ") ;
-  for (vector<RooAbsGenContext*>::const_iterator iter=_gcList.begin() ; iter!=_gcList.end() ; ++iter) {
-    (*iter)->printMultiline(os,content,verbose,indent2) ;
+  for (auto iter : _gcList) {
+    iter->printMultiline(os,content,verbose,indent2) ;
   }
 }

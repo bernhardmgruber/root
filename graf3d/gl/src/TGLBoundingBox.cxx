@@ -171,8 +171,8 @@ void TGLBoundingBox::Set(const TGLBoundingBox & other)
 
 void TGLBoundingBox::SetEmpty()
 {
-   for (UInt_t v = 0; v < 8; v++) {
-      fVertex[v].Fill(0.0);
+   for (auto & v : fVertex) {
+      v.Fill(0.0);
    }
    // Could change cached volume/axes
    UpdateCache();
@@ -332,8 +332,8 @@ void TGLBoundingBox::Scale(Double_t xFactor, Double_t yFactor, Double_t zFactor)
 
 void TGLBoundingBox::Translate(const TGLVector3 & offset)
 {
-   for (UInt_t v = 0; v < 8; v++) {
-      fVertex[v] = fVertex[v] + offset;
+   for (auto & v : fVertex) {
+      v = v + offset;
    }
 
    // No cache change - volume and axes vectors remain same
@@ -344,8 +344,8 @@ void TGLBoundingBox::Translate(const TGLVector3 & offset)
 
 void TGLBoundingBox::Transform(const TGLMatrix & matrix)
 {
-   for (UInt_t v = 0; v < 8; v++) {
-      matrix.TransformVertex(fVertex[v]);
+   for (auto & v : fVertex) {
+      matrix.TransformVertex(v);
    }
 
    // Could change cached volume/axes
@@ -457,8 +457,8 @@ Rgl::EOverlap TGLBoundingBox::Overlap(const TGLPlane & plane) const
 
    // Second : test all 8 box vertices against plane
    Int_t verticesInsidePlane = 8;
-   for (UInt_t v = 0; v < 8; v++) {
-      if (plane.DistanceTo(fVertex[v]) < 0.0) {
+   for (const auto & v : fVertex) {
+      if (plane.DistanceTo(v) < 0.0) {
          verticesInsidePlane--;
       }
    }

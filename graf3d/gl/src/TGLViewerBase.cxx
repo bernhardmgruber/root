@@ -76,10 +76,10 @@ TGLViewerBase::TGLViewerBase() :
 
 TGLViewerBase::~TGLViewerBase()
 {
-   for (SceneInfoList_i i=fScenes.begin(); i!=fScenes.end(); ++i)
+   for (auto & fScene : fScenes)
    {
-      (*i)->GetScene()->RemoveViewer(this);
-      delete *i;
+      fScene->GetScene()->RemoveViewer(this);
+      delete fScene;
    }
 
    DeleteOverlayElements(TGLOverlayElement::kAll);
@@ -151,9 +151,8 @@ void TGLViewerBase::RemoveScene(TGLSceneBase* scene)
 
 void TGLViewerBase::RemoveAllScenes()
 {
-   for (SceneInfoList_i i=fScenes.begin(); i!=fScenes.end(); ++i)
+   for (auto sinfo : fScenes)
    {
-      TGLSceneInfo * sinfo = *i;
       sinfo->GetScene()->RemoveViewer(this);
       delete sinfo;
    }
@@ -196,9 +195,9 @@ TGLSceneInfo* TGLViewerBase::GetSceneInfo(TGLSceneBase* scene)
 
 TGLLogicalShape* TGLViewerBase::FindLogicalInScenes(TObject* id)
 {
-   for (SceneInfoList_i i=fScenes.begin(); i!=fScenes.end(); ++i)
+   for (auto & fScene : fScenes)
    {
-      TGLLogicalShape *lshp = (*i)->GetScene()->FindLogical(id);
+      TGLLogicalShape *lshp = fScene->GetScene()->FindLogical(id);
       if (lshp)
          return lshp;
    }
@@ -241,12 +240,12 @@ void TGLViewerBase::DeleteOverlayElements(TGLOverlayElement::ERole role)
    OverlayElmVec_t ovl;
    fOverlay.swap(ovl);
 
-   for (OverlayElmVec_i i = ovl.begin(); i != ovl.end(); ++i)
+   for (auto & i : ovl)
    {
-      if (role == TGLOverlayElement::kAll || (*i)->GetRole() == role)
-         delete *i;
+      if (role == TGLOverlayElement::kAll || i->GetRole() == role)
+         delete i;
       else
-         fOverlay.push_back(*i);
+         fOverlay.push_back(i);
    }
 
    Changed();
@@ -278,9 +277,8 @@ void TGLViewerBase::ResetSceneInfos()
 void TGLViewerBase::MergeSceneBBoxes(TGLBoundingBox& bbox)
 {
    bbox.SetEmpty();
-   for (SceneInfoList_i i=fScenes.begin(); i!=fScenes.end(); ++i)
+   for (auto sinfo : fScenes)
    {
-      TGLSceneInfo * sinfo = *i;
       if (sinfo->GetActive())
       {
          sinfo->SetupTransformsAndBBox(); // !!! transform not done yet, no camera
@@ -344,9 +342,8 @@ void TGLViewerBase::PreRender()
 
    fOverallBoundingBox.SetEmpty();
    SceneInfoList_t locked_scenes;
-   for (SceneInfoList_i i=fScenes.begin(); i!=fScenes.end(); ++i)
+   for (auto sinfo : fScenes)
    {
-      TGLSceneInfo *sinfo = *i;
       TGLSceneBase *scene = sinfo->GetScene();
       if (sinfo->GetActive())
       {
@@ -371,9 +368,8 @@ void TGLViewerBase::PreRender()
    // Make precursory selection of visible scenes.
    // Only scene bounding-box .vs. camera frustum check performed.
    fVisScenes.clear();
-   for (SceneInfoList_i i=locked_scenes.begin(); i!=locked_scenes.end(); ++i)
+   for (auto sinfo : locked_scenes)
    {
-      TGLSceneInfo         * sinfo = *i;
       const TGLBoundingBox & bbox  = sinfo->GetTransformedBBox();
       Bool_t visp = (!bbox.IsEmpty() && fCamera->FrustumOverlap(bbox) != Rgl::kOutside);
       sinfo->ViewCheck(visp);
@@ -546,9 +542,8 @@ void TGLViewerBase::RenderOverlay(Int_t state, Bool_t selection)
 
 void TGLViewerBase::PostRender()
 {
-   for (SceneInfoVec_i i = fVisScenes.begin(); i != fVisScenes.end(); ++i)
+   for (auto sinfo : fVisScenes)
    {
-      TGLSceneInfo* sinfo = *i;
       fRnrCtx->SetSceneInfo(sinfo);
       sinfo->GetScene()->PostDraw(*fRnrCtx);
       fRnrCtx->SetSceneInfo(0);

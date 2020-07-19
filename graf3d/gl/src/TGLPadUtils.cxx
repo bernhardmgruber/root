@@ -368,8 +368,8 @@ void MarkerPainter::DrawCircle(UInt_t n, const TPoint *xy)const
       const Double_t y = xy[i].fY;
 
       glBegin(GL_LINE_LOOP);
-      for (UInt_t j = 0, e = fCircle.size(); j < e; ++j)
-         glVertex2d(fCircle[j].fX + x, fCircle[j].fY + y);
+      for (auto & j : fCircle)
+         glVertex2d(j.fX + x, j.fY + y);
       glEnd();
    }
 }
@@ -392,8 +392,8 @@ void MarkerPainter::DrawFullDotLarge(UInt_t n, const TPoint *xy)const
       const Double_t y = xy[i].fY;
 
       glBegin(GL_TRIANGLE_FAN);
-      for (UInt_t j = 0, e = fCircle.size(); j < e; ++j)
-         glVertex2d(fCircle[j].fX + x, fCircle[j].fY + y);
+      for (auto & j : fCircle)
+         glVertex2d(j.fX + x, j.fY + y);
       glEnd();
    }
 }

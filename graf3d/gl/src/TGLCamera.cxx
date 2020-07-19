@@ -55,8 +55,8 @@ TGLCamera::TGLCamera() :
    fViewport(0,0,100,100),
    fLargestSeen(0.0)
 {
-   for (UInt_t i = 0; i < kPlanesPerFrustum; i++ ) {
-      fFrustumPlanes[i].Set(1.0, 0.0, 0.0, 0.0);
+   for (auto & fFrustumPlane : fFrustumPlanes) {
+      fFrustumPlane.Set(1.0, 0.0, 0.0, 0.0);
    }
    TGLVertex3 origin;
    fCamBase.Set(origin, TGLVector3(1, 0, 0), TGLVector3(0, 0, 1));
@@ -79,8 +79,8 @@ TGLCamera::TGLCamera(const TGLVector3 & hAxis, const TGLVector3 & vAxis) :
    fViewport(0,0,100,100),
    fLargestSeen(0.0)
 {
-   for (UInt_t i = 0; i < kPlanesPerFrustum; i++ ) {
-      fFrustumPlanes[i].Set(1.0, 0.0, 0.0, 0.0);
+   for (auto & fFrustumPlane : fFrustumPlanes) {
+      fFrustumPlane.Set(1.0, 0.0, 0.0, 0.0);
    }
    TGLVertex3 origin;
    fCamBase.Set(origin, vAxis, hAxis);
@@ -285,9 +285,9 @@ Rgl::EOverlap TGLCamera::FrustumOverlap(const TGLBoundingBox & box) const
    // TODO: Improve this - have a reliable test (separating axes).
 
    Int_t planesInside = 0; // Assume outside to start
-   for (Int_t planeIndex = 0; planeIndex < kPlanesPerFrustum; ++planeIndex)
+   for (const auto & fFrustumPlane : fFrustumPlanes)
    {
-      Rgl::EOverlap planeOverlap = box.Overlap(fFrustumPlanes[planeIndex]);
+      Rgl::EOverlap planeOverlap = box.Overlap(fFrustumPlane);
 
       // Special case - any object which comes through the near clipping
       // plane is completely removed - disabled at present

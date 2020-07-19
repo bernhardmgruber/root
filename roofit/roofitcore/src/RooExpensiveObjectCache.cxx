@@ -66,8 +66,8 @@ RooExpensiveObjectCache::RooExpensiveObjectCache(const RooExpensiveObjectCache& 
 
 RooExpensiveObjectCache::~RooExpensiveObjectCache() 
 {
-  for (std::map<TString,ExpensiveObject*>::iterator iter = _map.begin() ; iter!=_map.end() ; ++iter) {
-    delete iter->second ;
+  for (auto & iter : _map) {
+    delete iter.second ;
   }
 }
 
@@ -153,9 +153,9 @@ const TObject* RooExpensiveObjectCache::retrieveObject(const char* name, TClass*
 
 const TObject* RooExpensiveObjectCache::getObj(Int_t uid) 
 {
-  for (std::map<TString,ExpensiveObject*>::iterator iter = _map.begin() ; iter !=_map.end() ; ++iter) {
-    if (iter->second->uid() == uid) {
-      return iter->second->payload() ;
+  for (auto & iter : _map) {
+    if (iter.second->uid() == uid) {
+      return iter.second->payload() ;
     }
   }  
   return 0 ;
@@ -186,9 +186,9 @@ Bool_t RooExpensiveObjectCache::clearObj(Int_t uid)
 
 Bool_t RooExpensiveObjectCache::setObj(Int_t uid, TObject* obj) 
 {
-  for (std::map<TString,ExpensiveObject*>::iterator iter = _map.begin() ; iter !=_map.end() ; ++iter) {
-    if (iter->second->uid() == uid) {
-      iter->second->setPayload(obj) ;
+  for (auto & iter : _map) {
+    if (iter.second->uid() == uid) {
+      iter.second->setPayload(obj) ;
       return kFALSE ;
     }
   }  

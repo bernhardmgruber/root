@@ -429,8 +429,8 @@ void TDataType::AddBuiltins(TCollection* types)
       fgBuiltins[kDataTypeAliasSignedChar_t] = new TDataType("signed char");
    }
 
-   for (Int_t i = 0; i < (Int_t)kNumDataTypes; ++i) {
-      if (fgBuiltins[i]) types->Add(fgBuiltins[i]);
+   for (auto & fgBuiltin : fgBuiltins) {
+      if (fgBuiltin) types->Add(fgBuiltin);
    }
 }
 

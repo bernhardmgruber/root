@@ -481,8 +481,7 @@ Double_t RooStats::HistFactory::RooBarlowBeestonLL::evaluate() const
 
     // Loop over the bins in the cache
     // Set all gamma's to 0
-    for( unsigned int i = 0; i < channel_cache.size(); ++i ) {
-      BarlowCache& bin_cache = channel_cache.at(i);
+    for(auto & bin_cache : channel_cache) {
       if( !bin_cache.hasStatUncert ) continue;
       RooRealVar* gamma = bin_cache.gamma;
       gamma->setVal(0.0);
@@ -503,8 +502,7 @@ Double_t RooStats::HistFactory::RooBarlowBeestonLL::evaluate() const
 
     // Loop over the bins in the cache
     // Set all gamma's to 1
-    for( unsigned int i = 0; i < channel_cache.size(); ++i ) {
-      BarlowCache& bin_cache = channel_cache.at(i);
+    for(auto & bin_cache : channel_cache) {
       if( !bin_cache.hasStatUncert ) continue;
       RooRealVar* gamma = bin_cache.gamma;
       gamma->setVal(1.0);

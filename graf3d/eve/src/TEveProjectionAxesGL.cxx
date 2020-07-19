@@ -75,9 +75,9 @@ void TEveProjectionAxesGL::FilterOverlappingLabels(Int_t idx, Float_t ref) const
    Int_t cnt = 0;
    Float_t currD = 0;
    Float_t minD = TMath::Abs(orig[0].first -center);
-   for (TGLAxisPainter::LabVec_t::iterator it = orig.begin(); it != orig.end(); ++it)
+   for (auto & it : orig)
    {
-      currD = TMath::Abs((*it).first - center);
+      currD = TMath::Abs(it.first - center);
       if (minD > currD)
       {
          minD = currD;

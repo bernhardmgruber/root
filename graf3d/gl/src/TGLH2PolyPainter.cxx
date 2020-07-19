@@ -360,17 +360,17 @@ void TGLH2PolyPainter::DrawCap(CIter_t cap, Int_t binIndex, bool bottomCap)const
    const Rgl::Pad::Tesselation_t &t = *cap;
    typedef std::list<Rgl::Pad::MeshPatch_t>::const_iterator CMIter_t;
    if (bottomCap) {
-       for (CMIter_t p = t.begin(); p != t.end(); ++p) {
-          const std::vector<Double_t> &vs = p->fPatch;
-          glBegin(GLenum(p->fPatchType));
+       for (const auto & p : t) {
+          const std::vector<Double_t> &vs = p.fPatch;
+          glBegin(GLenum(p.fPatchType));
           for (UInt_t i = 0; i < vs.size(); i += 3)
              glVertex3d(vs[i], vs[i + 1], fZMin);
           glEnd();
        }
    } else {
-      for (CMIter_t p = t.begin(); p != t.end(); ++p) {
-         const std::vector<Double_t> &vs = p->fPatch;
-         glBegin(GLenum(p->fPatchType));
+      for (const auto & p : t) {
+         const std::vector<Double_t> &vs = p.fPatch;
+         glBegin(GLenum(p.fPatchType));
          for (UInt_t i = 0; i < vs.size(); i += 3)
             glVertex3dv(&vs[i]);
          glEnd();

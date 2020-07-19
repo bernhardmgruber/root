@@ -295,8 +295,7 @@ bool XMLReader::IsClosingTag(const std::string& tag)
  */
 XMLReader::ETagNames XMLReader::GetNameOfTag(const std::string& tag, std::string& name)
 {
-   for (std::string::size_type i = 0, e = tag.length(); i < e; ++i) {
-      char c = tag[i];
+   for (char c : tag) {
       if (isspace(c)) break;
       if ((c != '<') && (c != '>'))
          name += c;

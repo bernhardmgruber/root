@@ -283,8 +283,8 @@ Bool_t TFormula::IsHexadecimal(const TString & formula, int i)
       if (isdigit(formula[i+1]) )
          return true;
       static char hex_values[12] = { 'a','A', 'b','B','c','C','d','D','e','E','f','F'};
-      for (int jjj = 0; jjj < 12; ++jjj) {
-         if (formula[i+1] == hex_values[jjj])
+      for (char hex_value : hex_values) {
+         if (formula[i+1] == hex_value)
             return true;
       }
    }
@@ -2052,9 +2052,7 @@ void TFormula::ProcessFormula(TString &formula)
 {
    // std::cout << "Begin: formula is " << formula << " list of functors " << fFuncs.size() << std::endl;
 
-   for (list<TFormulaFunction>::iterator funcsIt = fFuncs.begin(); funcsIt != fFuncs.end(); ++funcsIt) {
-      TFormulaFunction &fun = *funcsIt;
-
+   for (auto & fun : fFuncs) {
       // std::cout << "fun is " << fun.GetName() << std::endl;
 
       if (fun.fFound)
@@ -2355,14 +2353,14 @@ void TFormula::ProcessFormula(TString &formula)
    // check that all formula components are matched otherwise emit an error
    if (!fClingInitialized && !fLazyInitialization) {
       //Bool_t allFunctorsMatched = false;
-      for (list<TFormulaFunction>::iterator it = fFuncs.begin(); it != fFuncs.end(); ++it) {
+      for (auto & fFunc : fFuncs) {
          // functions are now by default always not checked 
-         if (!it->fFound && !it->IsFuncCall()) {
+         if (!fFunc.fFound && !fFunc.IsFuncCall()) {
             //allFunctorsMatched = false;
-            if (it->GetNargs() == 0)
-               Error("ProcessFormula", "\"%s\" has not been matched in the formula expression", it->GetName());
+            if (fFunc.GetNargs() == 0)
+               Error("ProcessFormula", "\"%s\" has not been matched in the formula expression", fFunc.GetName());
             else
-               Error("ProcessFormula", "Could not find %s function with %d argument(s)", it->GetName(), it->GetNargs());
+               Error("ProcessFormula", "Could not find %s function with %d argument(s)", fFunc.GetName(), fFunc.GetNargs());
          }
       }
       Error("ProcessFormula","Formula \"%s\" is invalid !", GetExpFormula().Data() );
@@ -3044,11 +3042,11 @@ void TFormula::SetParName(Int_t ipar, const char * name)
 void TFormula::ReplaceParamName(TString & formula, const TString & oldName, const TString & name){
    if (!formula.IsNull() ) {
       bool found = false;
-      for(list<TFormulaFunction>::iterator it = fFuncs.begin(); it != fFuncs.end(); ++it)
+      for(auto & fFunc : fFuncs)
          {
-         if (oldName == it->GetName()) {
+         if (oldName == fFunc.GetName()) {
             found = true;
-            it->fName = name;
+            fFunc.fName = name;
             break;
          }
       }
@@ -3334,8 +3332,7 @@ Double_t TFormula::DoEval(const double * x, const double * params) const
    if(!fReadyToExecute)
       {
       Error("Eval", "Formula is invalid and not ready to execute ");
-      for (auto it = fFuncs.begin(); it != fFuncs.end(); ++it) {
-         TFormulaFunction fun = *it;
+      for (auto fun : fFuncs) {
          if (!fun.fFound) {
             printf("%s is unknown.\n", fun.GetName());
          }
@@ -3603,8 +3600,7 @@ void TFormula::Print(Option_t *option) const
    if(!fReadyToExecute)
       {
       Warning("Print", "Formula is not ready to execute. Missing parameters/variables");
-      for (list<TFormulaFunction>::const_iterator it = fFuncs.begin(); it != fFuncs.end(); ++it) {
-         TFormulaFunction fun = *it;
+      for (auto fun : fFuncs) {
          if (!fun.fFound) {
             printf("%s is unknown.\n", fun.GetName());
          }

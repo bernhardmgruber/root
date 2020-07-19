@@ -523,8 +523,8 @@ void TGLContextIdentity::DeleteGLResources()
 {
    if (!fDLTrash.empty())
    {
-      for (DLTrashIt_t it = fDLTrash.begin(), e = fDLTrash.end(); it != e; ++it)
-         glDeleteLists(it->first, it->second);
+      for (const auto & it : fDLTrash)
+         glDeleteLists(it.first, it.second);
       fDLTrash.clear();
    }
 

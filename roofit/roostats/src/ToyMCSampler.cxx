@@ -303,8 +303,8 @@ const RooArgList* ToyMCSampler::EvaluateAllTestStatistics(RooAbsData& data, cons
 SamplingDistribution* ToyMCSampler::GetSamplingDistribution(RooArgSet& paramPointIn) {
    if(fTestStatistics.size() > 1) {
       oocoutW((TObject*)NULL, InputArguments) << "Multiple test statistics defined, but only one distribution will be returned." << endl;
-      for( unsigned int i=0; i < fTestStatistics.size(); i++ ) {
-         oocoutW((TObject*)NULL, InputArguments) << " \t test statistic: " << fTestStatistics[i] << endl;
+      for(auto & fTestStatistic : fTestStatistics) {
+         oocoutW((TObject*)NULL, InputArguments) << " \t test statistic: " << fTestStatistic << endl;
       }
    }
 

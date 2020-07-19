@@ -121,10 +121,10 @@ void TEveCalo2DGL::DrawRPhi(TGLRnrCtx & rnrCtx, TEveCalo2D::vBinCells_t& cellLis
 
          // sum eta cells
          TEveCaloData::vCellId_t* cids = cellLists[phiBin];
-         for (TEveCaloData::vCellId_i it = cids->begin(); it != cids->end(); it++)
+         for (auto & cid : *cids)
          {
-            data->GetCellData(*it, cellData);
-            sliceVal[(*it).fSlice] += cellData.Value(fM->fPlotEt)*(*it).fFraction;
+            data->GetCellData(cid, cellData);
+            sliceVal[cid.fSlice] += cellData.Value(fM->fPlotEt)*cid.fFraction;
          }
 
          if (rnrCtx.SecSelection()) {
@@ -175,16 +175,16 @@ void TEveCalo2DGL::DrawRPhiHighlighted(std::vector<TEveCaloData::vCellId_t*>& ce
          // selected eta sum
          for (Int_t s=0; s<nSlices; ++s) sliceVal[s] = 0;
          TEveCaloData::vCellId_t& cids = *(cellLists[phiBin]);
-         for (TEveCaloData::vCellId_i i=cids.begin(); i!=cids.end(); i++) {
-            data->GetCellData((*i), cellData);
-            sliceVal[i->fSlice] += cellData.Value(fM->fPlotEt)*(*i).fFraction;
+         for (auto & cid : cids) {
+            data->GetCellData(cid, cellData);
+            sliceVal[cid.fSlice] += cellData.Value(fM->fPlotEt)*cid.fFraction;
          }
          // referenced eta sum
          for (Int_t s=0; s<nSlices; ++s) sliceValRef[s] = 0;
          TEveCaloData::vCellId_t& cidsRef = *(fM->fCellLists[phiBin]);
-         for (TEveCaloData::vCellId_i i=cidsRef.begin(); i!=cidsRef.end(); i++) {
-            data->GetCellData(*i, cellData);
-            sliceValRef[i->fSlice] += cellData.Value(fM->fPlotEt)*(*i).fFraction;
+         for (auto & i : cidsRef) {
+            data->GetCellData(i, cellData);
+            sliceValRef[i.fSlice] += cellData.Value(fM->fPlotEt)*i.fFraction;
          }
          // draw
          for (Int_t s = 0; s < nSlices; ++s)  {
@@ -295,13 +295,13 @@ void TEveCalo2DGL::DrawRhoZ(TGLRnrCtx & rnrCtx, TEveCalo2D::vBinCells_t& cellLis
          }
          // values
          TEveCaloData::vCellId_t* cids = cellLists[etaBin];
-         for (TEveCaloData::vCellId_i it = cids->begin(); it != cids->end(); ++it)
+         for (auto & cid : *cids)
          {
-            data->GetCellData(*it, cellData);
+            data->GetCellData(cid, cellData);
             if (cellData.IsUpperRho())
-               sliceValsUp [it->fSlice] += cellData.Value(fM->fPlotEt)*(*it).fFraction;
+               sliceValsUp [cid.fSlice] += cellData.Value(fM->fPlotEt)*cid.fFraction;
             else
-               sliceValsLow[it->fSlice] += cellData.Value(fM->fPlotEt)*(*it).fFraction;
+               sliceValsLow[cid.fSlice] += cellData.Value(fM->fPlotEt)*cid.fFraction;
          }
 
          isBarrel = !(etaMax > 0 && etaMax > transEtaF) && !(etaMin < 0 && etaMin < transEtaB);
@@ -382,12 +382,12 @@ void TEveCalo2DGL::DrawRhoZHighlighted(std::vector<TEveCaloData::vCellId_t*>& ce
             sliceValsUp[s] = 0; sliceValsLow[s] = 0;
          }
          TEveCaloData::vCellId_t& cids = *(cellLists[etaBin]);
-         for (TEveCaloData::vCellId_i i=cids.begin(); i!=cids.end(); i++) {
-            data->GetCellData(*i, cellData);
+         for (auto & cid : cids) {
+            data->GetCellData(cid, cellData);
             if (cellData.IsUpperRho())
-               sliceValsUp [i->fSlice] += cellData.Value(fM->fPlotEt)*(*i).fFraction;
+               sliceValsUp [cid.fSlice] += cellData.Value(fM->fPlotEt)*cid.fFraction;
             else
-               sliceValsLow[i->fSlice] += cellData.Value(fM->fPlotEt)*(*i).fFraction;
+               sliceValsLow[cid.fSlice] += cellData.Value(fM->fPlotEt)*cid.fFraction;
          }
 
          // reference phi sum
@@ -396,13 +396,13 @@ void TEveCalo2DGL::DrawRhoZHighlighted(std::vector<TEveCaloData::vCellId_t*>& ce
             sliceValsUpRef[s] = 0; sliceValsLowRef[s] = 0;
          }
          TEveCaloData::vCellId_t& cidsRef = *(fM->fCellLists[etaBin]);
-         for (TEveCaloData::vCellId_i i=cidsRef.begin(); i!=cidsRef.end(); i++)
+         for (auto & i : cidsRef)
          {
-            data->GetCellData(*i, cellData);
+            data->GetCellData(i, cellData);
             if (cellData.IsUpperRho())
-               sliceValsUpRef [i->fSlice] += cellData.Value(fM->fPlotEt)*(*i).fFraction;
+               sliceValsUpRef [i.fSlice] += cellData.Value(fM->fPlotEt)*i.fFraction;
             else
-               sliceValsLowRef[i->fSlice] += cellData.Value(fM->fPlotEt)*(*i).fFraction;
+               sliceValsLowRef[i.fSlice] += cellData.Value(fM->fPlotEt)*i.fFraction;
          }
 
          Float_t bincenterEta = axis->GetBinCenter(etaBin);
@@ -517,23 +517,22 @@ void TEveCalo2DGL::ProcessSelection(TGLRnrCtx & /*rnrCtx*/, TGLSelectRecord & re
    {
       Int_t bin   = rec.GetItem(1);
       Int_t slice = rec.GetItem(2);
-      for (TEveCaloData::vCellId_i it = fM->fCellLists[bin]->begin();
-           it != fM->fCellLists[bin]->end(); ++it)
+      for (auto & it : *fM->fCellLists[bin])
       {
-         if ((*it).fSlice == slice)
+         if (it.fSlice == slice)
          {
             if (IsRPhi())
             {
-               sel.push_back(*it);
+               sel.push_back(it);
             }
             else
             {
                assert(rec.GetN() > 3);
                Bool_t is_upper = (rec.GetItem(3) == 1);
                TEveCaloData::CellData_t cd;
-               fM->fData->GetCellData(*it, cd);
+               fM->fData->GetCellData(it, cd);
                if ((is_upper && cd.IsUpperRho()) || (!is_upper && !cd.IsUpperRho()))
-                  sel.push_back(*it);
+                  sel.push_back(it);
             }
          }
       }

@@ -151,10 +151,10 @@ void TKDE::SetOptions(const Option_t* option, Double_t rho) {
       *it = options.substr(pos + 1);
       options = options.substr(0, pos);
    }
-   for (std::vector<std::string>::iterator it = voption.begin(); it != voption.end(); ++it) {
-      size_t pos = (*it).find(':');
+   for (auto & it : voption) {
+      size_t pos = it.find(':');
       if (pos != std::string::npos) {
-         GetOptions((*it).substr(0, pos) , (*it).substr(pos + 1));
+         GetOptions(it.substr(0, pos) , it.substr(pos + 1));
       }
    }
    AssureOptions();

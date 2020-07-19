@@ -262,8 +262,8 @@ RooAbsData::~RooAbsData()
   delete _dstore ;
 
   // Delete owned dataset components
-  for(map<std::string,RooAbsData*>::iterator iter = _ownedComponents.begin() ; iter!= _ownedComponents.end() ; ++iter) {
-    delete iter->second ;
+  for(auto & _ownedComponent : _ownedComponents) {
+    delete _ownedComponent.second ;
   }
 
   RooTrace::destroy(this) ;

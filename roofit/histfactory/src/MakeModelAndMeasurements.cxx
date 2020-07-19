@@ -184,9 +184,7 @@ void topDriver( string input ) {
   // but is here for now.
 
   
-  for(unsigned int i = 0; i < measurement_list.size(); ++i) {
-    
-    HistFactory::Measurement measurement = measurement_list.at(i);
+  for(auto measurement : measurement_list) {
     
     // Add the channels to this measurement
     //for( unsigned int chanItr = 0; chanItr < channel_list.size(); ++chanItr ) {

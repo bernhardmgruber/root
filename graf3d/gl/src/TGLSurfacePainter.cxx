@@ -782,8 +782,7 @@ void TGLSurfacePainter::DrawProjections()const
    glLineWidth(3.f);
 
    typedef std::list<Projection_t>::const_iterator CLI_t;
-   for (CLI_t begin = fXOZProj.begin(), end = fXOZProj.end(); begin != end; ++begin) {
-      const Projection_t &proj = *begin;
+   for (const auto & proj : fXOZProj) {
       glColor4ub(proj.fRGBA[0], proj.fRGBA[1], proj.fRGBA[2], proj.fRGBA[3]);
 
       for(UInt_t i = 0, e = proj.fVertices.size() / 3; i < e; ++i) {
@@ -806,8 +805,7 @@ void TGLSurfacePainter::DrawProjections()const
       }
    }
 
-   for (CLI_t begin = fYOZProj.begin(), end = fYOZProj.end(); begin != end; ++begin) {
-      const Projection_t &proj = *begin;
+   for (const auto & proj : fYOZProj) {
       glColor4ub(proj.fRGBA[0], proj.fRGBA[1], proj.fRGBA[2], proj.fRGBA[3]);
 
       for(UInt_t i = 0, e = proj.fVertices.size() / 3; i < e; ++i) {
@@ -831,8 +829,7 @@ void TGLSurfacePainter::DrawProjections()const
       }
    }
 
-   for (CLI_t begin = fXOYProj.begin(), end = fXOYProj.end(); begin != end; ++begin) {
-      const Projection_t &proj = *begin;
+   for (const auto & proj : fXOYProj) {
       glColor4ub(proj.fRGBA[0], proj.fRGBA[1], proj.fRGBA[2], proj.fRGBA[3]);
 
       for(UInt_t i = 0, e = proj.fVertices.size() / 2; i < e; ++i) {

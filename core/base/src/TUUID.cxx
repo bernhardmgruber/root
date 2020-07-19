@@ -272,8 +272,8 @@ void TUUID::FillBuffer(char *&buffer)
    tobuf(buffer, fTimeHiAndVersion);
    tobuf(buffer, fClockSeqHiAndReserved);
    tobuf(buffer, fClockSeqLow);
-   for (Int_t i = 0; i < 6; i++)
-      tobuf(buffer, fNode[i]);
+   for (unsigned char i : fNode)
+      tobuf(buffer, i);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -288,8 +288,8 @@ void TUUID::ReadBuffer(char *&buffer)
    frombuf(buffer, &fTimeHiAndVersion);
    frombuf(buffer, &fClockSeqHiAndReserved);
    frombuf(buffer, &fClockSeqLow);
-   for (Int_t i = 0; i < 6; i++)
-      frombuf(buffer, &fNode[i]);
+   for (unsigned char & i : fNode)
+      frombuf(buffer, &i);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -304,8 +304,8 @@ void TUUID::StreamerV1(TBuffer &b)
    b >> fTimeHiAndVersion;
    b >> fClockSeqHiAndReserved;
    b >> fClockSeqLow;
-   for (UInt_t i = 0; i < 6; i++) {
-      b >> fNode[i];
+   for (unsigned char & i : fNode) {
+      b >> i;
    }
 }
 

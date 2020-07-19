@@ -628,9 +628,9 @@ Bool_t TRecorderReplaying::RemapWindowReferences()
          fGuiEvent->fWindow = ids->fValue;
          found = kTRUE;
       }
-      for (Int_t i = 0; i < 5; ++i) {
-         if ((Long_t) ids->fKey == fGuiEvent->fUser[i])
-            fGuiEvent->fUser[i] = ids->fValue;
+      for (long & i : fGuiEvent->fUser) {
+         if ((Long_t) ids->fKey == i)
+            i = ids->fValue;
       }
       if (fGuiEvent->fMasked && ids->fKey == fGuiEvent->fMasked) {
          fGuiEvent->fMasked = ids->fValue;

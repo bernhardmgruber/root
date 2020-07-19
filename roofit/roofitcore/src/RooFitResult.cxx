@@ -513,8 +513,8 @@ void RooFitResult::printMultiline(ostream& os, Int_t /*contents*/, Bool_t verbos
   }
   os << endl ; 
   os << indent << "                Status : " ;
-  for (vector<pair<string,int> >::const_iterator iter = _statusHistory.begin() ; iter != _statusHistory.end() ; ++iter) {
-    os << iter->first << "=" << iter->second << " " ;
+  for (const auto & iter : _statusHistory) {
+    os << iter.first << "=" << iter.second << " " ;
   }
   os << endl << endl ;;
 
@@ -1334,8 +1334,8 @@ RooAbsPdf* RooFitResult::createHessePdf(const RooArgSet& params) const
 
   // Calculate offset vectors mu1 and mu2
   RooArgList mu1 ;
-  for (UInt_t i=0 ; i<map1.size() ; i++) {
-    RooRealVar* parclone = (RooRealVar*) _finalPars->at(map1[i])->Clone(Form("%s_centralvalue",_finalPars->at(map1[i])->GetName())) ;
+  for (int i : map1) {
+    RooRealVar* parclone = (RooRealVar*) _finalPars->at(i)->Clone(Form("%s_centralvalue",_finalPars->at(i)->GetName())) ;
     parclone->setConstant(kTRUE) ;
     mu1.add(*parclone) ;      
   }

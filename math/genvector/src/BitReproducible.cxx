@@ -84,8 +84,7 @@ std::string BitReproducible::D2x(double d) {
    DB8 db;
    db.fD = d;
    std::ostringstream ss;
-   for (int i=0; i<8; ++i) {
-      int k = fgByte_order[i];
+   for (int k : fgByte_order) {
       ss << std::hex << std::setw(2) << std::setfill('0') << (int)db.fB[k];
    }
    return ss.str();

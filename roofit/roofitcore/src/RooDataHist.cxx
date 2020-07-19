@@ -441,18 +441,18 @@ void RooDataHist::importTH1Set(const RooArgList& vars, RooCategory& indexCat, ma
 
   TH1* histo(0) ;  
   Bool_t init(kFALSE) ;
-  for (map<string,TH1*>::iterator hiter = hmap.begin() ; hiter!=hmap.end() ; ++hiter) {
+  for (auto & hiter : hmap) {
     // Store pointer to first histogram from which binning specification will be taken
     if (!histo) {
-      histo = hiter->second ;
+      histo = hiter.second ;
     }
     // Define state labels in index category (both in provided indexCat and in internal copy in dataset)
-    if (!indexCat.lookupType(hiter->first.c_str())) {
-      indexCat.defineType(hiter->first) ;
-      coutI(InputArguments) << "RooDataHist::importTH1Set(" << GetName() << ") defining state \"" << hiter->first << "\" in index category " << indexCat.GetName() << endl ;
+    if (!indexCat.lookupType(hiter.first.c_str())) {
+      indexCat.defineType(hiter.first) ;
+      coutI(InputArguments) << "RooDataHist::importTH1Set(" << GetName() << ") defining state \"" << hiter.first << "\" in index category " << indexCat.GetName() << endl ;
     }
-    if (!icat->lookupType(hiter->first.c_str())) {	
-      icat->defineType(hiter->first) ;
+    if (!icat->lookupType(hiter.first.c_str())) {	
+      icat->defineType(hiter.first) ;
     }
   }
 
@@ -536,15 +536,15 @@ void RooDataHist::importDHistSet(const RooArgList& /*vars*/, RooCategory& indexC
 {
   RooCategory* icat = (RooCategory*) _vars.find(indexCat.GetName()) ;
 
-  for (map<string,RooDataHist*>::iterator diter = dmap.begin() ; diter!=dmap.end() ; ++diter) {
+  for (auto & diter : dmap) {
 
     // Define state labels in index category (both in provided indexCat and in internal copy in dataset)
-    if (!indexCat.lookupType(diter->first.c_str())) {
-      indexCat.defineType(diter->first) ;
-      coutI(InputArguments) << "RooDataHist::importDHistSet(" << GetName() << ") defining state \"" << diter->first << "\" in index category " << indexCat.GetName() << endl ;
+    if (!indexCat.lookupType(diter.first.c_str())) {
+      indexCat.defineType(diter.first) ;
+      coutI(InputArguments) << "RooDataHist::importDHistSet(" << GetName() << ") defining state \"" << diter.first << "\" in index category " << indexCat.GetName() << endl ;
     }
-    if (!icat->lookupType(diter->first.c_str())) {	
-      icat->defineType(diter->first) ;
+    if (!icat->lookupType(diter.first.c_str())) {	
+      icat->defineType(diter.first) ;
     }
   }
 
@@ -552,11 +552,11 @@ void RooDataHist::importDHistSet(const RooArgList& /*vars*/, RooCategory& indexC
   appendToDir(this,kTRUE) ;  
 
 
-  for (map<string,RooDataHist*>::iterator diter = dmap.begin() ; diter!=dmap.end() ; ++diter) {
+  for (auto & diter : dmap) {
 
-    RooDataHist* dhist = diter->second ;
+    RooDataHist* dhist = diter.second ;
 
-    icat->setLabel(diter->first.c_str()) ;
+    icat->setLabel(diter.first.c_str()) ;
 
     // Transfer contents
     for (Int_t i=0 ; i<dhist->numEntries() ; i++) {

@@ -752,8 +752,8 @@ TString TMakeProject::UpdateAssociativeToVector(const char *name)
          }
       } else {
          static const char *stlnames[] = { "pair", "greater", "less", "allocator" };
-         for(unsigned int in = 0; in < sizeof(stlnames)/sizeof(stlnames[0]); ++in) {
-            if (strncmp( inside[0].c_str(), stlnames[in], strlen(stlnames[in])) == 0 ) {
+         for(auto & stlname : stlnames) {
+            if (strncmp( inside[0].c_str(), stlname, strlen(stlname)) == 0 ) {
                inside[0] = "std::" + inside[0];
                break;
             }

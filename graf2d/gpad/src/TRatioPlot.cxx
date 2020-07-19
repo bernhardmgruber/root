@@ -115,8 +115,8 @@ TRatioPlot::~TRatioPlot()
    if (fConfidenceInterval1 && fConfidenceInterval1->TestBit(kNotDeleted)) delete fConfidenceInterval1;
    if (fConfidenceInterval2 && fConfidenceInterval2->TestBit(kNotDeleted)) delete fConfidenceInterval2;
 
-   for (unsigned int i=0;i<fGridlines.size();++i) {
-      delete (fGridlines[i]);
+   for (auto & fGridline : fGridlines) {
+      delete fGridline;
    }
 
    if (fSharedXAxis && fSharedXAxis->TestBit(kNotDeleted)) delete fSharedXAxis;
@@ -771,8 +771,8 @@ void TRatioPlot::CreateGridline()
 
    double y;
    int outofrange = 0;
-   for (unsigned int i=0;i<fGridlinePositions.size();++i) {
-      y = fGridlinePositions.at(i);
+   for (double fGridlinePosition : fGridlinePositions) {
+      y = fGridlinePosition;
 
       if (y < lowYFirst || lowYLast < y) {
          ++outofrange;
@@ -783,8 +783,8 @@ void TRatioPlot::CreateGridline()
    dest = dest - outofrange;
 
    // clear all
-   for (unsigned int i=0;i<fGridlines.size();++i) {
-      delete fGridlines.at(i);
+   for (auto & fGridline : fGridlines) {
+      delete fGridline;
    }
 
    fGridlines.erase(fGridlines.begin(), fGridlines.end());

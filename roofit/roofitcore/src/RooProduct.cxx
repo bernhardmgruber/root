@@ -192,9 +192,9 @@ RooProduct::ProdMap* RooProduct::groupProductTerms(const RooArgSet& allVars) con
   // check that we have all variables to be integrated over on the LHS
   // of the map, and all terms in the product do appear on the RHS
   int nVar=0; int nFunc=0;
-  for (ProdMap::iterator i = map->begin();i!=map->end();++i) {
-    nVar+=i->first->getSize();
-    nFunc+=i->second->getSize();
+  for (auto & i : *map) {
+    nVar+=i.first->getSize();
+    nFunc+=i.second->getSize();
   }
   assert(nVar==allVars.getSize());
   assert(nFunc==_compRSet.getSize());
@@ -230,9 +230,9 @@ Int_t RooProduct::getPartIntList(const RooArgSet* iset, const char *isetRange) c
   // did we find any factorizable terms?
   if (map->size()<2) {
     
-    for (ProdMap::iterator iter = map->begin() ; iter != map->end() ; ++iter) {
-      delete iter->first ;
-      delete iter->second ;
+    for (auto & iter : *map) {
+      delete iter.first ;
+      delete iter.second ;
     }
 
     delete map ;
@@ -240,24 +240,24 @@ Int_t RooProduct::getPartIntList(const RooArgSet* iset, const char *isetRange) c
   }
   cache = new CacheElem();
 
-  for (ProdMap::const_iterator i = map->begin();i!=map->end();++i) {
+  for (const auto & i : *map) {
     RooAbsReal *term(0);
-    if (i->second->getSize()>1) { // create a RooProd for this subexpression
-      const char *name = makeFPName("SUBPROD_",*i->second);
-      term = new RooProduct(name,name,*i->second);
+    if (i.second->getSize()>1) { // create a RooProd for this subexpression
+      const char *name = makeFPName("SUBPROD_",*i.second);
+      term = new RooProduct(name,name,*i.second);
       cache->_ownedList.addOwned(*term);
       cxcoutD(Integration) << "RooProduct::getPartIntList(" << GetName() << ") created subexpression " << term->GetName() << endl;
     } else {
       assert(i->second->getSize()==1);
-      RooFIter j = i->second->fwdIterator();
+      RooFIter j = i.second->fwdIterator();
       term = (RooAbsReal*)j.next();
     }
     assert(term!=0);
-    if (i->first->getSize()==0) { // check whether we need to integrate over this term or not...
+    if (i.first->getSize()==0) { // check whether we need to integrate over this term or not...
       cache->_prodList.add(*term);
       cxcoutD(Integration) << "RooProduct::getPartIntList(" << GetName() << ") adding simple factor " << term->GetName() << endl;
     } else {
-      RooAbsReal *integral = term->createIntegral(*i->first,isetRange);
+      RooAbsReal *integral = term->createIntegral(*i.first,isetRange);
       cache->_prodList.add(*integral);
       cache->_ownedList.addOwned(*integral);
       cxcoutD(Integration) << "RooProduct::getPartIntList(" << GetName() << ") adding integral for " << term->GetName() << " : " << integral->GetName() << endl;
@@ -269,9 +269,9 @@ Int_t RooProduct::getPartIntList(const RooArgSet* iset, const char *isetRange) c
   cxcoutD(Integration) << "RooProduct::getPartIntList(" << GetName() << ") created list " << cache->_prodList << " with code " << code+1 << endl
 		       << " for iset=" << *iset << " @" << iset << " range: " << (isetRange?isetRange:"<none>") << endl ;
 
-  for (ProdMap::iterator iter = map->begin() ; iter != map->end() ; ++iter) {
-    delete iter->first ;
-    delete iter->second ;
+  for (auto & iter : *map) {
+    delete iter.first ;
+    delete iter.second ;
   }
   delete map ;
   return code;

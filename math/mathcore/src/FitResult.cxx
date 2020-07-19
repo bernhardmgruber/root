@@ -347,10 +347,10 @@ void FitResult::NormalizeErrors() {
    if (fNdf == 0 || fChi2 <= 0) return;
    double s2 = fChi2/fNdf;
    double s = std::sqrt(fChi2/fNdf);
-   for (unsigned int i = 0; i < fErrors.size() ; ++i)
-      fErrors[i] *= s;
-   for (unsigned int i = 0; i < fCovMatrix.size() ; ++i)
-      fCovMatrix[i] *= s2;
+   for (double & fError : fErrors)
+      fError *= s;
+   for (double & i : fCovMatrix)
+      i *= s2;
 
    fNormalized = true;
 }

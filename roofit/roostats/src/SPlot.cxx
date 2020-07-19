@@ -714,8 +714,8 @@ void SPlot::AddSWeight( RooAbsPdf* pdf, const RooArgList &yieldsTmp,
 
   //Make any variables that were forced to constant no longer constant
 
-  for(Int_t i=0; i < (Int_t) constVarHolder.size(); i++)
-    constVarHolder.at(i)->setConstant(kFALSE);
+  for(auto & i : constVarHolder)
+    i->setConstant(kFALSE);
 
   return;
 

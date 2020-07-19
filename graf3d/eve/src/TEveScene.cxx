@@ -114,12 +114,12 @@ void TEveScene::Repaint(Bool_t dropLogicals)
 
    TGLScene::LogicalShapeMap_t& logs = fGLScene->RefLogicalShapes();
    TEveElement* elm;
-   for (TGLScene::LogicalShapeMapIt_t li = logs.begin(); li != logs.end(); ++li)
+   for (auto & log : logs)
    {
-      elm = dynamic_cast<TEveElement*>(li->first);
-      if (elm && li->second->Ref() == 1)
+      elm = dynamic_cast<TEveElement*>(log.first);
+      if (elm && log.second->Ref() == 1)
       {
-         TGLPhysicalShape* pshp = const_cast<TGLPhysicalShape*>(li->second->GetFirstPhysical());
+         TGLPhysicalShape* pshp = const_cast<TGLPhysicalShape*>(log.second->GetFirstPhysical());
          pshp->Select(elm->GetSelectedLevel());
       }
    }
@@ -187,8 +187,8 @@ void TEveScene::Paint(Option_t* option)
 {
    if (GetRnrState())
    {
-      for(List_i i=fChildren.begin(); i!=fChildren.end(); ++i)
-         (*i)->PadPaint(option);
+      for(auto & i : fChildren)
+         i->PadPaint(option);
    }
 }
 
@@ -260,9 +260,9 @@ void TEveSceneList::DestroyScenes()
 
 void TEveSceneList::RepaintChangedScenes(Bool_t dropLogicals)
 {
-   for (List_i i=fChildren.begin(); i!=fChildren.end(); ++i)
+   for (auto & i : fChildren)
    {
-      TEveScene* s = (TEveScene*) *i;
+      TEveScene* s = (TEveScene*) i;
       if (s->IsChanged())
       {
          s->Repaint(dropLogicals);
@@ -275,9 +275,9 @@ void TEveSceneList::RepaintChangedScenes(Bool_t dropLogicals)
 
 void TEveSceneList::RepaintAllScenes(Bool_t dropLogicals)
 {
-   for (List_i i=fChildren.begin(); i!=fChildren.end(); ++i)
+   for (auto & i : fChildren)
    {
-      ((TEveScene*) *i)->Repaint(dropLogicals);
+      ((TEveScene*) i)->Repaint(dropLogicals);
    }
 }
 
@@ -289,9 +289,9 @@ void TEveSceneList::DestroyElementRenderers(TEveElement* element)
    static const TEveException eh("TEveSceneList::DestroyElementRenderers ");
 
    TObject* obj = element->GetRenderObject(eh);
-   for (List_i i=fChildren.begin(); i!=fChildren.end(); ++i)
+   for (auto & i : fChildren)
    {
-      ((TEveScene*)*i)->DestroyElementRenderers(obj);
+      ((TEveScene*)i)->DestroyElementRenderers(obj);
    }
 }
 
@@ -326,9 +326,9 @@ void TEveSceneList::ProcessSceneChanges(Bool_t dropLogicals, TExMap* stampMap)
       }
    }
 
-   for (List_i i=fChildren.begin(); i!=fChildren.end(); ++i)
+   for (auto & i : fChildren)
    {
-      TEveScene* s = (TEveScene*) *i;
+      TEveScene* s = (TEveScene*) i;
 
       if (s->IsChanged())
       {

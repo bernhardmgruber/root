@@ -246,10 +246,10 @@ void TGLCameraOverlay::RenderAxis(TGLRnrCtx& rnrCtx, Bool_t grid)
       // draw label vertical lines
       TGLUtil::ColorTransparency(lineColor, alpha);
       glBegin(GL_LINES);
-      for (TGLAxisPainter::LabVec_t::iterator i = labs.begin(); i != labs.end(); ++i) {
-         tmp = vy1 + xdir * (i->first);
+      for (auto & lab : labs) {
+         tmp = vy1 + xdir * (lab.first);
          glVertex3dv(tmp.Arr());
-         tmp = vy2 + xdir * (i->first);
+         tmp = vy2 + xdir * (lab.first);
          glVertex3dv(tmp.Arr());
       }
       glEnd();
@@ -322,10 +322,10 @@ void TGLCameraOverlay::RenderAxis(TGLRnrCtx& rnrCtx, Bool_t grid)
       // draw label horizontal lines
       TGLUtil::ColorTransparency(lineColor, alpha);
       glBegin(GL_LINES);
-      for (TGLAxisPainter::LabVec_t::iterator i = labs.begin(); i != labs.end(); ++i) {
-         tmp = vx1 + ydir *(i->first);
+      for (auto & lab : labs) {
+         tmp = vx1 + ydir *(lab.first);
          glVertex3dv(tmp.Arr());
-         tmp = vx2 + ydir *(i->first);
+         tmp = vx2 + ydir *(lab.first);
          glVertex3dv(tmp.Arr());
       }
       glEnd();

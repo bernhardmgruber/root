@@ -1622,15 +1622,13 @@ bool ROOT::TMetaUtils::hasOpaqueTypedef(clang::QualType instanceType, const ROOT
    //         fprintf(stderr,"ERROR: Could not findS TST for %s\n",type_name.c_str());
          return false;
       }
-      for(clang::TemplateSpecializationType::iterator
-          I = TST->begin(), E = TST->end();
-          I!=E; ++I)
+      for(const auto & I : *TST)
       {
-         if (I->getKind() == clang::TemplateArgument::Type) {
+         if (I.getKind() == clang::TemplateArgument::Type) {
    //            std::string arg;
    //            arg = GetQualifiedName( I->getAsType(), *clxx );
    //            fprintf(stderr,"DEBUG: looking at %s\n", arg.c_str());
-            result |= ROOT::TMetaUtils::hasOpaqueTypedef(I->getAsType(), normCtxt);
+            result |= ROOT::TMetaUtils::hasOpaqueTypedef(I.getAsType(), normCtxt);
          }
       }
    }
@@ -1950,8 +1948,8 @@ void ROOT::TMetaUtils::WriteClassInit(std::ostream& finalString,
 
    std::string filename = ROOT::TMetaUtils::GetFileName(*cl, interp);
    if (filename.length() > 0) {
-      for (unsigned int i=0; i<filename.length(); i++) {
-         if (filename[i]=='\\') filename[i]='/';
+      for (char & i : filename) {
+         if (i=='\\') i='/';
       }
    }
    finalString << "\"" << filename << "\", " << ROOT::TMetaUtils::GetLineNumber(cl)
@@ -4757,14 +4755,13 @@ clang::QualType ROOT::TMetaUtils::ReSubstTemplateArg(clang::QualType input, cons
    if (inputTST) {
       bool mightHaveChanged = false;
       llvm::SmallVector<clang::TemplateArgument, 4> desArgs;
-      for(clang::TemplateSpecializationType::iterator I = inputTST->begin(), E = inputTST->end();
-          I != E; ++I) {
-         if (I->getKind() != clang::TemplateArgument::Type) {
+      for(const auto & I : *inputTST) {
+         if (I.getKind() != clang::TemplateArgument::Type) {
             desArgs.push_back(*I);
             continue;
          }
 
-         clang::QualType SubTy = I->getAsType();
+         clang::QualType SubTy = I.getAsType();
          // Check if the type needs more desugaring and recurse.
          if (llvm::isa<clang::SubstTemplateTypeParmType>(SubTy)
              || llvm::isa<clang::TemplateSpecializationType>(SubTy)) {

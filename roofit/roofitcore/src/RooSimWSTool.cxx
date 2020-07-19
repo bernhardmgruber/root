@@ -876,8 +876,8 @@ void RooSimWSTool::ObjBuildConfig::print()
   map<RooAbsPdf*,ObjSplitRule>::iterator ri ;
   for (ri = _pdfmap.begin() ; ri != _pdfmap.end() ; ++ri ) {    
     cout << "Splitrule for p.d.f " << ri->first->GetName() << " with state list " ;
-    for (std::list<const RooCatType*>::iterator misi= ri->second._miStateList.begin() ; misi!=ri->second._miStateList.end() ; ++misi) {
-      cout << (*misi)->GetName() << " " ;
+    for (auto & misi : ri->second._miStateList) {
+      cout << misi->GetName() << " " ;
     }
     cout << endl ;
 

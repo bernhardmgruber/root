@@ -448,8 +448,8 @@ void TFractionFitter::IncludeBin(Int_t bin) {
 /// excluded from the fit or not.
 
 bool TFractionFitter::IsExcluded(Int_t bin) const {
-   for (unsigned int b = 0; b < fExcludedBins.size(); ++b)
-      if (fExcludedBins[b] == bin) return true;
+   for (int fExcludedBin : fExcludedBins)
+      if (fExcludedBin == bin) return true;
    return false;
 }
 

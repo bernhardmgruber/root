@@ -521,8 +521,8 @@ namespace {
       int np=0;
       graph->SetPoint(np,xmin,xminY);
       // assign the calculated envelope boundaries to the bin centers of the bins
-      for(auto it = maxValues.begin(); it != maxValues.end(); ++it){
-        graph->SetPoint(++np,hist->GetXaxis()->GetBinCenter(it->first),it->second);
+      for(auto & maxValue : maxValues){
+        graph->SetPoint(++np,hist->GetXaxis()->GetBinCenter(maxValue.first),maxValue.second);
       }
       graph->SetPoint(++np,xmax,xmaxY);
       for(auto it = minValues.rbegin(); it != minValues.rend(); ++it){

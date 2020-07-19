@@ -35,8 +35,8 @@ namespace RooStats {
 ////////////////////////////////////////////////////////////////////////////////
 
 ToyMCImportanceSampler::~ToyMCImportanceSampler() {
-   for( unsigned int i=0; i < fImportanceSnapshots.size(); i++ ) if(fImportanceSnapshots[i]) delete fImportanceSnapshots[i];
-   for( unsigned int i=0; i < fNullSnapshots.size(); i++ ) if(fNullSnapshots[i]) delete fNullSnapshots[i];
+   for(auto & fImportanceSnapshot : fImportanceSnapshots) if(fImportanceSnapshot) delete fImportanceSnapshot;
+   for(auto & fNullSnapshot : fNullSnapshots) if(fNullSnapshot) delete fNullSnapshot;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -44,8 +44,8 @@ ToyMCImportanceSampler::~ToyMCImportanceSampler() {
 void ToyMCImportanceSampler::ClearCache(void) {
    ToyMCSampler::ClearCache();
 
-   for( unsigned int i=0; i < fImpNLLs.size(); i++ ) if(fImpNLLs[i]) { delete fImpNLLs[i]; fImpNLLs[i] = NULL; }
-   for( unsigned int i=0; i < fNullNLLs.size(); i++ ) if(fNullNLLs[i]) { delete fNullNLLs[i]; fNullNLLs[i] = NULL; }
+   for(auto & fImpNLL : fImpNLLs) if(fImpNLL) { delete fImpNLL; fImpNLL = NULL; }
+   for(auto & fNullNLL : fNullNLLs) if(fNullNLL) { delete fNullNLL; fNullNLL = NULL; }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -329,7 +329,7 @@ RooAbsData* ToyMCImportanceSampler::GenerateToyData(
       fNuisanceParametersSampler->NextPoint(allVarsMinusParamPoint, globalWeight);
    }
    // populate input weights vector with this globalWeight
-   for( unsigned int i=0; i < weights.size(); i++ ) weights[i] = globalWeight;
+   for(double & weight : weights) weight = globalWeight;
 
    RooAbsData* data = NULL;
    if( fGenerateFromNull ) {
@@ -378,7 +378,7 @@ RooAbsData* ToyMCImportanceSampler::GenerateToyData(
    // for each null: find minNLLVal of null and all imp densities
    ooccoutD((TObject*)0,InputArguments) << "About to find the minimum NLLs." << endl;
    vector<double> minNLLVals;
-   for( unsigned int i=0; i < nullNLLVals.size(); i++ ) minNLLVals.push_back( nullNLLVals[i] );
+   for(double & nullNLLVal : nullNLLVals) minNLLVals.push_back( nullNLLVal );
 
    for( unsigned int i=0; i < fImportanceDensities.size(); i++ ) {
       //oocoutI((TObject*)0,InputArguments) << "Setting variables to impSnapshot["<<i<<"]"<<endl;

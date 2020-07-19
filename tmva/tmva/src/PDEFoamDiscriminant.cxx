@@ -220,11 +220,10 @@ TH2D* TMVA::PDEFoamDiscriminant::Project2(Int_t idim1, Int_t idim2, ECellValue c
          // loop over cells and fill the histogram with the cell
          // values
          Float_t sum_cv = 0; // sum of the cell values
-         for (std::vector<TMVA::PDEFoamCell*>::const_iterator it = cells.begin();
-              it != cells.end(); ++it) {
+         for (auto cell : cells) {
             // get cell position and size
             PDEFoamVect cellPosi(GetTotDim()), cellSize(GetTotDim());
-            (*it)->GetHcub(cellPosi, cellSize);
+            cell->GetHcub(cellPosi, cellSize);
             // Create complete event vector from txvec.  The missing
             // coordinates of txvec are set to the cell center.
             std::vector<Float_t> tvec;

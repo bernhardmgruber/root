@@ -159,7 +159,7 @@ TFumili::TFumili(Int_t maxpar)
 
    fAKAPPA = 0.;
    fGT = 0.;
-   for (int i = 0; i<5; ++i) fINDFLG[i] = 0;
+   for (int & i : fINDFLG) i = 0;
 
    SetName("Fumili");
    gFumili = this;

@@ -66,8 +66,8 @@ void TEveSelection::DoElementSelect(TEveSelection::SelMap_i entry)
 
    (el->*fSelElement)(kTRUE);
    el->FillImpliedSelectedSet(set);
-   for (Set_i i = set.begin(); i != set.end(); ++i)
-      ((*i)->*fIncImpSelElement)();
+   for (auto i : set)
+      (i->*fIncImpSelElement)();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -79,8 +79,8 @@ void TEveSelection::DoElementUnselect(TEveSelection::SelMap_i entry)
    TEveElement *el  = entry->first;
    Set_t       &set = entry->second;
 
-   for (Set_i i = set.begin(); i != set.end(); ++i)
-      ((*i)->*fDecImpSelElement)();
+   for (auto i : set)
+      (i->*fDecImpSelElement)();
    set.clear();
    (el->*fSelElement)(kFALSE);
 }
@@ -173,11 +173,11 @@ void TEveSelection::RemoveElementsLocal()
 
 void TEveSelection::RemoveImpliedSelected(TEveElement* el)
 {
-   for (SelMap_i i = fImpliedSelected.begin(); i != fImpliedSelected.end(); ++i)
+   for (auto & i : fImpliedSelected)
    {
-      Set_i j = i->second.find(el);
-      if (j != i->second.end())
-         i->second.erase(j);
+      Set_i j = i.second.find(el);
+      if (j != i.second.end())
+         i.second.erase(j);
    }
 }
 
@@ -190,12 +190,12 @@ void TEveSelection::RecheckImpliedSet(SelMap_i smi)
 {
    Set_t set;
    smi->first->FillImpliedSelectedSet(set);
-   for (Set_i i = set.begin(); i != set.end(); ++i)
+   for (auto i : set)
    {
-      if (smi->second.find(*i) == smi->second.end())
+      if (smi->second.find(i) == smi->second.end())
       {
-         smi->second.insert(*i);
-         ((*i)->*fIncImpSelElement)();
+         smi->second.insert(i);
+         (i->*fIncImpSelElement)();
       }
    }
 }

@@ -317,21 +317,21 @@ RooDataSet::RooDataSet(const char* name, const char* title, const RooArgSet& var
     if (!icat) {
       throw std::string("RooDataSet::RooDataSet() ERROR in constructor, cannot find index category") ;
     }
-    for (map<string,RooAbsData*>::iterator hiter = hmap.begin() ; hiter!=hmap.end() ; ++hiter) {
+    for (auto & hiter : hmap) {
       // Define state labels in index category (both in provided indexCat and in internal copy in dataset)
-      if (indexCat && !indexCat->hasLabel(hiter->first)) {
-        indexCat->defineType(hiter->first) ;
-        coutI(InputArguments) << "RooDataSet::ctor(" << GetName() << ") defining state \"" << hiter->first << "\" in index category " << indexCat->GetName() << endl ;
+      if (indexCat && !indexCat->hasLabel(hiter.first)) {
+        indexCat->defineType(hiter.first) ;
+        coutI(InputArguments) << "RooDataSet::ctor(" << GetName() << ") defining state \"" << hiter.first << "\" in index category " << indexCat->GetName() << endl ;
       }
-      if (icat && !icat->hasLabel(hiter->first)) {
-        icat->defineType(hiter->first) ;
+      if (icat && !icat->hasLabel(hiter.first)) {
+        icat->defineType(hiter.first) ;
       }
-      icat->setLabel(hiter->first.c_str()) ;
-      storeMap[icat->getCurrentLabel()]=hiter->second->store() ;
+      icat->setLabel(hiter.first.c_str()) ;
+      storeMap[icat->getCurrentLabel()]=hiter.second->store() ;
 
       // Take ownership of slice if requested
       if (ownLinked) {
-        addOwnedComponent(hiter->first.c_str(),*hiter->second) ;
+        addOwnedComponent(hiter.first.c_str(),*hiter.second) ;
       }
     }
 
@@ -446,19 +446,19 @@ RooDataSet::RooDataSet(const char* name, const char* title, const RooArgSet& var
 
         // Case 2a --- Import multiple RooDataSets as slices with cutspec
         RooCategory* icat = (RooCategory*) _vars.find(indexCat->GetName()) ;
-        for (map<string,RooDataSet*>::iterator hiter = hmap.begin() ; hiter!=hmap.end() ; ++hiter) {
+        for (auto & hiter : hmap) {
           // Define state labels in index category (both in provided indexCat and in internal copy in dataset)
-          if (!indexCat->hasLabel(hiter->first)) {
-            indexCat->defineType(hiter->first) ;
-            coutI(InputArguments) << "RooDataSet::ctor(" << GetName() << ") defining state \"" << hiter->first << "\" in index category " << indexCat->GetName() << endl ;
+          if (!indexCat->hasLabel(hiter.first)) {
+            indexCat->defineType(hiter.first) ;
+            coutI(InputArguments) << "RooDataSet::ctor(" << GetName() << ") defining state \"" << hiter.first << "\" in index category " << indexCat->GetName() << endl ;
           }
-          if (!icat->hasLabel(hiter->first)) {
-            icat->defineType(hiter->first) ;
+          if (!icat->hasLabel(hiter.first)) {
+            icat->defineType(hiter.first) ;
           }
-          icat->setLabel(hiter->first.c_str()) ;
+          icat->setLabel(hiter.first.c_str()) ;
 
-          RooFormulaVar cutVarTmp(cutSpec,cutSpec,hiter->second->_vars) ;
-          _dstore->loadValues(hiter->second->store(),&cutVarTmp,cutRange) ;
+          RooFormulaVar cutVarTmp(cutSpec,cutSpec,hiter.second->_vars) ;
+          _dstore->loadValues(hiter.second->store(),&cutVarTmp,cutRange) ;
         }
 
       } else if (impData) {
@@ -510,17 +510,17 @@ RooDataSet::RooDataSet(const char* name, const char* title, const RooArgSet& var
         // Case 2b --- Import multiple RooDataSets as slices with cutvar
 
         RooCategory* icat = (RooCategory*) _vars.find(indexCat->GetName()) ;
-        for (map<string,RooDataSet*>::iterator hiter = hmap.begin() ; hiter!=hmap.end() ; ++hiter) {
+        for (auto & hiter : hmap) {
           // Define state labels in index category (both in provided indexCat and in internal copy in dataset)
-          if (!indexCat->hasLabel(hiter->first)) {
-            indexCat->defineType(hiter->first) ;
-            coutI(InputArguments) << "RooDataSet::ctor(" << GetName() << ") defining state \"" << hiter->first << "\" in index category " << indexCat->GetName() << endl ;
+          if (!indexCat->hasLabel(hiter.first)) {
+            indexCat->defineType(hiter.first) ;
+            coutI(InputArguments) << "RooDataSet::ctor(" << GetName() << ") defining state \"" << hiter.first << "\" in index category " << indexCat->GetName() << endl ;
           }
-          if (!icat->hasLabel(hiter->first)) {
-            icat->defineType(hiter->first) ;
+          if (!icat->hasLabel(hiter.first)) {
+            icat->defineType(hiter.first) ;
           }
-          icat->setLabel(hiter->first.c_str()) ;
-          _dstore->loadValues(hiter->second->store(),cutVar,cutRange) ;
+          icat->setLabel(hiter.first.c_str()) ;
+          _dstore->loadValues(hiter.second->store(),cutVar,cutRange) ;
         }
 
 
@@ -565,18 +565,18 @@ RooDataSet::RooDataSet(const char* name, const char* title, const RooArgSet& var
       if (indexCat) {
 
         RooCategory* icat = (RooCategory*) _vars.find(indexCat->GetName()) ;
-        for (map<string,RooDataSet*>::iterator hiter = hmap.begin() ; hiter!=hmap.end() ; ++hiter) {
+        for (auto & hiter : hmap) {
           // Define state labels in index category (both in provided indexCat and in internal copy in dataset)
-          if (!indexCat->hasLabel(hiter->first)) {
-            indexCat->defineType(hiter->first) ;
-            coutI(InputArguments) << "RooDataSet::ctor(" << GetName() << ") defining state \"" << hiter->first << "\" in index category " << indexCat->GetName() << endl ;
+          if (!indexCat->hasLabel(hiter.first)) {
+            indexCat->defineType(hiter.first) ;
+            coutI(InputArguments) << "RooDataSet::ctor(" << GetName() << ") defining state \"" << hiter.first << "\" in index category " << indexCat->GetName() << endl ;
           }
-          if (!icat->hasLabel(hiter->first)) {
-            icat->defineType(hiter->first) ;
+          if (!icat->hasLabel(hiter.first)) {
+            icat->defineType(hiter.first) ;
           }
-          icat->setLabel(hiter->first.c_str()) ;
+          icat->setLabel(hiter.first.c_str()) ;
           // Case 2c --- Import multiple RooDataSets as slices
-          _dstore->loadValues(hiter->second->store(),0,cutRange) ;
+          _dstore->loadValues(hiter.second->store(),0,cutRange) ;
         }
 
       } else if (impData) {
@@ -1332,8 +1332,8 @@ Bool_t RooDataSet::merge(list<RooDataSet*>dsetList)
 
   checkInit() ;
   // Sanity checks: data sets must have the same size
-  for (list<RooDataSet*>::iterator iter = dsetList.begin() ; iter != dsetList.end() ; ++iter) {
-    if (numEntries()!=(*iter)->numEntries()) {
+  for (auto & iter : dsetList) {
+    if (numEntries()!=iter->numEntries()) {
       coutE(InputArguments) << "RooDataSet::merge(" << GetName() << ") ERROR: datasets have different size" << endl ;
       return kTRUE ;    
     }
@@ -1341,9 +1341,9 @@ Bool_t RooDataSet::merge(list<RooDataSet*>dsetList)
 
   // Extend vars with elements of other dataset
   list<RooAbsDataStore*> dstoreList ;
-  for (list<RooDataSet*>::iterator iter = dsetList.begin() ; iter != dsetList.end() ; ++iter) {
-    _vars.addClone((*iter)->_vars,kTRUE) ;
-    dstoreList.push_back((*iter)->store()) ;
+  for (auto & iter : dsetList) {
+    _vars.addClone(iter->_vars,kTRUE) ;
+    dstoreList.push_back(iter->store()) ;
   }
 
   // Merge data stores

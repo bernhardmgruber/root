@@ -244,9 +244,8 @@ TTreeReader::TTreeReader(const char* keyname, TDirectory* dir, TEntryList* entry
 
 TTreeReader::~TTreeReader()
 {
-   for (std::deque<ROOT::Internal::TTreeReaderValueBase*>::const_iterator
-           i = fValues.begin(), e = fValues.end(); i != e; ++i) {
-      (*i)->MarkTreeReaderUnavailable();
+   for (auto fValue : fValues) {
+      fValue->MarkTreeReaderUnavailable();
    }
    if (fTree && fNotify.IsLinked())
       fNotify.RemoveLink(*fTree);
@@ -351,8 +350,7 @@ Bool_t TTreeReader::Notify()
 
 Bool_t TTreeReader::SetProxies() {
 
-   for (size_t i = 0; i < fValues.size(); ++i) {
-      ROOT::Internal::TTreeReaderValueBase* reader = fValues[i];
+   for (auto reader : fValues) {
       reader->CreateProxy();
       if (!reader->GetProxy()){
          return kFALSE;

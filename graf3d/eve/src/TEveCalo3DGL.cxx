@@ -563,17 +563,17 @@ void TEveCalo3DGL::DirectDraw(TGLRnrCtx &rnrCtx) const
    if (rnrCtx.SecSelection()) glPushName(0);
 
    fOffset.assign(fM->fCellList.size(), 0);
-   for (TEveCaloData::vCellId_i i = fM->fCellList.begin(); i != fM->fCellList.end(); ++i)
+   for (auto & i : fM->fCellList)
    {
-      fM->fData->GetCellData((*i), cellData);
-      tower = i->fTower;
+      fM->fData->GetCellData(i, cellData);
+      tower = i.fTower;
       if (tower != prevTower)
       {
          offset = 0;
          prevTower = tower;
       }
       fOffset[cellID] = offset;
-      fM->SetupColorHeight(cellData.Value(fM->fPlotEt), (*i).fSlice, towerH);
+      fM->SetupColorHeight(cellData.Value(fM->fPlotEt), i.fSlice, towerH);
 
       if (rnrCtx.SecSelection()) glLoadName(cellID);
 
@@ -640,16 +640,16 @@ void TEveCalo3DGL::DrawSelectedCells(TEveCaloData::vCellId_t cells) const
    TEveCaloData::CellData_t cellData;
    Float_t towerH = 0;
 
-   for (TEveCaloData::vCellId_i i = cells.begin(); i != cells.end(); i++)
+   for (auto & cell : cells)
    {
-      fM->fData->GetCellData(*i, cellData);
-      fM->SetupColorHeight(cellData.Value(fM->fPlotEt), (*i).fSlice, towerH);
+      fM->fData->GetCellData(cell, cellData);
+      fM->SetupColorHeight(cellData.Value(fM->fPlotEt), cell.fSlice, towerH);
 
       // find tower with offsets
       Float_t offset = 0;
       for (Int_t j = 0; j < (Int_t) fM->fCellList.size(); ++j)
       {
-         if (fM->fCellList[j].fTower == i->fTower && fM->fCellList[j].fSlice == i->fSlice )
+         if (fM->fCellList[j].fTower == cell.fTower && fM->fCellList[j].fSlice == cell.fSlice )
          {
             offset = fOffset[j];
             break;

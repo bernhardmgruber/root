@@ -155,8 +155,8 @@ Bool_t TGLTH3CompositionPainter::InitGeometry()
                                          fCoord->GetFirstZBin());
    fMinMaxVal.first = fMinMaxVal.second;
 
-   for (UInt_t hNum = 0, lastH = fData->fHists.size(); hNum < lastH; ++hNum) {
-      h = fData->fHists[hNum].first;
+   for (auto & fHist : fData->fHists) {
+      h = fHist.first;
       for (Int_t ir = fCoord->GetFirstXBin(); ir <= fCoord->GetLastXBin(); ++ir) {
          for (Int_t jr = fCoord->GetFirstYBin(); jr <= fCoord->GetLastYBin(); ++jr) {
             for (Int_t kr = fCoord->GetFirstZBin();  kr <= fCoord->GetLastZBin(); ++kr) {
@@ -320,9 +320,9 @@ void TGLTH3CompositionPainter::DrawPlot()const
    if(!maxContent)//bad, find better way to check zero.
       maxContent = 1.;
 
-   for (UInt_t hNum = 0; hNum < fData->fHists.size(); ++hNum) {
-      const TH3 *h = fData->fHists[hNum].first;
-      const TGLTH3Composition::ETH3BinShape shape = fData->fHists[hNum].second;
+   for (auto & fHist : fData->fHists) {
+      const TH3 *h = fHist.first;
+      const TGLTH3Composition::ETH3BinShape shape = fHist.second;
       SetColor(h->GetFillColor());
 
       for(Int_t ir = irInit, i = iInit; addI > 0 ? i < nX : i >= 0; ir += addI, i += addI) {
@@ -365,11 +365,11 @@ void TGLTH3CompositionPainter::DrawPlot()const
    const TGLEnableGuard smoothGuard(GL_LINE_SMOOTH);//[5-5]
    glHint(GL_LINE_SMOOTH_HINT, GL_NICEST);
 
-   for (UInt_t hNum = 0; hNum < fData->fHists.size(); ++hNum) {
-      if (fData->fHists[hNum].second == TGLTH3Composition::kSphere)
+   for (auto & fHist : fData->fHists) {
+      if (fHist.second == TGLTH3Composition::kSphere)
          continue;//No outlines for spherical bins.
 
-      const TH3 *h = fData->fHists[hNum].first;
+      const TH3 *h = fHist.first;
 
       for(Int_t ir = irInit, i = iInit; addI > 0 ? i < nX : i >= 0; ir += addI, i += addI) {
          for(Int_t jr = jrInit, j = jInit; addJ > 0 ? j < nY : j >= 0; jr += addJ, j += addJ) {

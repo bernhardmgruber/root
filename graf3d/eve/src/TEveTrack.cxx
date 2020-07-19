@@ -247,9 +247,9 @@ void TEveTrack::ComputeBBox()
       {
          BBoxCheckPoint(p);
       }
-      for (vPathMark_ci i = fPathMarks.begin(); i != fPathMarks.end(); ++i)
+      for (const auto & fPathMark : fPathMarks)
       {
-         BBoxCheckPoint(i->fV.fX, i->fV.fY,i->fV.fZ);
+         BBoxCheckPoint(fPathMark.fV.fX, fPathMark.fV.fY,fPathMark.fV.fZ);
       }
    }
    else
@@ -459,9 +459,9 @@ void TEveTrack::MakeTrack(Bool_t recurse)
 
    if (recurse)
    {
-      for (List_i i=fChildren.begin(); i!=fChildren.end(); ++i)
+      for (auto & i : fChildren)
       {
-         TEveTrack* t = dynamic_cast<TEveTrack*>(*i);
+         TEveTrack* t = dynamic_cast<TEveTrack*>(i);
          if (t) t->MakeTrack(recurse);
       }
    }
@@ -526,14 +526,14 @@ void TEveTrack::PrintPathMarks()
    printf("TEveTrack '%s', number of path marks %d, label %d\n",
           GetName(), (Int_t)fPathMarks.size(), fLabel);
 
-   for (vPathMark_i pm = fPathMarks.begin(); pm != fPathMarks.end(); ++pm)
+   for (auto & fPathMark : fPathMarks)
    {
       printf("  %-9s  p: %8f %8f %8f Vertex: %8e %8e %8e %g Extra:%8f %8f %8f\n",
-             pm->TypeName(),
-             pm->fP.fX,  pm->fP.fY, pm->fP.fZ,
-             pm->fV.fX,  pm->fV.fY, pm->fV.fZ,
-             pm->fE.fX,  pm->fE.fY, pm->fE.fZ,
-             pm->fTime);
+             fPathMark.TypeName(),
+             fPathMark.fP.fX,  fPathMark.fP.fY, fPathMark.fP.fZ,
+             fPathMark.fV.fX,  fPathMark.fV.fY, fPathMark.fV.fZ,
+             fPathMark.fE.fX,  fPathMark.fE.fY, fPathMark.fE.fZ,
+             fPathMark.fTime);
    }
 }
 
@@ -636,9 +636,9 @@ void TEveTrackList::MakeTracks(Bool_t recurse)
 {
    fLimPt = fLimP = 0;
 
-   for (List_i i=fChildren.begin(); i!=fChildren.end(); ++i)
+   for (auto & i : fChildren)
    {
-      TEveTrack* track = dynamic_cast<TEveTrack*>(*i);
+      TEveTrack* track = dynamic_cast<TEveTrack*>(i);
       if (track)
       {
          track->MakeTrack(recurse);
@@ -647,7 +647,7 @@ void TEveTrackList::MakeTracks(Bool_t recurse)
          fLimP  = TMath::Max(fLimP,  track->fP.Mag());
       }
       if (recurse)
-         FindMomentumLimits(*i, recurse);
+         FindMomentumLimits(i, recurse);
    }
 
    fLimPt = RoundMomentumLimit(fLimPt);
@@ -1082,19 +1082,19 @@ void TEveTrackList::SelectByP(Double_t min_p, Double_t max_p, TEveElement* el)
 
 TEveTrack* TEveTrackList::FindTrackByLabel(Int_t label)
 {
-   for (List_i i=fChildren.begin(); i!=fChildren.end(); ++i)
+   for (auto & i : fChildren)
    {
-      if (((TEveTrack*)(*i))->GetLabel() == label)
+      if (((TEveTrack*)i)->GetLabel() == label)
       {
          TGListTree     *lt   = gEve->GetLTEFrame()->GetListTree();
          TGListTreeItem *mlti = lt->GetSelected();
          if (mlti->GetUserData() != this)
             mlti = FindListTreeItem(lt);
-         TGListTreeItem *tlti = (*i)->FindListTreeItem(lt, mlti);
+         TGListTreeItem *tlti = i->FindListTreeItem(lt, mlti);
          lt->HighlightItem(tlti);
          lt->SetSelected(tlti);
-         gEve->EditElement(*i);
-         return (TEveTrack*) *i;
+         gEve->EditElement(i);
+         return (TEveTrack*) i;
       }
    }
    return 0;
@@ -1105,19 +1105,19 @@ TEveTrack* TEveTrackList::FindTrackByLabel(Int_t label)
 
 TEveTrack* TEveTrackList::FindTrackByIndex(Int_t index)
 {
-   for (List_i i=fChildren.begin(); i!=fChildren.end(); ++i)
+   for (auto & i : fChildren)
    {
-      if (((TEveTrack*)(*i))->GetIndex() == index)
+      if (((TEveTrack*)i)->GetIndex() == index)
       {
          TGListTree     *lt   = gEve->GetLTEFrame()->GetListTree();
          TGListTreeItem *mlti = lt->GetSelected();
          if (mlti->GetUserData() != this)
             mlti = FindListTreeItem(lt);
-         TGListTreeItem *tlti = (*i)->FindListTreeItem(lt, mlti);
+         TGListTreeItem *tlti = i->FindListTreeItem(lt, mlti);
          lt->HighlightItem(tlti);
          lt->SetSelected(tlti);
-         gEve->EditElement(*i);
-         return (TEveTrack*) *i;
+         gEve->EditElement(i);
+         return (TEveTrack*) i;
       }
    }
    return 0;

@@ -266,10 +266,10 @@ Bool_t TMVA::kNN::ModulekNN::Fill(const UShort_t odepth, const UInt_t ifrac, con
 
       EventVec evec;
 
-      for (EventVec::const_iterator event = fEvent.begin(); event != fEvent.end(); ++event) {
-         std::map<Short_t, UInt_t>::iterator cit = fCount.find(event->GetType());
+      for (const auto & event : fEvent) {
+         std::map<Short_t, UInt_t>::iterator cit = fCount.find(event.GetType());
          if (cit == fCount.end()) {
-            fCount[event->GetType()] = 1;
+            fCount[event.GetType()] = 1;
          }
          else if (cit->second < min) {
             ++(cit->second);
@@ -279,10 +279,10 @@ Bool_t TMVA::kNN::ModulekNN::Fill(const UShort_t odepth, const UInt_t ifrac, con
          }
 
          for (UInt_t d = 0; d < fDimn; ++d) {
-            fVar[d].push_back(event->GetVar(d));
+            fVar[d].push_back(event.GetVar(d));
          }
 
-         evec.push_back(*event);
+         evec.push_back(event);
       }
 
       Log() << kINFO << "<Fill> Erased " << fEvent.size() - evec.size() << " events" << Endl;
@@ -294,8 +294,8 @@ Bool_t TMVA::kNN::ModulekNN::Fill(const UShort_t odepth, const UInt_t ifrac, con
    fCount.clear();
 
    // sort each variable for all events - needs this before Optimize() and ComputeMetric()
-   for (VarMap::iterator it = fVar.begin(); it != fVar.end(); ++it) {
-      std::sort((it->second).begin(), (it->second).end());
+   for (auto & it : fVar) {
+      std::sort((it.second).begin(), (it.second).end());
    }
 
    if (option.find("metric") != std::string::npos && ifrac > 0) {
@@ -303,8 +303,8 @@ Bool_t TMVA::kNN::ModulekNN::Fill(const UShort_t odepth, const UInt_t ifrac, con
 
       // sort again each variable for all events - needs this before Optimize()
       // rescaling has changed variable values
-      for (VarMap::iterator it = fVar.begin(); it != fVar.end(); ++it) {
-         std::sort((it->second).begin(), (it->second).end());
+      for (auto & it : fVar) {
+         std::sort((it.second).begin(), (it.second).end());
       }
    }
 
@@ -319,12 +319,12 @@ Bool_t TMVA::kNN::ModulekNN::Fill(const UShort_t odepth, const UInt_t ifrac, con
       return kFALSE;
    }
 
-   for (EventVec::const_iterator event = fEvent.begin(); event != fEvent.end(); ++event) {
-      fTree->Add(*event, 0);
+   for (const auto & event : fEvent) {
+      fTree->Add(event, 0);
 
-      std::map<Short_t, UInt_t>::iterator cit = fCount.find(event->GetType());
+      std::map<Short_t, UInt_t>::iterator cit = fCount.find(event.GetType());
       if (cit == fCount.end()) {
-         fCount[event->GetType()] = 1;
+         fCount[event.GetType()] = 1;
       }
       else {
          ++(cit->second);
@@ -612,11 +612,11 @@ void TMVA::kNN::ModulekNN::ComputeMetric(const UInt_t ifrac)
 
    fVar.clear();
 
-   for (UInt_t ievent = 0; ievent < fEvent.size(); ++ievent) {
-      fEvent[ievent] = Scale(fEvent[ievent]);
+   for (auto & ievent : fEvent) {
+      ievent = Scale(ievent);
 
       for (UInt_t ivar = 0; ivar < fDimn; ++ivar) {
-         fVar[ivar].push_back(fEvent[ievent].GetVar(ivar));
+         fVar[ivar].push_back(ievent.GetVar(ivar));
       }
    }
 }

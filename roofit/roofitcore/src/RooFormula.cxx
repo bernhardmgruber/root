@@ -80,8 +80,8 @@ std::vector<bool> findCategoryServers(const RooAbsCollection& collection) {
   std::vector<bool> output;
   output.reserve(collection.size());
 
-  for (unsigned int i = 0; i < collection.size(); ++i) {
-    output.push_back(collection[i]->InheritsFrom(RooAbsCategory::Class()));
+  for (auto i : collection) {
+    output.push_back(i->InheritsFrom(RooAbsCategory::Class()));
   }
 
   return output;

@@ -2709,8 +2709,8 @@ TFile* TTree::ChangeFile(TFile* file)
    char* fname = new char[kBufSize];
    ++fFileNumber;
    char uscore[10];
-   for (Int_t i = 0; i < 10; ++i) {
-      uscore[i] = 0;
+   for (char & i : uscore) {
+      i = 0;
    }
    Int_t nus = 0;
    // Try to find a suitable file name that does not already exist.
@@ -5724,8 +5724,8 @@ void TTree::InitializeBranchLists(bool checkLeafCount)
                 return a.first > b.first;
              });
 
-   for (size_t i = 0; i < fSortedBranches.size(); i++)  {
-      fSortedBranches[i].first = 0LL;
+   for (auto & fSortedBranche : fSortedBranches)  {
+      fSortedBranche.first = 0LL;
    }
 }
 
@@ -5734,8 +5734,8 @@ void TTree::InitializeBranchLists(bool checkLeafCount)
 
 void TTree::SortBranchesByTime()
 {
-   for (size_t i = 0; i < fSortedBranches.size(); i++)  {
-      fSortedBranches[i].first *= kNEntriesResortInv;
+   for (auto & fSortedBranche : fSortedBranches)  {
+      fSortedBranche.first *= kNEntriesResortInv;
    }
 
    std::sort(fSortedBranches.begin(),
@@ -5744,8 +5744,8 @@ void TTree::SortBranchesByTime()
                 return a.first > b.first;
              });
 
-   for (size_t i = 0; i < fSortedBranches.size(); i++)  {
-      fSortedBranches[i].first = 0LL;
+   for (auto & fSortedBranche : fSortedBranches)  {
+      fSortedBranche.first = 0LL;
    }
 }
 

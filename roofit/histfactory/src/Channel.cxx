@@ -90,8 +90,8 @@ void RooStats::HistFactory::Channel::Print( std::ostream& stream ) {
   if( fSamples.size() != 0 ) {
 
     stream << "\t Samples: " << std::endl;
-    for( unsigned int i = 0; i < fSamples.size(); ++i ) {
-      fSamples.at(i).Print( stream );
+    for(auto & fSample : fSamples) {
+      fSample.Print( stream );
     }
   }
 
@@ -148,8 +148,8 @@ void RooStats::HistFactory::Channel::PrintXML( std::string directory, std::strin
       << "/> " << std::endl << std::endl;            
   */
 
-  for( unsigned int i = 0; i < fSamples.size(); ++i ) {
-    fSamples.at(i).PrintXML( xml );
+  for(auto & fSample : fSamples) {
+    fSample.PrintXML( xml );
     xml << std::endl << std::endl;
   }
 
@@ -234,18 +234,14 @@ void RooStats::HistFactory::Channel::CollectHistograms() {
   }
 
   // Collect any histograms for additional Datasets
-  for( unsigned int i=0; i < fAdditionalData.size(); ++i) {
-    RooStats::HistFactory::Data& data = fAdditionalData.at(i);
+  for(auto & data : fAdditionalData) {
     if( data.GetInputFile() != "" ) {
       data.SetHisto( GetHistogram(data.GetInputFile(), data.GetHistoPath(), data.GetHistoName(), fileHandles) );
     }
   }
 
   // Get the histograms for the samples:
-  for( unsigned int sampItr = 0; sampItr < fSamples.size(); ++sampItr ) {
-
-    RooStats::HistFactory::Sample& sample = fSamples.at( sampItr );
-
+  for(auto & sample : fSamples) {
 
     // Get the nominal histogram:
     cxcoutDHF << "Collecting Nominal Histogram" << std::endl;
@@ -267,10 +263,8 @@ void RooStats::HistFactory::Channel::CollectHistograms() {
 
       
     // Get the HistoSys Variations:
-    for( unsigned int histoSysItr = 0; histoSysItr < sample.GetHistoSysList().size(); ++histoSysItr ) {
+    for(auto & histoSys : sample.GetHistoSysList()) {
 
-      RooStats::HistFactory::HistoSys& histoSys = sample.GetHistoSysList().at( histoSysItr );
-	
       histoSys.SetHistoLow( GetHistogram(histoSys.GetInputFileLow(), 
 					 histoSys.GetHistoPathLow(),
 					 histoSys.GetHistoNameLow(),
@@ -284,9 +278,7 @@ void RooStats::HistFactory::Channel::CollectHistograms() {
 
 
       // Get the HistoFactor Variations:
-    for( unsigned int histoFactorItr = 0; histoFactorItr < sample.GetHistoFactorList().size(); ++histoFactorItr ) {
-
-      RooStats::HistFactory::HistoFactor& histoFactor = sample.GetHistoFactorList().at( histoFactorItr );
+    for(auto & histoFactor : sample.GetHistoFactorList()) {
 
       histoFactor.SetHistoLow( GetHistogram(histoFactor.GetInputFileLow(), 
 					    histoFactor.GetHistoPathLow(),
@@ -301,10 +293,8 @@ void RooStats::HistFactory::Channel::CollectHistograms() {
 
 
       // Get the ShapeSys Variations:
-    for( unsigned int shapeSysItr = 0; shapeSysItr < sample.GetShapeSysList().size(); ++shapeSysItr ) {
+    for(auto & shapeSys : sample.GetShapeSysList()) {
 	
-      RooStats::HistFactory::ShapeSys& shapeSys = sample.GetShapeSysList().at( shapeSysItr );
-
       shapeSys.SetErrorHist( GetHistogram(shapeSys.GetInputFile(), 
 					  shapeSys.GetHistoPath(),
 					  shapeSys.GetHistoName(),
@@ -313,9 +303,7 @@ void RooStats::HistFactory::Channel::CollectHistograms() {
 
     
     // Get any initial shape for a ShapeFactor
-    for( unsigned int shapeFactorItr = 0; shapeFactorItr < sample.GetShapeFactorList().size(); ++shapeFactorItr ) {
-
-      RooStats::HistFactory::ShapeFactor& shapeFactor = sample.GetShapeFactorList().at( shapeFactorItr );
+    for(auto & shapeFactor : sample.GetShapeFactorList()) {
 
       // Check if we need an InitialShape
       if( shapeFactor.HasInitialShape() ) {
@@ -343,9 +331,7 @@ bool RooStats::HistFactory::Channel::CheckHistograms() {
     }
 
     // Get the histograms for the samples:
-    for( unsigned int sampItr = 0; sampItr < fSamples.size(); ++sampItr ) {
-
-      RooStats::HistFactory::Sample& sample = fSamples.at( sampItr );
+    for(auto & sample : fSamples) {
 
       // Get the nominal histogram:
       if( sample.GetHisto() == NULL ) {

@@ -306,8 +306,8 @@ public:
       float advance = 0;
 
       buf[1] = L'\0';
-      for (std::wstring::const_iterator iterator = string.begin(); iterator != string.end(); ++iterator) {
-         buf[0] = *iterator;
+      for (wchar_t iterator : string) {
+         buf[0] = iterator;
          const bool cyrillic_or_cjk = is_cyrillic_or_cjk(buf[0]);
 
          if (cyrillic_or_cjk) {

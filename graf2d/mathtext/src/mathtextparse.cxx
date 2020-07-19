@@ -61,37 +61,36 @@ namespace mathtext {
       std::vector<std::string> radical_index;
       bool horizontal_box = false;
 
-      for (std::vector<std::string>::const_iterator iterator = str_split.begin(); iterator != str_split.end();
-           ++iterator) {
+      for (const auto & iterator : str_split) {
          // ONLY LEVEL 0 superscript and subscript are interpreted,
          // and they are ignored afterwards.
          if(level == 0 && delimiter_level == 0) {
-            if((*iterator)[0] == '^') {
+            if(iterator[0] == '^') {
                superscript = true;
                continue;
             }
-            else if((*iterator)[0] == '_') {
+            else if(iterator[0] == '_') {
                subscript = true;
                continue;
             }
-            else if(*iterator == "\\sqrt") {
+            else if(iterator == "\\sqrt") {
                radical_state = RADICAL_STATE_RADICAND;
                radical_index = std::vector<std::string>();
                continue;
             }
-            else if(iterator->substr(0, 5) == "\\root") {
+            else if(iterator.substr(0, 5) == "\\root") {
                radical_state = RADICAL_STATE_INDEX;
                continue;
             }
             else if(radical_state == RADICAL_STATE_INDEX &&
-                    *iterator == "\\of") {
+                    iterator == "\\of") {
                radical_index = buffer;
                buffer.clear();
                radical_state = RADICAL_STATE_RADICAND;
                continue;
             }
-            else if(iterator->substr(0, 5) == "\\hbox" ||
-                    iterator->substr(0, 5) == "\\text") {
+            else if(iterator.substr(0, 5) == "\\hbox" ||
+                    iterator.substr(0, 5) == "\\text") {
                horizontal_box = true;
                continue;
             }
@@ -102,11 +101,11 @@ namespace mathtext {
             lower = std::lower_bound(
                                      font_change_control_sequence,
                                      font_change_control_sequence + nfont_change,
-                                     *iterator);
+                                     iterator);
 
             if(lower <
                font_change_control_sequence + nfont_change &&
-               *lower == *iterator) {
+               *lower == iterator) {
                const unsigned long index =
                lower - font_change_control_sequence;
 
@@ -117,10 +116,10 @@ namespace mathtext {
             lower = std::lower_bound(
                                      operator_control_sequence,
                                      operator_control_sequence + noperator,
-                                     *iterator);
+                                     iterator);
             if(lower <
                operator_control_sequence + noperator &&
-               *lower == *iterator) {
+               *lower == iterator) {
                const unsigned long index =
                lower - operator_control_sequence;
 
@@ -141,7 +140,7 @@ namespace mathtext {
                   // Operator defined with \mathchardef
                   const field_t operator_math_symbol(
                                                      math_symbol_t(
-                                                                   *iterator,
+                                                                   iterator,
                                                                    operator_code_point[index],
                                                                    math_symbol_t::FAMILY_REGULAR));
                   atom_t atom(atom_t::TYPE_OP, field_t(
@@ -156,7 +155,7 @@ namespace mathtext {
             }
          }
 
-         if((*iterator)[0] == '}') {
+         if(iterator[0] == '}') {
             level--;
             // When the level decreases to 0 here, the compound
             // expression is complete, create a subfield and
@@ -177,7 +176,7 @@ namespace mathtext {
                buffer.clear();
             }
          }
-         else if(*iterator == "\\right") {
+         else if(iterator == "\\right") {
             delimiter_level--;
             // When the delimtier level decreases to 0 here, the
             // compound expression is complete, create a subfield
@@ -201,14 +200,14 @@ namespace mathtext {
 
          if(level > 0 || delimiter_level > 0 ||
             radical_state == RADICAL_STATE_INDEX) {
-            buffer.push_back(*iterator);
+            buffer.push_back(iterator);
          }
          else if(delimiter_right) {
             const std::string left = buffer.front();
 
             buffer.erase(buffer.begin());
 
-            const field_t subfield(left, buffer, *iterator,
+            const field_t subfield(left, buffer, iterator,
                                    family);
 
             if(radical_state == RADICAL_STATE_RADICAND) {
@@ -223,17 +222,17 @@ namespace mathtext {
             buffer.clear();
          }
          else if(horizontal_box) {
-            box_t box(math_text_t::utf8_cast(*iterator));
+            box_t box(math_text_t::utf8_cast(iterator));
 
             append(field_t(box), superscript, subscript);
          }
-         else if((*iterator)[0] != '{' &&
-                 (*iterator)[0] != '}' &&
-                 *iterator != "\\left" &&
-                 *iterator != "\\right") {
+         else if(iterator[0] != '{' &&
+                 iterator[0] != '}' &&
+                 iterator != "\\left" &&
+                 iterator != "\\right") {
             if(radical_state == RADICAL_STATE_RADICAND) {
                const field_t subfield(
-                                      std::vector<std::string>(1, *iterator),
+                                      std::vector<std::string>(1, iterator),
                                       family);
                atom_t atom(atom_t::TYPE_RAD, subfield);
 
@@ -241,46 +240,46 @@ namespace mathtext {
                append(item_t(atom));
             }
             // FIXME: This should be a true table
-            else if(*iterator == "\\over") {
+            else if(iterator == "\\over") {
                append(item_t(item_t::TYPE_GENERALIZED_FRACTION,
                              1.0F));
             }
-            else if(*iterator == "\\atop") {
+            else if(iterator == "\\atop") {
                append(item_t(item_t::TYPE_GENERALIZED_FRACTION,
                              0.0F));
             }
             // FIXME: This should be a true table
-            else if(*iterator == "\\!") {
+            else if(iterator == "\\!") {
                append(item_t(item_t::TYPE_KERN, -3.0F));
             }
-            else if(*iterator == "\\,") {
+            else if(iterator == "\\,") {
                append(item_t(item_t::TYPE_KERN, 3.0F));
             }
-            else if(*iterator == "\\:") {
+            else if(iterator == "\\:") {
                append(item_t(item_t::TYPE_KERN, 4.0F));
             }
-            else if(*iterator == "\\;") {
+            else if(iterator == "\\;") {
                append(item_t(item_t::TYPE_KERN, 5.0F));
             }
-            else if(*iterator == "\\quad") {
+            else if(iterator == "\\quad") {
                append(item_t(item_t::TYPE_KERN, 18.0F));
             }
-            else if(*iterator == "\\qquad") {
+            else if(iterator == "\\qquad") {
                append(item_t(item_t::TYPE_KERN, 36.0F));
             }
             else {
                const math_symbol_t
-               math_symbol(*iterator, family);
+               math_symbol(iterator, family);
 
                append(item_t::TYPE_ATOM, math_symbol,
                       superscript, subscript);
             }
          }
 
-         if((*iterator)[0] == '{') {
+         if(iterator[0] == '{') {
             level++;
          }
-         else if(*iterator == "\\left") {
+         else if(iterator == "\\left") {
             // Since the actual delimiter follows, it is going to
             // be appended to the buffer "automatically".
             delimiter_level++;
@@ -343,9 +342,9 @@ namespace mathtext {
    {
       std::string code = raw_code;
 
-      for (std::string::iterator iterator = code.begin(); iterator != code.end(); ++iterator) {
-         if(*iterator == escape_character) {
-            *iterator = '\\';
+      for (char & iterator : code) {
+         if(iterator == escape_character) {
+            iterator = '\\';
          }
       }
 

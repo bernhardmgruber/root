@@ -311,8 +311,8 @@ void TGL5DPainter::ResetGeometryRanges()
    if (fCamera)
       fCamera->SetViewVolume(fBackBox.Get3DBox());
    //Iterate through all surfaces and re-calculate them.
-   for (SurfIter_t surf = fIsos.begin(); surf != fIsos.end(); ++surf) {
-      fData->SelectPoints(surf->f4D, surf->fRange);
+   for (auto & fIso : fIsos) {
+      fData->SelectPoints(fIso.f4D, fIso.fRange);
       fKDE.BuildModel(fData, 0.05);//0.05 is sigma, will be controlled via GUI.
       Info("TGL5DPainter::ResetGeometryRanges", "Building the mesh ...");
       //Prepare grid parameters.
@@ -321,7 +321,7 @@ void TGL5DPainter::ResetGeometryRanges()
                                            fCoord->GetYScale(),
                                            fCoord->GetZScale());
       fMeshBuilder.SetGeometry(fData);
-      Mesh_t &mesh = surf->fMesh;
+      Mesh_t &mesh = fIso.fMesh;
       //Clear old data.
       mesh.fVerts.clear();
       mesh.fNorms.clear();

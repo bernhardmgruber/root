@@ -162,7 +162,7 @@ void TAxis3D::InitSet()
 
 void TAxis3D::Browse(TBrowser *b)
 {
-   for (Int_t i=0;i<3;i++) b->Add(&fAxis[i],fAxis[i].GetTitle());
+   for (auto & fAxi : fAxis) b->Add(&fAxi,fAxi.GetTitle());
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -171,9 +171,9 @@ void TAxis3D::Browse(TBrowser *b)
 Int_t TAxis3D::DistancetoPrimitive(Int_t px, Int_t py)
 {
    Int_t dist = 9;
-   for (int i=0;i<3;i++) {
-      Int_t axDist = fAxis[i].DistancetoPrimitive(px,py);
-      if (dist > axDist) { dist = axDist; fSelected = &fAxis[i]; }
+   for (auto & fAxi : fAxis) {
+      Int_t axDist = fAxi.DistancetoPrimitive(px,py);
+      if (dist > axDist) { dist = axDist; fSelected = &fAxi; }
    }
    if (fZoomMode)
       return 0;

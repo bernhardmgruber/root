@@ -212,8 +212,8 @@ void TEveLine::ReduceSegmentLengths(Float_t max)
 
    s = q.size();
    Reset(s);
-   for (std::vector<TEveVector>::iterator i = q.begin(); i != q.end(); ++i)
-      SetNextPoint(i->fX, i->fY, i->fZ);
+   for (auto & i : q)
+      SetNextPoint(i.fX, i.fY, i.fZ);
 }
 
 ////////////////////////////////////////////////////////////////////////////////

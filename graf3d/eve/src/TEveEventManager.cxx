@@ -36,9 +36,9 @@ TEveEventManager::TEveEventManager(const char* n, const char* t) :
 
 void TEveEventManager::AfterNewEventLoaded()
 {
-   for (std::vector<TString>::iterator i = fNewEventCommands.begin(); i != fNewEventCommands.end(); ++i)
+   for (auto & fNewEventCommand : fNewEventCommands)
    {
-      gInterpreter->ProcessLine(*i);
+      gInterpreter->ProcessLine(fNewEventCommand);
    }
 }
 

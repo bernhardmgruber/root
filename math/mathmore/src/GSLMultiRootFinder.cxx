@@ -129,9 +129,9 @@ int GSLMultiRootFinder::AddFunction(const ROOT::Math::IMultiGenFunction & func) 
 
 void GSLMultiRootFinder::ClearFunctions() {
    // clear the function list
-   for (unsigned int i = 0; i < fFunctions.size(); ++i) {
-      if (fFunctions[i] != 0 ) delete fFunctions[i];
-      fFunctions[i] = 0;
+   for (auto & fFunction : fFunctions) {
+      if (fFunction != 0 ) delete fFunction;
+      fFunction = 0;
    }
    fFunctions.clear();
 }

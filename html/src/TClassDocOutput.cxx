@@ -667,11 +667,10 @@ Bool_t TClassDocOutput::CreateDotClassChartInh(const char* filename)
    outdot << "{" << std::endl;
    for (Int_t level = 1; kTRUE; ++level) {
       Bool_t levelExists = kFALSE;
-      for (std::map<TClass*, Int_t>::iterator iDerived = derivesFromMe.begin();
-         iDerived != derivesFromMe.end(); ++iDerived) {
-         if (iDerived->second != level) continue;
+      for (auto & iDerived : derivesFromMe) {
+         if (iDerived.second != level) continue;
          levelExists = kTRUE;
-         TIter iBaseOfDerived(iDerived->first->GetListOfBases());
+         TIter iBaseOfDerived(iDerived.first->GetListOfBases());
          TBaseClass* baseDerived = 0;
          Bool_t writeNode = kFALSE;
          TClass* writeAndMoreFor = 0;
@@ -682,7 +681,7 @@ Bool_t TClassDocOutput::CreateDotClassChartInh(const char* filename)
                unsigned int& count = entriesPerDerived[clBaseDerived];
                if (count < maxClassesPerDerived) {
                   writeNode = kTRUE;
-                  ssDep << "\"" << iDerived->first->GetName() << "\" -> \""
+                  ssDep << "\"" << iDerived.first->GetName() << "\" -> \""
                      << clBaseDerived->GetName() << "\";" << std::endl;
                   ++count;
                } else if (count == maxClassesPerDerived) {
@@ -695,9 +694,9 @@ Bool_t TClassDocOutput::CreateDotClassChartInh(const char* filename)
          }
 
          if (writeNode) {
-            wroteNode.insert(iDerived->first);
-            outdot << "  \"" << iDerived->first->GetName() << "\"";
-            const char* htmlFileName = fHtml->GetHtmlFileName(iDerived->first->GetName());
+            wroteNode.insert(iDerived.first);
+            outdot << "  \"" << iDerived.first->GetName() << "\"";
+            const char* htmlFileName = fHtml->GetHtmlFileName(iDerived.first->GetName());
             if (htmlFileName)
                outdot << " [URL=\"" << htmlFileName << "\"]";
             outdot << ";" << std::endl;

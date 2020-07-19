@@ -129,8 +129,8 @@ TGDMLParse::TGDMLParse()
    fWorld = 0;
    fVolID = 0;
    fFILENO = 0;
-   for (Int_t i = 0; i < 20; i++)
-      fFileEngine[i] = 0;
+   for (auto & i : fFileEngine)
+      i = 0;
    fStartFile = 0;
    fCurrentFile = 0;
    auto def_units = TGeoManager::GetDefaultUnits();
@@ -1124,9 +1124,9 @@ XMLNodePointer_t TGDMLParse::EleProcess(TXMLEngine *gdml, XMLNodePointer_t node,
          ele = nullptr;
       if (!ele) {
          ele = new TGeoElement(NameShort(name), NameShort(name), ncompo);
-         for (fractions f = fracmap.begin(); f != fracmap.end(); ++f) {
-            if (fisomap.find(f->first) != fisomap.end()) {
-               ele->AddIsotope((TGeoIsotope *)fisomap[f->first], f->second);
+         for (auto & f : fracmap) {
+            if (fisomap.find(f.first) != fisomap.end()) {
+               ele->AddIsotope((TGeoIsotope *)fisomap[f.first], f.second);
             }
          }
       } else if (gDebug >= 2) {
@@ -1187,9 +1187,9 @@ XMLNodePointer_t TGDMLParse::EleProcess(TXMLEngine *gdml, XMLNodePointer_t node,
          ele = nullptr;
       if (!ele) {
          ele = new TGeoElement(NameShort(name), NameShort(name), ncompo);
-         for (fractions f = fracmap.begin(); f != fracmap.end(); ++f) {
-            if (fisomap.find(f->first) != fisomap.end()) {
-               ele->AddIsotope((TGeoIsotope *)fisomap[f->first], f->second);
+         for (auto & f : fracmap) {
+            if (fisomap.find(f.first) != fisomap.end()) {
+               ele->AddIsotope((TGeoIsotope *)fisomap[f.first], f.second);
             }
          }
       } else if (gDebug >= 2) {
@@ -1520,26 +1520,26 @@ XMLNodePointer_t TGDMLParse::MatProcess(TXMLEngine *gdml, XMLNodePointer_t node,
       Int_t natoms;
       Double_t weight;
 
-      for (fractions f = fracmap.begin(); f != fracmap.end(); ++f) {
-         matname = f->first;
+      for (auto & f : fracmap) {
+         matname = f.first;
          matname = NameShort(matname);
 
          TGeoMaterial *mattmp = (TGeoMaterial *)gGeoManager->GetListOfMaterials()->FindObject(matname);
 
-         if (mattmp || (felemap.find(f->first) != felemap.end())) {
+         if (mattmp || (felemap.find(f.first) != felemap.end())) {
             if (composite) {
-               natoms = (Int_t)f->second;
+               natoms = (Int_t)f.second;
 
-               mix->AddElement(felemap[f->first], natoms);
+               mix->AddElement(felemap[f.first], natoms);
 
             }
 
             else {
-               weight = f->second;
+               weight = f.second;
                if (mattmp) {
                   mix->AddElement(mattmp, weight);
                } else {
-                  mix->AddElement(felemap[f->first], weight);
+                  mix->AddElement(felemap[f.first], weight);
                }
             }
          }

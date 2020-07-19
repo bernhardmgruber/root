@@ -243,9 +243,9 @@ void TGLAxisPainter::RnrLabels() const
    fLabelFont.PreRender();
    Double_t p = 0.;
    TString s;
-   for (LabVec_t::const_iterator it = fLabVec.begin(); it != fLabVec.end(); ++it) {
-      FormAxisValue((*it).second, s);
-      p = (*it).first;
+   for (const auto & it : fLabVec) {
+      FormAxisValue(it.second, s);
+      p = it.first;
       RnrText(s, fDir*p, fLabelAlignH, fLabelAlignV, fLabelFont);
    }
 

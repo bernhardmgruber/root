@@ -799,9 +799,8 @@ void TGeoManager::ClearNavigators()
 {
    if (fMultiThread) fgMutex.lock();
    TGeoNavigatorArray *arr = 0;
-   for (NavigatorsMap_t::iterator it = fNavigators.begin();
-        it != fNavigators.end(); ++it) {
-      arr = (*it).second;
+   for (auto & fNavigator : fNavigators) {
+      arr = fNavigator.second;
       if (arr) delete arr;
    }
    fNavigators.clear();
@@ -2078,7 +2077,7 @@ void TGeoManager::DefaultColors()
 {
    const Int_t nmax = 110;
    Int_t col[nmax];
-   for (Int_t i=0;i<nmax;i++) col[i] = kGray;
+   for (int & i : col) i = kGray;
 
    //here we should create a new TColor with the same rgb as in the default
    //ROOT colors used below

@@ -6305,26 +6305,26 @@ void TPad::ShowGuidelines(TObject *object, const Int_t event, const char mode, c
          }
          // Show equal distances
          for (UInt_t i = 0; i<curDist.size(); i++) {
-            for (UInt_t j = 0; j<otherDist.size(); j++) {
-               if ((curDist[i].fdir == otherDist[j].fdir)&&(otherDist[j].fdir=='x')&&(TMath::Abs(curDist[i].fdist-otherDist[j].fdist)<threshold)) {
+            for (auto & j : otherDist) {
+               if ((curDist[i].fdir == j.fdir)&&(j.fdir=='x')&&(TMath::Abs(curDist[i].fdist-j.fdist)<threshold)) {
                   if (cling && (!movedX) && (!resize)) {
                      if ((cur->GetBBoxCenter().fX < curDist[i].fb->GetBBoxCenter().fX)||(cur->GetBBoxCenter().fX < curDist[i].fa->GetBBoxCenter().fX))
-                           cur->SetBBoxCenterX(cur->GetBBoxCenter().fX - otherDist[j].fdist + curDist[i].fdist);
-                     else  cur->SetBBoxCenterX(cur->GetBBoxCenter().fX + otherDist[j].fdist - curDist[i].fdist);
+                           cur->SetBBoxCenterX(cur->GetBBoxCenter().fX - j.fdist + curDist[i].fdist);
+                     else  cur->SetBBoxCenterX(cur->GetBBoxCenter().fX + j.fdist - curDist[i].fdist);
                      movedX = true;
                   }
                   DrawDist(curDist[i].fa->GetBBox(), curDist[i].fb->GetBBox(), 'x');
-                  DrawDist(otherDist[j].fa->GetBBox(), otherDist[j].fb->GetBBox(), 'x');
+                  DrawDist(j.fa->GetBBox(), j.fb->GetBBox(), 'x');
                }
-               if ((curDist[i].fdir == otherDist[j].fdir)&&(otherDist[j].fdir=='y')&&(TMath::Abs(curDist[i].fdist-otherDist[j].fdist)<threshold)) {
+               if ((curDist[i].fdir == j.fdir)&&(j.fdir=='y')&&(TMath::Abs(curDist[i].fdist-j.fdist)<threshold)) {
                   if (cling && (!movedY) && (!resize)) {
                      if ((cur->GetBBoxCenter().fY < curDist[i].fb->GetBBoxCenter().fY)||(cur->GetBBoxCenter().fY < curDist[i].fa->GetBBoxCenter().fY))
-                           cur->SetBBoxCenterY(cur->GetBBoxCenter().fY - otherDist[j].fdist + curDist[i].fdist);
-                     else  cur->SetBBoxCenterY(cur->GetBBoxCenter().fY + otherDist[j].fdist - curDist[i].fdist);
+                           cur->SetBBoxCenterY(cur->GetBBoxCenter().fY - j.fdist + curDist[i].fdist);
+                     else  cur->SetBBoxCenterY(cur->GetBBoxCenter().fY + j.fdist - curDist[i].fdist);
                      movedY = true;
                   }
                   DrawDist(curDist[i].fa->GetBBox(), curDist[i].fb->GetBBox(), 'y');
-                  DrawDist(otherDist[j].fa->GetBBox(), otherDist[j].fb->GetBBox(), 'y');
+                  DrawDist(j.fa->GetBBox(), j.fb->GetBBox(), 'y');
                }
             }
             for (UInt_t j = i; j<curDist.size(); j++) {

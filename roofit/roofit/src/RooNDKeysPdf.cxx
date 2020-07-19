@@ -721,11 +721,11 @@ void RooNDKeysPdf::mirrorDataSet()
     // add mirror points of event i to total dataset
     TVectorD pointR(_nDim);
 
-    for (Int_t m=0; m<Int_t(epoints.size()); m++) {
+    for (auto & epoint : epoints) {
       _idx.push_back(i);
-      _dataPts.push_back(epoints[m]);
+      _dataPts.push_back(epoint);
       //_weights0.push_back(_weights0[i]);
-      for (Int_t j=0; j<_nDim; j++) { pointR[j] = (epoints[m])[j]; }
+      for (Int_t j=0; j<_nDim; j++) { pointR[j] = epoint[j]; }
       if (_nDim > 1 && _rotate) {
          pointR *= *_rotMat;
       }

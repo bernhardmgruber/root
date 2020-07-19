@@ -160,8 +160,8 @@ RooSimSplitGenContext::~RooSimSplitGenContext()
 {
   delete[] _fracThresh ;
   delete _idxCatSet ;
-  for (vector<RooAbsGenContext*>::iterator iter = _gcList.begin() ; iter!=_gcList.end() ; ++iter) {
-    delete (*iter) ;
+  for (auto & iter : _gcList) {
+    delete iter ;
   }
   delete _proxyIter ;
 }
@@ -178,8 +178,8 @@ void RooSimSplitGenContext::attach(const RooArgSet& args)
   }
 
   // Forward initGenerator call to all components
-  for (vector<RooAbsGenContext*>::iterator iter = _gcList.begin() ; iter!=_gcList.end() ; ++iter) {
-    (*iter)->attach(args) ;
+  for (auto & iter : _gcList) {
+    iter->attach(args) ;
   }
   
 }
@@ -198,8 +198,8 @@ void RooSimSplitGenContext::initGenerator(const RooArgSet &theEvent)
   }
   
   // Forward initGenerator call to all components
-  for (vector<RooAbsGenContext*>::iterator iter = _gcList.begin() ; iter!=_gcList.end() ; ++iter) {
-    (*iter)->initGenerator(theEvent) ;
+  for (auto & iter : _gcList) {
+    iter->initGenerator(theEvent) ;
   }
 
 }
@@ -302,8 +302,8 @@ RooDataSet* RooSimSplitGenContext::generate(Double_t nEvents, Bool_t skipInit, B
 
 void RooSimSplitGenContext::setExpectedData(Bool_t flag) 
 {
-  for (vector<RooAbsGenContext*>::iterator iter=_gcList.begin() ; iter!=_gcList.end() ; ++iter) {
-    (*iter)->setExpectedData(flag) ;
+  for (auto & iter : _gcList) {
+    iter->setExpectedData(flag) ;
   }
 }
 

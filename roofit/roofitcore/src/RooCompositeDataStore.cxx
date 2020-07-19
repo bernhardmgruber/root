@@ -79,9 +79,9 @@ RooCompositeDataStore::RooCompositeDataStore(const char* name, const char* title
 RooCompositeDataStore::RooCompositeDataStore(const RooCompositeDataStore& other, const char* newname) :
   RooAbsDataStore(other,newname), _indexCat(other._indexCat), _curStore(other._curStore), _curIndex(other._curIndex), _ownComps(kTRUE)
 {
-  for (map<Int_t,RooAbsDataStore*>::const_iterator iter=other._dataMap.begin() ; iter!=other._dataMap.end() ; ++iter) {
-    RooAbsDataStore* clonedata = iter->second->clone() ;
-    _dataMap[iter->first] = clonedata ;
+  for (auto iter : other._dataMap) {
+    RooAbsDataStore* clonedata = iter.second->clone() ;
+    _dataMap[iter.first] = clonedata ;
   }
   TRACE_CREATE
 }
@@ -99,9 +99,9 @@ RooCompositeDataStore::RooCompositeDataStore(const RooCompositeDataStore& other,
   }
 
   // Convert map by label to map by index for more efficient internal use
-  for (map<Int_t,RooAbsDataStore*>::const_iterator iter=other._dataMap.begin() ; iter!=other._dataMap.end() ; ++iter) {
-    RooAbsDataStore* clonedata = iter->second->clone(vars) ;
-    _dataMap[iter->first] = clonedata ;
+  for (auto iter : other._dataMap) {
+    RooAbsDataStore* clonedata = iter.second->clone(vars) ;
+    _dataMap[iter.first] = clonedata ;
   }  
   TRACE_CREATE
 }

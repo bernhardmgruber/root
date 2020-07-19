@@ -455,9 +455,9 @@ void TSAXParser::ConnectToHandler(const char *handlerName, void *handler)
 
    TClass *cl = TClass::GetClass(handlerName);
 
-   for (Int_t i = 0; i < 10; i++) {
-      if (CheckConnectArgs(this, this->IsA(), kFunctionsName[i],
-                           cl, kFunctionsName[i]) != -1)
-         Connect(kFunctionsName[i], handlerName, handler, kFunctionsName[i]);
+   for (const auto & i : kFunctionsName) {
+      if (CheckConnectArgs(this, this->IsA(), i,
+                           cl, i) != -1)
+         Connect(i, handlerName, handler, i);
    }
 }

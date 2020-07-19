@@ -362,11 +362,11 @@ Double_t RooXYChi2Var::fy() const
   } else {
     Double_t volume(1) ;
     _rrvIter->Reset() ;
-    for (list<RooAbsBinning*>::const_iterator iter = _binList.begin() ; iter != _binList.end() ; ++iter) {
+    for (auto iter : _binList) {
       RooRealVar* x = (RooRealVar*) _rrvIter->Next() ;
       Double_t xmin = x->getVal() + x->getErrorLo() ;
       Double_t xmax = x->getVal() + x->getErrorHi() ;
-      (*iter)->setRange(xmin,xmax) ;
+      iter->setRange(xmin,xmax) ;
       x->setShapeDirty() ;
       volume *= (xmax - xmin) ;
     }

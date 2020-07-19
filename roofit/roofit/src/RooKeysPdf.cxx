@@ -240,7 +240,7 @@ void RooKeysPdf::LoadDataSet( RooDataSet& data) {
   // in the Gaussian is well below the machine precision of a double, so it
   // does not contribute any more. That way, we can limit how many bins of the
   // binned approximation in _lookupTable we have to touch when filling it.
-  for (Int_t i=0;i<_nPoints+1;++i) _lookupTable[i] = 0.;
+  for (double & i : _lookupTable) i = 0.;
   for(Int_t j=0;j<_nEvents;++j) {
       const Double_t xlo = std::min(_hi,
          std::max(_lo, _dataPts[j] - _nSigma * _weights[j]));
@@ -297,8 +297,8 @@ void RooKeysPdf::LoadDataSet( RooDataSet& data) {
       }
   }
   static const Double_t sqrt2pi(std::sqrt(2*TMath::Pi()));
-  for (Int_t i=0;i<_nPoints+1;++i)
-    _lookupTable[i] /= sqrt2pi * _sumWgt;
+  for (double & i : _lookupTable)
+    i /= sqrt2pi * _sumWgt;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

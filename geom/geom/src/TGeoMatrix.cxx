@@ -578,7 +578,7 @@ ClassImp(TGeoTranslation);
 
 TGeoTranslation::TGeoTranslation()
 {
-   for (Int_t i=0; i<3; i++) fTranslation[i] = 0;
+   for (double & i : fTranslation) i = 0;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -1276,10 +1276,10 @@ void TGeoRotation::SetAngles(Double_t theta1, Double_t phi1, Double_t theta2, Do
    fRotationMatrix[5] = TMath::Sin(degrad*phi3)*TMath::Sin(degrad*theta3);
    fRotationMatrix[8] = TMath::Cos(degrad*theta3);
    // do the trick to eliminate most of the floating point errors
-   for (Int_t i=0; i<9; i++) {
-      if (TMath::Abs(fRotationMatrix[i])<1E-15) fRotationMatrix[i] = 0;
-      if (TMath::Abs(fRotationMatrix[i]-1)<1E-15) fRotationMatrix[i] = 1;
-      if (TMath::Abs(fRotationMatrix[i]+1)<1E-15) fRotationMatrix[i] = -1;
+   for (double & i : fRotationMatrix) {
+      if (TMath::Abs(i)<1E-15) i = 0;
+      if (TMath::Abs(i-1)<1E-15) i = 1;
+      if (TMath::Abs(i+1)<1E-15) i = -1;
    }
    if (!IsValid()) Error("SetAngles", "invalid rotation (G3 angles, th1=%f phi1=%f, th2=%f ph2=%f, th3=%f phi3=%f)",
                           theta1,phi1,theta2,phi2,theta3,phi3);
@@ -1414,7 +1414,7 @@ ClassImp(TGeoScale);
 TGeoScale::TGeoScale()
 {
    SetBit(kGeoScale);
-   for (Int_t i=0; i<3; i++) fScale[i] = 1.;
+   for (double & i : fScale) i = 1.;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -1646,7 +1646,7 @@ ClassImp(TGeoCombiTrans);
 
 TGeoCombiTrans::TGeoCombiTrans()
 {
-   for (Int_t i=0; i<3; i++) fTranslation[i] = 0.0;
+   for (double & i : fTranslation) i = 0.0;
    fRotation = 0;
 }
 
@@ -1661,7 +1661,7 @@ TGeoCombiTrans::TGeoCombiTrans(const TGeoMatrix &other)
       SetBit(kGeoTranslation);
       memcpy(fTranslation,other.GetTranslation(),kN3);
    } else {
-      for (Int_t i=0; i<3; i++) fTranslation[i] = 0.0;
+      for (double & i : fTranslation) i = 0.0;
    }
    if (other.IsRotation()) {
       SetBit(kGeoRotation);
@@ -1681,7 +1681,7 @@ TGeoCombiTrans::TGeoCombiTrans(const TGeoTranslation &tr, const TGeoRotation &ro
       const Double_t *trans = tr.GetTranslation();
       memcpy(fTranslation, trans, kN3);
    } else {
-      for (Int_t i=0; i<3; i++) fTranslation[i] = 0.0;
+      for (double & i : fTranslation) i = 0.0;
    }
    if (rot.IsRotation()) {
       SetBit(kGeoRotation);
@@ -1698,7 +1698,7 @@ TGeoCombiTrans::TGeoCombiTrans(const TGeoTranslation &tr, const TGeoRotation &ro
 TGeoCombiTrans::TGeoCombiTrans(const char *name)
                :TGeoMatrix(name)
 {
-   for (Int_t i=0; i<3; i++) fTranslation[i] = 0.0;
+   for (double & i : fTranslation) i = 0.0;
    fRotation = 0;
 }
 
@@ -2152,8 +2152,8 @@ ClassImp(TGeoGenTrans);
 TGeoGenTrans::TGeoGenTrans()
 {
    SetBit(kGeoGenTrans);
-   for (Int_t i=0; i<3; i++) fTranslation[i] = 0.0;
-   for (Int_t j=0; j<3; j++) fScale[j] = 1.0;
+   for (double & i : fTranslation) i = 0.0;
+   for (double & j : fScale) j = 1.0;
    fRotation = 0;
 }
 
@@ -2164,8 +2164,8 @@ TGeoGenTrans::TGeoGenTrans(const char *name)
              :TGeoCombiTrans(name)
 {
    SetBit(kGeoGenTrans);
-   for (Int_t i=0; i<3; i++) fTranslation[i] = 0.0;
-   for (Int_t j=0; j<3; j++) fScale[j] = 1.0;
+   for (double & i : fTranslation) i = 0.0;
+   for (double & j : fScale) j = 1.0;
    fRotation = 0;
 }
 
@@ -2242,8 +2242,8 @@ Bool_t TGeoGenTrans::Normalize()
 {
    Double_t normfactor = fScale[0]*fScale[1]*fScale[2];
    if (normfactor <= 1E-5) return kFALSE;
-   for (Int_t i=0; i<3; i++)
-      fScale[i] /= normfactor;
+   for (double & i : fScale)
+      i /= normfactor;
    return kTRUE;
 }
 

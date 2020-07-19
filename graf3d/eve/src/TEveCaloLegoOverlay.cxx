@@ -565,12 +565,12 @@ void TEveCaloLegoOverlay::RenderPaletteScales(TGLRnrCtx& rnrCtx)
    Float_t y;
    Double_t zf = +0.2;
    glBegin(GL_QUADS);
-   for (TGLAxisPainter::LabVec_t::iterator it = labVec.begin(); it != labVec.end(); ++it)
+   for (auto & it : labVec)
    {
-      fCalo->GetPalette()->ColorFromValue((Int_t)((*it).first), c);
+      fCalo->GetPalette()->ColorFromValue((Int_t)(it.first), c);
       glColor4ub( c[0], c[1], c[2], c[3]);
 
-      y = (*it).second;
+      y = it.second;
       glVertex3f( -w, y - h, zf); glVertex3f( +w, y - h, zf);
       glVertex3f( +w, y + h, zf); glVertex3f( -w, y + h, zf);
    }
@@ -578,9 +578,9 @@ void TEveCaloLegoOverlay::RenderPaletteScales(TGLRnrCtx& rnrCtx)
 
    TGLUtil::Color(rnrCtx.ColorSet().Markup().GetColorIndex());
    glBegin(GL_LINE_LOOP);
-   for (TGLAxisPainter::LabVec_t::iterator it = labVec.begin(); it != labVec.end(); ++it)
+   for (auto & it : labVec)
    {
-      y = (*it).second;
+      y = it.second;
       glVertex3f( -w, y - h, zf); glVertex3f( +w, y - h, zf);
       glVertex3f( +w, y + h, zf); glVertex3f( -w, y + h, zf);
    }
@@ -642,9 +642,9 @@ void TEveCaloLegoOverlay::Render(TGLRnrCtx& rnrCtx)
          if (lgl->fBinStep == 1)
          {
             TEveCaloData::CellData_t cellData;
-            for ( TEveCaloData::vCellId_t::iterator i = fCalo->fCellList.begin(); i != fCalo->fCellList.end(); ++i)
+            for (auto & i : fCalo->fCellList)
             {
-               fCalo->fData->GetCellData(*i, cellData);
+               fCalo->fData->GetCellData(i, cellData);
                if (sq > cellData.EtaDelta()) sq = cellData.EtaDelta();
                if (sq > cellData.PhiDelta()) sq = cellData.PhiDelta();
             }

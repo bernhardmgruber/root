@@ -127,8 +127,8 @@ void TGLScene::TSceneInfo::ClearAfterUpdate()
 
 void TGLScene::TSceneInfo::Lodify(TGLRnrCtx& ctx)
 {
-   for (DrawElementVec_i i = fVisibleElements.begin(); i != fVisibleElements.end(); ++i)
-      i->fPhysical->QuantizeShapeLOD(i->fPixelLOD, ctx.CombiLOD(), i->fFinalLOD);
+   for (auto & fVisibleElement : fVisibleElements)
+      fVisibleElement.fPhysical->QuantizeShapeLOD(fVisibleElement.fPixelLOD, ctx.CombiLOD(), fVisibleElement.fFinalLOD);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -144,19 +144,19 @@ void TGLScene::TSceneInfo::PreDraw()
       fSelOpaqueElements.clear();
       fSelTranspElements.clear();
 
-      for (DrawElementVec_i i = fVisibleElements.begin(); i != fVisibleElements.end(); ++i)
+      for (auto & fVisibleElement : fVisibleElements)
       {
-         if (i->fPhysical->IsSelected())
+         if (fVisibleElement.fPhysical->IsSelected())
          {
-            if (i->fPhysical->IsTransparent())
-               fSelTranspElements.push_back(&*i);
+            if (fVisibleElement.fPhysical->IsTransparent())
+               fSelTranspElements.push_back(&fVisibleElement);
             else
-               fSelOpaqueElements.push_back(&*i);
+               fSelOpaqueElements.push_back(&fVisibleElement);
          } else {
-            if (i->fPhysical->IsTransparent())
-               fTranspElements.push_back(&*i);
+            if (fVisibleElement.fPhysical->IsTransparent())
+               fTranspElements.push_back(&fVisibleElement);
             else
-               fOpaqueElements.push_back(&*i);
+               fOpaqueElements.push_back(&fVisibleElement);
          }
       }
       fMinorStamp = fScene->GetMinorStamp();
@@ -675,9 +675,9 @@ void TGLScene::RenderHighlight(TGLRnrCtx&           rnrCtx,
    DrawElementPtrVec_t svec(1);
 
    glEnable(GL_STENCIL_TEST);
-   for (DrawElementPtrVec_i i = elVec.begin(); i != elVec.end(); ++i)
+   for (auto & i : elVec)
    {
-      svec[0] = *i;
+      svec[0] = i;
 
       glStencilFunc(GL_ALWAYS, 0x1, 0x1);
       glStencilOp(GL_REPLACE, GL_REPLACE, GL_REPLACE);
@@ -900,9 +900,9 @@ void TGLScene::RenderElements(TGLRnrCtx&           rnrCtx,
 
    Int_t drawCount = 0;
 
-   for (DrawElementPtrVec_i i = elVec.begin(); i != elVec.end(); ++i)
+   for (auto & i : elVec)
    {
-      const TGLPhysicalShape * drawShape = (*i)->fPhysical;
+      const TGLPhysicalShape * drawShape = i->fPhysical;
 
       Bool_t drawNeeded = kTRUE;
 
@@ -913,8 +913,8 @@ void TGLScene::RenderElements(TGLRnrCtx&           rnrCtx,
       // Draw?
       if (drawNeeded)
       {
-         rnrCtx.SetShapeLOD((*i)->fFinalLOD);
-         rnrCtx.SetShapePixSize((*i)->fPixelSize);
+         rnrCtx.SetShapeLOD(i->fFinalLOD);
+         rnrCtx.SetShapePixSize(i->fPixelSize);
          glPushName(drawShape->ID());
          drawShape->Draw(rnrCtx);
          glPopName();
@@ -1543,8 +1543,8 @@ void TGLScene::RGBAFromColorIdx(Float_t rgba[4], Color_t ci, Char_t transp)
 Bool_t TGLScene::IsOutside(const TGLBoundingBox & box,
                            const TGLPlaneSet_t  & planes)
 {
-   for (TGLPlaneSet_ci p=planes.begin(); p!=planes.end(); ++p)
-      if (box.Overlap(*p) == Rgl::kOutside)
+   for (const auto & plane : planes)
+      if (box.Overlap(plane) == Rgl::kOutside)
          return kTRUE;
    return kFALSE;
 }

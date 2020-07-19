@@ -2183,8 +2183,7 @@ void TCling::RegisterModule(const char* modulename,
             ExtLexicalStorageAdder elsa;
             for (auto dciIt = T->decls_begin();dciIt!=T->decls_end();dciIt++){
                cling::Transaction::DelayCallInfo& dci = *dciIt;
-               for(auto dit = dci.m_DGR.begin(); dit != dci.m_DGR.end(); ++dit) {
-                  clang::Decl* declPtr = *dit;
+               for(auto declPtr : dci.m_DGR) {
                   elsa.TraverseDecl(declPtr);
                }
             }
